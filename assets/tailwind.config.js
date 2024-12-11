@@ -85,8 +85,10 @@ module.exports = {
         creditCard: "8px 10px 16px 0px rgba(0, 0, 0, 0.05)",
       },
       fontFamily: {
-        inter: "var(--font-inter)",
-        "ibm-plex-serif": "var(--font-ibm-plex-serif)",
+        // inter: "var(--font-inter)",
+        // "ibm-plex-serif": "var(--font-ibm-plex-serif)",
+        inter: ['Inter', 'sans-serif'], // Define Inter for sans
+        "ibm-plex-serif": ['IBM Plex Serif', 'serif'], // Define IBM Plex Serif for serif
       },
       keyframes: {
         "accordion-down": {

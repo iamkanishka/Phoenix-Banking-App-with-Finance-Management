@@ -8,6 +8,33 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: "IBM Plex Serif";
+  src: url("/assets/static/fonts/ibm-plex-serif-v19-latin-700.woff2")
+    format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "IBM Plex Serif";
+  src: url("/assets/static/fonts/ibm-plex-serif-v19-latin-regular.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/assets/static/fonts/inter-v18-latin-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+body {
+  font-family: "Inter", "IBM Plex Serif", sans-serif;
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
