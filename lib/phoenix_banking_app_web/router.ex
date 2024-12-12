@@ -17,7 +17,15 @@ defmodule PhoenixBankingAppWeb.Router do
   scope "/", PhoenixBankingAppWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    # auth routes
+    live "/auth/sign-in", Auth.SignIn, :sign_in
+    live "/auth/sign-up", Auth.SignUp, :sign_up
+
+    # module routes
+    live "/home", Home.Show, :home
+    live "/my-banks", MyBanks.Show, :home
+    live "/payment-transfer", PaymentTransfer.Show, :home
+    live "/transaction-history", TransactionHistory.Show, :home
   end
 
   # Other scopes may use custom stacks.
