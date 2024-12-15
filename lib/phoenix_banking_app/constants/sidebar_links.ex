@@ -2,22 +2,22 @@ defmodule PhoenixBankingApp.Constants.SidebarLinks do
 
  @sidebar_links_consts [
     %{
-      imgURL: "/icons/home.svg",
-      route: "/",
+      imgURL: "/images/home.svg",
+      route: "/home",
       label: "Home",
     },
     %{
-      imgURL: "/icons/dollar-circle.svg",
+      imgURL: "/images/dollar-circle.svg",
       route: "/my-banks",
       label: "My Banks",
     },
     %{
-      imgURL: "/icons/transaction.svg",
+      imgURL: "/images/transaction.svg",
       route: "/transaction-history",
       label: "Transaction History",
     },
     %{
-      imgURL: "/icons/money-send.svg",
+      imgURL: "/images/money-send.svg",
       route: "/payment-transfer",
       label: "Transfer Funds",
     },
