@@ -8,6 +8,8 @@ defmodule PhoenixBankingAppWeb.Router do
     plug :put_root_layout, html: {PhoenixBankingAppWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+
+    plug PhoenixBankingAppWeb.Plugs.CurrentUrlLiveView
   end
 
   pipeline :api do
@@ -22,6 +24,7 @@ defmodule PhoenixBankingAppWeb.Router do
     live "/auth/sign-up", Auth.SignUp, :sign_up
 
     # module routes
+    live "/", Home.Show, :home
     live "/home", Home.Show, :home
     live "/my-banks", MyBanks.Show, :home
     live "/payment-transfer", PaymentTransfer.Show, :home
