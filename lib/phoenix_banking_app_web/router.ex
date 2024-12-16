@@ -24,11 +24,10 @@ defmodule PhoenixBankingAppWeb.Router do
     live "/auth/sign-up", Auth.SignUp, :sign_up
 
     # module routes
-    live "/", Home.Show, :home
-    live "/home", Home.Show, :home
-    live "/my-banks", MyBanks.Show, :home
-    live "/payment-transfer", PaymentTransfer.Show, :home
-    live "/transaction-history", TransactionHistory.Show, :home
+    live "/", Home.Show, :show
+    live "/my-banks", MyBanks.Show, :show
+    live "/payment-transfer", PaymentTransfer.Show, :show
+    live "/transaction-history", TransactionHistory.Show, :show
   end
 
   # Other scopes may use custom stacks.
