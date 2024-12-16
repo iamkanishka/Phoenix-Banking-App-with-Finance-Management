@@ -1,4 +1,4 @@
-defmodule PhoenixBankingAppWeb.Layouts.Sidebar do
+defmodule PhoenixBankingAppWeb.CustomComponents.Sidebar do
   use PhoenixBankingAppWeb, :live_component
   alias PhoenixBankingApp.Constants.SidebarLinks
 
@@ -39,7 +39,7 @@ defmodule PhoenixBankingAppWeb.Layouts.Sidebar do
           </.link>
         <% end %>
       </nav>
-       <.live_component module={PhoenixBankingAppWeb.Layouts.Footer} id="{:footer}" type={"desktop"} />
+       <.live_component module={PhoenixBankingAppWeb.CustomComponents.Footer} id="{:footer}" type={"desktop"} />
 
     </section>
     """
