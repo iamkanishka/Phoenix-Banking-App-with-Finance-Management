@@ -1,0 +1,15 @@
+<div class="flex">
+  <.live_component module={PhoenixBankingAppWeb.CustomComponents.SidebarLive}
+  id={:header} />
+
+  <section class="home">
+    <div class="home-content">
+      <header class="home-header">
+        <.live_component module={PhoenixBankingAppWeb.Home.Components.HeaderBoxLive}
+        id={:headerbox} type="greeting" title="Welcome"
+        user={@loggedIn?.firstName || 'Guest'} subtext="Access and manage your
+        account and transactions efficiently." />
+      </header>
+    </div>
+  </section>
+</div>

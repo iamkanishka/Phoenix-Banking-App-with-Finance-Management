@@ -6,7 +6,7 @@ defmodule PhoenixBankingAppWeb.Auth.SignIn do
     ~H"""
     <section class="flex-center size-full max-sm:px-6">
       <.live_component
-        module={PhoenixBankingAppWeb.Auth.Components.AuthForm}
+        module={PhoenixBankingAppWeb.Auth.Components.AuthFormLive}
         id="{:authform}"
         type="sign-in"
       />

@@ -1,4 +1,4 @@
-defmodule PhoenixBankingAppWeb.CustomComponents.Footer do
+defmodule PhoenixBankingAppWeb.CustomComponents.FooterLive do
   use PhoenixBankingAppWeb, :live_component
 
   @impl true
