@@ -5,11 +5,22 @@
   <section class="home">
     <div class="home-content">
       <header class="home-header">
-        <.live_component module={PhoenixBankingAppWeb.Home.Components.HeaderBoxLive}
-        id={:headerbox} type="greeting" title="Welcome"
-        user={@loggedIn?.firstName || 'Guest'} subtext="Access and manage your
-        account and transactions efficiently." />
+        <!--
+        // <.live_component module={PhoenixBankingAppWeb.Home.Components.HeaderBoxLive}
+        // id={:headerbox} type="greeting" title="Welcome"
+        // user={@loggedIn?.firstName || 'Guest'} subtext="Access and manage your
+        // account and transactions efficiently." />
+        -->
+        <.live_component
+        module={PhoenixBankingAppWeb.HomeLive.Components.HeaderBoxLive}
+        id={:headerbox} type={"greeting"} title={"Welcome"} user={"Guest"}
+        subtext={"Access and manage your account and transactions efficiently."}
+        />
       </header>
+
+      <.live_component
+      module={PhoenixBankingAppWeb.HomeLive.Components.RecentTransaction}
+      id={:recent_transaction} appwriteItemId={""} />
     </div>
   </section>
 </div>
