@@ -7,7 +7,7 @@ defmodule PhoenixBankingAppWeb.CustomComponents.Sidebar do
     ~H"""
     <section class="sidebar">
       <nav class="flex flex-col gap-4">
-        <.link navigate={~p"/home"} class="mb-12 cursor-pointer flex items-center gap-2">
+        <.link navigate={~p"/"} class="mb-12 cursor-pointer flex items-center gap-2">
           <img
             src="/images/app_logo.svg"
             alt="Horizon logo"
@@ -39,8 +39,12 @@ defmodule PhoenixBankingAppWeb.CustomComponents.Sidebar do
           </.link>
         <% end %>
       </nav>
-       <.live_component module={PhoenixBankingAppWeb.CustomComponents.Footer} id="{:footer}" type={"desktop"} />
 
+      <.live_component
+        module={PhoenixBankingAppWeb.CustomComponents.Footer}
+        id="{:footer}"
+        type="desktop"
+      />
     </section>
     """
   end
