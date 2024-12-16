@@ -1,4 +1,4 @@
-defmodule PhoenixBankingAppWeb.Auth.Components.AuthForm do
+defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
   alias PhoenixBankingAppWeb.Auth.Validators.FormValidator
   use PhoenixBankingAppWeb, :live_component
 
@@ -28,7 +28,7 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthForm do
       if @user != nil, do
       <div class="flex flex-col gap-4">
         <.live_component
-          module={PhoenixBankingAppWeb.CustomComponents.PlaidLink}
+          module={PhoenixBankingAppWeb.CustomComponents.PlaidLinkLive}
           id="{:plaidlink}"
           user={%{}}
           variant="primary"
