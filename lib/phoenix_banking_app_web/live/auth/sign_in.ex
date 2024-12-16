@@ -4,9 +4,13 @@ defmodule PhoenixBankingAppWeb.Auth.SignIn do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
-    SignIn
-    </div>
+    <section class="flex-center size-full max-sm:px-6">
+      <.live_component
+        module={PhoenixBankingAppWeb.Auth.Components.AuthForm}
+        id="{:authform}"
+        type="sign-in"
+      />
+    </section>
     """
   end
 end
