@@ -1,4 +1,4 @@
-defmodule PhoenixBankingAppWeb.CustomComponents.PlaidLink do
+defmodule PhoenixBankingAppWeb.CustomComponents.PlaidLinkLive do
   use PhoenixBankingAppWeb, :live_component
 
   @impl true
