@@ -10,6 +10,7 @@
         // id={:headerbox} type="greeting" title="Welcome"
         // user={@loggedIn?.firstName || 'Guest'} subtext="Access and manage your
         // account and transactions efficiently." />
+       
         -->
         <.live_component
         module={PhoenixBankingAppWeb.HomeLive.Components.HeaderBoxLive}
@@ -20,7 +21,8 @@
 
       <.live_component
       module={PhoenixBankingAppWeb.HomeLive.Components.RecentTransaction}
-      id={:recent_transaction} appwriteItemId={""} />
+      id={:recent_transaction}  appwrite_item_id={@appwrite_item_id}  url={@url}
+      accounts={@accounts} />
     </div>
   </section>
 </div>
