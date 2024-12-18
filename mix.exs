@@ -57,7 +57,8 @@ defmodule PhoenixBankingApp.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:salad_ui, "~> 0.14.4"},
-      {:number, "~> 1.0"}
+      {:number, "~> 1.0"},
+      {:timex, "~> 3.7"}
 
     ]
   end
