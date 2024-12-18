@@ -6,11 +6,14 @@ const fs = require("fs")
 const path = require("path")
 
 module.exports = {
+  mode: 'jit',
   content: [
     "./js/**/*.js",
     "../lib/phoenix_banking_app_web.ex",
-    "../lib/phoenix_banking_app_web/**/*.*ex"
+    "../lib/phoenix_banking_app_web/**/*.*ex",
+    "./css/app.css"
   ],
+  prefix: "",
   theme: {
     container: {
       center: true,
