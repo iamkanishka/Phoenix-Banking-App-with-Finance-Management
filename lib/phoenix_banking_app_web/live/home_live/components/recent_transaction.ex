@@ -19,7 +19,10 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RecentTransaction do
         appwrite_item_id={@appwrite_item_id}
         url={@url}
         accounts={@accounts}
+        transactions={@transactions}
       />
+
+
     </section>
     """
   end
