@@ -32,10 +32,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
 
       <div>
         <%= for account <- @accounts do %>
-
           <%= if String.to_integer(to_string(@appwrite_item_id)) == String.to_integer(to_string(account["appwrite_item_id"])) do %>
-
-
             <.live_component
               module={PhoenixBankingAppWeb.HomeLive.Components.BankInfo}
               id={account["name"]}
@@ -44,21 +41,15 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
               type="full"
               account={account}
             />
-
           <% end %>
         <% end %>
       </div>
-
-
     </div>
     """
   end
 
   @impl true
   def update(assigns, socket) do
-    IO.inspect(assigns["appwrite_item_id"])
-
-
     {:ok,
      socket
      |> assign(assigns)}

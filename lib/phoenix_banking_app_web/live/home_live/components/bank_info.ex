@@ -7,6 +7,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankInfo do
     ~H"""
     <div
       phx-click="bank_change"
+      phx-target={@myself}
       class={"bank-info #{@colors["bg"]}" <> if  @type == "card" and  String.to_integer(to_string(@appwrite_item_id)) == String.to_integer(to_string(@account["appwrite_item_id"])), do: "bg-bank-gradient", else: if @type == "card", do: "rounded-xl hover:shadow-sm cursor-pointer" ,else: "" }
     >
       <figure class={"flex-center h-fit rounded-full bg-blue-100 #{@colors["lightBg"]}"}>
@@ -52,8 +53,9 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankInfo do
 
   @impl true
   def handle_event("bank_change", _unsigned_params, socket) do
-    #  {:noreply, push_patch(socket, to: Routes.account_path(socket, :index, id: id))}
-    {:noreply, socket}
+    {:noreply,
+     socket
+     |> push_patch(to: ~p"/?id=#{to_string(socket.assigns.appwrite_item_id)}")}
   end
 
   defp format_amount(amount) when is_number(amount) do
