@@ -29,7 +29,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
           <% end %>
         </ul>
       </div>
-
+       <%!-- Bank Info --%>
       <div>
         <%= for account <- @accounts do %>
           <%= if String.to_integer(to_string(@appwrite_item_id)) == String.to_integer(to_string(account["appwrite_item_id"])) do %>
@@ -43,6 +43,14 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
             />
           <% end %>
         <% end %>
+      </div>
+       <%!-- Bank Transaction --%>
+      <div>
+        <.live_component
+          module={PhoenixBankingAppWeb.CustomComponents.TransactionTable}
+          id={:bank_transaction_table}
+          transactions={@transactions}
+        />
       </div>
     </div>
     """
