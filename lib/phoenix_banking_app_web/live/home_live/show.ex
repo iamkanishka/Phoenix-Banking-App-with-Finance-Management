@@ -20,16 +20,16 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
         "name" => "Plaid Deposits",
         "subtype" => "Deposits",
         "currentBalance" => 856_365,
-        "appwrite_item_id" => 12378524,
+        "appwrite_item_id" => 12_378_524,
         "type" => :credit
       }
     ]
 
-
-  {:noreply,
+    {:noreply,
      socket
      |> assign(:appwrite_item_id, get_id(params, accounts))
      |> assign(:accounts, accounts)
+     |> assign(:transactions, sample_transactions())
      |> assign(:url, uri)}
   end
 
@@ -44,5 +44,55 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
         # For example, assign a default value or redirect
         Enum.at(accounts, 0)["appwrite_item_id"]
     end
+  end
+
+  def sample_transactions do
+    [
+      %{
+        id: 1,
+        name: "Grocery Store Purchase",
+        amount: 75.50,
+        type: "debit",
+        date: "2024-12-10T14:30:00Z",
+        payment_channel: "credit card",
+        category: "Food and Drink"
+      },
+      %{
+        id: 2,
+        name: "Salary Payment",
+        amount: 3000.00,
+        type: "credit",
+        date: "2024-12-01T09:00:00Z",
+        payment_channel: "bank transfer",
+        category: "Payment"
+      },
+      %{
+        id: 3,
+        name: "Electric Bill Payment",
+        amount: 120.75,
+        type: "debit",
+        date: "2024-12-15T10:00:00Z",
+        payment_channel: "online banking",
+        category: "Payment"
+      },
+      %{
+        id: 4,
+        name: "Gym Membership",
+        amount: 50.00,
+        type: "debit",
+        date: "2024-11-25T16:00:00Z",
+        payment_channel: "credit card",
+        category: "Payment"
+      },
+      %{
+        id: 5,
+        name: "Gift Card Redemption",
+        amount: 25.00,
+        type: "credit",
+        date: "2024-12-05T11:45:00Z",
+        payment_channel: "gift card",
+        category: "Payment"
+      }
+    ]
   end
 end
