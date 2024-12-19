@@ -26,6 +26,7 @@ defmodule PhoenixBankingAppWeb.Router do
     # module routes
     live "/", HomeLive.Show, :show
     live "/:id", HomeLive.Show, :show
+    live "/:id/:page", HomeLive.Show, :show
     live "/my-banks", MyBanksLive.Show, :show
     live "/payment-transfer", PaymentTransferLive.Show, :show
     live "/transaction-history", TransactionHistoryLive.Show, :show
