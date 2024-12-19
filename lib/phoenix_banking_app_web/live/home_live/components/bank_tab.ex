@@ -1,6 +1,6 @@
 defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
   use PhoenixBankingAppWeb, :live_component
-
+  @rowsPerPage 10;
   @impl true
   def render(assigns) do
     ~H"""
@@ -52,14 +52,30 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
           transactions={@transactions}
         />
       </div>
+
+      <div>
+        <.live_component
+          module={PhoenixBankingAppWeb.CustomComponents.Pagination }
+          id={:bank_transaction_pagination}
+          page={@page}
+          total_pages ={@total_pages}
+
+
+        />
+      </div>
+
     </div>
     """
   end
 
   @impl true
   def update(assigns, socket) do
+    pagination = paginate(assigns.transactions, assigns.page, 10)
+
     {:ok,
      socket
+     |> assign(:transactions, pagination[:transactions])
+     |> assign(:total_pages, pagination[:total_pages])
      |> assign(assigns)}
   end
 
@@ -69,4 +85,18 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
      socket
      |> push_patch(to: ~p"/?id=#{id}")}
   end
+
+
+  def paginate(transactions, page, rows_per_page \\ 10) do
+    total_pages = div(Enum.count(transactions) + rows_per_page - 1, rows_per_page)
+
+    index_of_last_transaction = String.to_integer(page) * rows_per_page
+    index_of_first_transaction = index_of_last_transaction - rows_per_page
+
+    current_transactions = Enum.slice(transactions, index_of_first_transaction, rows_per_page)
+
+    %{total_pages: total_pages, current_transactions: current_transactions}
+  end
+
+
 end
