@@ -20,9 +20,8 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RecentTransaction do
         url={@url}
         accounts={@accounts}
         transactions={@transactions}
+        page={@page}
       />
-
-
     </section>
     """
   end
@@ -33,5 +32,4 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RecentTransaction do
      socket
      |> assign(assigns)}
   end
-
 end
