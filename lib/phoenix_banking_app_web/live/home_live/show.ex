@@ -63,7 +63,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
     [
       %{
         id: :erlang.unique_integer([:positive]),
-        name: "Grocery Store Purchase",
+        name: "Grocery Store Purchase first ",
         amount: 75.50,
         type: "debit",
         date: "2024-12-10T14:30:00Z",
@@ -109,7 +109,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
 
       %{
         id: :erlang.unique_integer([:positive]),
-        name: "Grocery Store Purchase",
+        name: "Grocery Store Purchase second",
         amount: 75.50,
         type: "debit",
         date: "2024-12-10T14:30:00Z",
@@ -145,189 +145,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
       },
       %{
         id: :erlang.unique_integer([:positive]),
-        name: "Gift Card Redemption",
-        amount: 25.00,
-        type: "credit",
-        date: "2024-12-05T11:45:00Z",
-        payment_channel: "gift card",
-        category: "Payment"
-      },
-
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Grocery Store Purchase",
-        amount: 75.50,
-        type: "debit",
-        date: "2024-12-10T14:30:00Z",
-        payment_channel: "credit card",
-        category: "Food and Drink"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Salary Payment",
-        amount: 3000.00,
-        type: "credit",
-        date: "2024-12-01T09:00:00Z",
-        payment_channel: "bank transfer",
-        category: "Payment"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Electric Bill Payment",
-        amount: 120.75,
-        type: "debit",
-        date: "2024-12-15T10:00:00Z",
-        payment_channel: "online banking",
-        category: "Payment"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Gym Membership",
-        amount: 50.00,
-        type: "debit",
-        date: "2024-11-25T16:00:00Z",
-        payment_channel: "credit card",
-        category: "Payment"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Gift Card Redemption",
-        amount: 25.00,
-        type: "credit",
-        date: "2024-12-05T11:45:00Z",
-        payment_channel: "gift card",
-        category: "Payment"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Grocery Store Purchase",
-        amount: 75.50,
-        type: "debit",
-        date: "2024-12-10T14:30:00Z",
-        payment_channel: "credit card",
-        category: "Food and Drink"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Salary Payment",
-        amount: 3000.00,
-        type: "credit",
-        date: "2024-12-01T09:00:00Z",
-        payment_channel: "bank transfer",
-        category: "Payment"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Electric Bill Payment",
-        amount: 120.75,
-        type: "debit",
-        date: "2024-12-15T10:00:00Z",
-        payment_channel: "online banking",
-        category: "Payment"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Gym Membership",
-        amount: 50.00,
-        type: "debit",
-        date: "2024-11-25T16:00:00Z",
-        payment_channel: "credit card",
-        category: "Payment"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Gift Card Redemption",
-        amount: 25.00,
-        type: "credit",
-        date: "2024-12-05T11:45:00Z",
-        payment_channel: "gift card",
-        category: "Payment"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Grocery Store Purchase",
-        amount: 75.50,
-        type: "debit",
-        date: "2024-12-10T14:30:00Z",
-        payment_channel: "credit card",
-        category: "Food and Drink"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Salary Payment",
-        amount: 3000.00,
-        type: "credit",
-        date: "2024-12-01T09:00:00Z",
-        payment_channel: "bank transfer",
-        category: "Payment"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Electric Bill Payment",
-        amount: 120.75,
-        type: "debit",
-        date: "2024-12-15T10:00:00Z",
-        payment_channel: "online banking",
-        category: "Payment"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Gym Membership",
-        amount: 50.00,
-        type: "debit",
-        date: "2024-11-25T16:00:00Z",
-        payment_channel: "credit card",
-        category: "Payment"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Gift Card Redemption",
-        amount: 25.00,
-        type: "credit",
-        date: "2024-12-05T11:45:00Z",
-        payment_channel: "gift card",
-        category: "Payment"
-      },
-
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Grocery Store Purchase",
-        amount: 75.50,
-        type: "debit",
-        date: "2024-12-10T14:30:00Z",
-        payment_channel: "credit card",
-        category: "Food and Drink"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Salary Payment",
-        amount: 3000.00,
-        type: "credit",
-        date: "2024-12-01T09:00:00Z",
-        payment_channel: "bank transfer",
-        category: "Payment"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Electric Bill Payment",
-        amount: 120.75,
-        type: "debit",
-        date: "2024-12-15T10:00:00Z",
-        payment_channel: "online banking",
-        category: "Payment"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Gym Membership",
-        amount: 50.00,
-        type: "debit",
-        date: "2024-11-25T16:00:00Z",
-        payment_channel: "credit card",
-        category: "Payment"
-      },
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Gift Card Redemption",
+        name: "Gift Card Redemption third",
         amount: 25.00,
         type: "credit",
         date: "2024-12-05T11:45:00Z",
@@ -601,6 +419,188 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
       %{
         id: :erlang.unique_integer([:positive]),
         name: "Gift Card Redemption",
+        amount: 25.00,
+        type: "credit",
+        date: "2024-12-05T11:45:00Z",
+        payment_channel: "gift card",
+        category: "Payment"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Grocery Store Purchase",
+        amount: 75.50,
+        type: "debit",
+        date: "2024-12-10T14:30:00Z",
+        payment_channel: "credit card",
+        category: "Food and Drink"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Salary Payment",
+        amount: 3000.00,
+        type: "credit",
+        date: "2024-12-01T09:00:00Z",
+        payment_channel: "bank transfer",
+        category: "Payment"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Electric Bill Payment",
+        amount: 120.75,
+        type: "debit",
+        date: "2024-12-15T10:00:00Z",
+        payment_channel: "online banking",
+        category: "Payment"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Gym Membership",
+        amount: 50.00,
+        type: "debit",
+        date: "2024-11-25T16:00:00Z",
+        payment_channel: "credit card",
+        category: "Payment"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Gift Card Redemption",
+        amount: 25.00,
+        type: "credit",
+        date: "2024-12-05T11:45:00Z",
+        payment_channel: "gift card",
+        category: "Payment"
+      },
+
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Grocery Store  gsgsgsgsgsg Purchase",
+        amount: 75.50,
+        type: "debit",
+        date: "2024-12-10T14:30:00Z",
+        payment_channel: "credit card",
+        category: "Food and Drink"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Salary Payment",
+        amount: 3000.00,
+        type: "credit",
+        date: "2024-12-01T09:00:00Z",
+        payment_channel: "bank transfer",
+        category: "Payment"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Electric Bill Payment",
+        amount: 120.75,
+        type: "debit",
+        date: "2024-12-15T10:00:00Z",
+        payment_channel: "online banking",
+        category: "Payment"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Gym Membership",
+        amount: 50.00,
+        type: "debit",
+        date: "2024-11-25T16:00:00Z",
+        payment_channel: "credit card",
+        category: "Payment"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Gift Card Redemption",
+        amount: 25.00,
+        type: "credit",
+        date: "2024-12-05T11:45:00Z",
+        payment_channel: "gift card",
+        category: "Payment"
+      },
+
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Grocery Store Purchase",
+        amount: 75.50,
+        type: "debit",
+        date: "2024-12-10T14:30:00Z",
+        payment_channel: "credit card",
+        category: "Food and Drink"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Salary Payment   7238723465876234",
+        amount: 3000.00,
+        type: "credit",
+        date: "2024-12-01T09:00:00Z",
+        payment_channel: "bank transfer",
+        category: "Payment"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Electric Bill Payment",
+        amount: 120.75,
+        type: "debit",
+        date: "2024-12-15T10:00:00Z",
+        payment_channel: "online banking",
+        category: "Payment"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Gym Membership sadchajsdghcvjhasdgc",
+        amount: 50.00,
+        type: "debit",
+        date: "2024-11-25T16:00:00Z",
+        payment_channel: "credit card",
+        category: "Payment"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Gift Card Redemption",
+        amount: 25.00,
+        type: "credit",
+        date: "2024-12-05T11:45:00Z",
+        payment_channel: "gift card",
+        category: "Payment"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Grocery Store Purchase",
+        amount: 75.50,
+        type: "debit",
+        date: "2024-12-10T14:30:00Z",
+        payment_channel: "credit card",
+        category: "Food and Drink"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Salary Payment",
+        amount: 3000.00,
+        type: "credit",
+        date: "2024-12-01T09:00:00Z",
+        payment_channel: "bank transfer",
+        category: "Payment"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Electric Bill Payment",
+        amount: 120.75,
+        type: "debit",
+        date: "2024-12-15T10:00:00Z",
+        payment_channel: "online banking",
+        category: "Payment"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Gym Membership",
+        amount: 50.00,
+        type: "debit",
+        date: "2024-11-25T16:00:00Z",
+        payment_channel: "credit card",
+        category: "Payment"
+      },
+      %{
+        id: :erlang.unique_integer([:positive]),
+        name: "Gift Card Redemption 6 cghecking ",
         amount: 25.00,
         type: "credit",
         date: "2024-12-05T11:45:00Z",
