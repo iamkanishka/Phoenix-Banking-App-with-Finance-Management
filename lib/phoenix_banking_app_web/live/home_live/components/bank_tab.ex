@@ -1,6 +1,6 @@
 defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
   use PhoenixBankingAppWeb, :live_component
-  @rowsPerPage 10;
+  @rowsPerPage 10
   @impl true
   def render(assigns) do
     ~H"""
@@ -50,20 +50,21 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
           module={PhoenixBankingAppWeb.CustomComponents.TransactionTable}
           id={:bank_transaction_table}
           transactions={@transactions}
+          appwrite_item_id={@appwrite_item_id}
+          url={@url}
         />
       </div>
 
       <div>
         <.live_component
-          module={PhoenixBankingAppWeb.CustomComponents.Pagination }
+          module={PhoenixBankingAppWeb.CustomComponents.Pagination}
           id={:bank_transaction_pagination}
           page={@page}
-          total_pages ={@total_pages}
-
-
+          appwrite_item_id={@appwrite_item_id}
+          url={@url}
+          total_pages={@total_pages}
         />
       </div>
-
     </div>
     """
   end
@@ -74,9 +75,9 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
 
     {:ok,
      socket
-     |> assign(:transactions, pagination[:transactions])
-     |> assign(:total_pages, pagination[:total_pages])
-     |> assign(assigns)}
+     |> assign(assigns)
+     |> assign(:transactions, pagination[:current_transactions])
+     |> assign(:total_pages, pagination[:total_pages])}
   end
 
   @impl true
@@ -86,17 +87,16 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
      |> push_patch(to: ~p"/?id=#{id}")}
   end
 
-
   def paginate(transactions, page, rows_per_page \\ 10) do
+    pageNumber = if is_number(page), do: page, else: String.to_integer(page)
+
     total_pages = div(Enum.count(transactions) + rows_per_page - 1, rows_per_page)
 
-    index_of_last_transaction = String.to_integer(page) * rows_per_page
+    index_of_last_transaction = pageNumber * rows_per_page
     index_of_first_transaction = index_of_last_transaction - rows_per_page
 
     current_transactions = Enum.slice(transactions, index_of_first_transaction, rows_per_page)
 
     %{total_pages: total_pages, current_transactions: current_transactions}
   end
-
-
 end
