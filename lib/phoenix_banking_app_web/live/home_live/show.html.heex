@@ -19,10 +19,18 @@
         />
       </header>
 
+      <!-- Recent transaction -->
+
       <.live_component
       module={PhoenixBankingAppWeb.HomeLive.Components.RecentTransaction}
-      id={:recent_transaction}  appwrite_item_id={@appwrite_item_id}  url={@url}
+      id={:recent_transaction} appwrite_item_id={@appwrite_item_id} url={@url}
       accounts={@accounts} transactions={@transactions} page={@page} />
+     
+      <!-- Right Side Bar -->
+      <.live_component
+      module={PhoenixBankingAppWeb.HomeLive.Components.RightsideBar}
+      id={:right_side_bar} user={@loggedIn} transactions={@transactions}
+      banks={@accountsData?.slice(0, 2)} />
     </div>
   </section>
 </div>
