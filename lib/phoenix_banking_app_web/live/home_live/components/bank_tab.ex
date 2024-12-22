@@ -1,6 +1,6 @@
 defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
   use PhoenixBankingAppWeb, :live_component
-  @rowsPerPage 10
+
   @impl true
   def render(assigns) do
     ~H"""
