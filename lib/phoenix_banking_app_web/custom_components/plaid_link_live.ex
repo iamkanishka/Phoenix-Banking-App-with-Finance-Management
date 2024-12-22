@@ -10,7 +10,7 @@ defmodule PhoenixBankingAppWeb.CustomComponents.PlaidLinkLive do
     </.button>
     else:
     if @variant == "ghost",  do:
-    <.button phx-click="open" @variant="ghost" class="plaidlink-ghost">
+    <.button phx-click="open" class="plaidlink-ghost">
       <img src="/images/connect-bank.svg" alt="connect bank" width={24} height={24} />
       <p class="hiddenl text-[16px] font-semibold text-black-2 xl:block">Connect bank</p>
     </.button>
