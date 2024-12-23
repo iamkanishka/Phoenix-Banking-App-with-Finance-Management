@@ -53,7 +53,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
                 showBalance={false}
               /> --%>
               <.live_component
-                module={PhoenixBankingAppWeb.HomeLive.Components.BankCard}
+                module={PhoenixBankingAppWeb.CustomComponents.BankCard}
                 id={"bank_card#{Enum.at(@banks, 0)["$id"]}"}
                 appwrite_item_id={@appwrite_item_id}
                 account={Enum.at(@banks, 0)}
@@ -71,7 +71,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
                   showBalance={false}
                 /> --%>
                 <.live_component
-                  module={PhoenixBankingAppWeb.HomeLive.Components.BankCard}
+                  module={PhoenixBankingAppWeb.CustomComponents.BankCard}
                   id={"bank_card#{Enum.at(@banks, 1)["$id"]}"}
                   appwrite_item_id={@appwrite_item_id}
                   account={Enum.at(@banks, 1)}
