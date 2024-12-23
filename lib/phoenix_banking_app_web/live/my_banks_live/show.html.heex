@@ -1,9 +1,43 @@
 <div class="flex">
   <div>
-    <.live_component module={PhoenixBankingAppWeb.CustomComponents.SidebarLive} id={:header}
-    />
+    <.live_component module={PhoenixBankingAppWeb.CustomComponents.SidebarLive}
+    id={:header} />
   </div>
   <div>
-    <h1>My Bans</h1>
+    <section className="flex">
+      <div className="my-banks">
+        <!--
+        <HeaderBox 
+          title="My Bank Accounts"
+          subtext="Effortlessly manage your banking activites."
+        />
+        -->
+
+        <.live_component
+        module={PhoenixBankingAppWeb.CustomComponents.HeaderBoxLive}
+        id={:headerbox} title={"My Bank Accounts"} user={"Guest"}
+        subtext={"Effortlessly manage your banking activites."} />
+
+        <div className="space-y-4">
+          <h2 className="header-2">Your cards</h2>
+          <div className="flex flex-wrap gap-6">
+            <!--
+            {accounts && accounts.data.map((a: Account) => (
+              <BankCard 
+                key={accounts.id}
+                account={a}
+                userName={loggedIn?.firstName}
+              />
+            ))}
+         
+      -->
+            <%= for account <- @accounts.data do %> <.live_component
+            module={PhoenixBankingAppWeb.CustomComponents.BankCard}
+            id={"my_banks_bank_card#{Enum.at(@accounts, 0)["$id"]}"}
+            account={account} userName={"#{@user.firstName} "} /> <%= end %>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </div>
