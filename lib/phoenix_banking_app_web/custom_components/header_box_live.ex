@@ -1,4 +1,4 @@
-defmodule PhoenixBankingAppWeb.HomeLive.Components.HeaderBoxLive do
+defmodule PhoenixBankingAppWeb.CustomComponents.HeaderBoxLive do
   use PhoenixBankingAppWeb, :live_component
 
   @impl true
