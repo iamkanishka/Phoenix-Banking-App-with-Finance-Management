@@ -55,16 +55,18 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
         />
       </div>
 
-      <div>
-        <.live_component
-          module={PhoenixBankingAppWeb.CustomComponents.Pagination}
-          id={:bank_transaction_pagination}
-          page={@page}
-          appwrite_item_id={@appwrite_item_id}
-          url={@url}
-          total_pages={@total_pages}
-        />
-      </div>
+      <%= if @total_pages > 1 do %>
+        <div>
+          <.live_component
+            module={PhoenixBankingAppWeb.CustomComponents.Pagination}
+            id={:bank_transaction_pagination}
+            page={@page}
+            appwrite_item_id={@appwrite_item_id}
+            url={@url}
+            total_pages={@total_pages}
+          />
+        </div>
+      <% end %>
     </div>
     """
   end
