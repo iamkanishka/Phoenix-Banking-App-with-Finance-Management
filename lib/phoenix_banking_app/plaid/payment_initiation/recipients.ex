@@ -1,21 +1,21 @@
-defmodule Plaid.PaymentInitiation.Recipients do
+defmodule PhoenixBankingApp.Plaid.PaymentInitiation.Recipients do
   @moduledoc """
   Functions for Plaid `payment_initiation/recipient` endpoints.
   """
 
-  alias Plaid.Client.Request
-  alias Plaid.Client
+  alias PhoenixBankingApp.Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client
 
   @derive Jason.Encoder
   defstruct recipients: [], request_id: nil
 
   @type t :: %__MODULE__{
-          recipients: [Plaid.PaymentInitiation.Recipients.Recipient.t()],
+          recipients: [PhoenixBankingApp.Plaid.PaymentInitiation.Recipients.Recipient.t()],
           request_id: String.t()
         }
   @type params :: %{required(atom) => term}
   @type config :: %{required(atom) => String.t() | keyword}
-  @type error :: {:error, Plaid.Error.t() | any()} | no_return
+  @type error :: {:error, PhoenixBankingApp.Plaid.Error.t() | any()} | no_return
 
   defmodule Recipient do
     @moduledoc """
@@ -33,7 +33,7 @@ defmodule Plaid.PaymentInitiation.Recipients do
             recipient_id: String.t(),
             name: String.t(),
             iban: String.t(),
-            address: Plaid.PaymentInitiation.Recipients.Recipient.Address.t(),
+            address: PhoenixBankingApp.Plaid.PaymentInitiation.Recipients.Recipient.Address.t(),
             request_id: String.t()
           }
 
@@ -67,7 +67,7 @@ defmodule Plaid.PaymentInitiation.Recipients do
   }
   ```
   """
-  @spec create(params, config) :: {:ok, Plaid.PaymentInitiation.Recipients.Recipient.t()} | error
+  @spec create(params, config) :: {:ok, PhoenixBankingApp.Plaid.PaymentInitiation.Recipients.Recipient.t()} | error
   def create(params, config \\ %{}) do
     request_operation("payment_initiation/recipient/create", params, config, &map_recipient(&1))
   end
@@ -84,7 +84,7 @@ defmodule Plaid.PaymentInitiation.Recipients do
 
   defp map_recipients(body) do
     Poison.Decode.transform(body, %{
-      as: %Plaid.PaymentInitiation.Recipients{recipients: [full_struct()]}
+      as: %PhoenixBankingApp.Plaid.PaymentInitiation.Recipients{recipients: [full_struct()]}
     })
   end
 
@@ -93,8 +93,8 @@ defmodule Plaid.PaymentInitiation.Recipients do
   end
 
   defp full_struct do
-    %Plaid.PaymentInitiation.Recipients.Recipient{
-      address: %Plaid.PaymentInitiation.Recipients.Recipient.Address{}
+    %PhoenixBankingApp.Plaid.PaymentInitiation.Recipients.Recipient{
+      address: %PhoenixBankingApp.Plaid.PaymentInitiation.Recipients.Recipient.Address{}
     }
   end
 
@@ -108,7 +108,7 @@ defmodule Plaid.PaymentInitiation.Recipients do
   }
   ```
   """
-  @spec get(params, config) :: {:ok, Plaid.PaymentInitiation.Recipients.Recipient.t()} | error
+  @spec get(params, config) :: {:ok, PhoenixBankingApp.Plaid.PaymentInitiation.Recipients.Recipient.t()} | error
   def get(params, config \\ %{}) do
     request_operation("payment_initiation/recipient/get", params, config, &map_recipient(&1))
   end
@@ -116,7 +116,7 @@ defmodule Plaid.PaymentInitiation.Recipients do
   @doc """
   Lists all recipients.
   """
-  @spec list(config) :: {:ok, Plaid.PaymentInitiation.Recipients.t()} | error
+  @spec list(config) :: {:ok, PhoenixBankingApp.Plaid.PaymentInitiation.Recipients.t()} | error
   def list(config \\ %{}) do
     request_operation("payment_initiation/recipient/list", %{}, config, &map_recipients(&1))
   end

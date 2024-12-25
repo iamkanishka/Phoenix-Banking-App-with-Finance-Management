@@ -8,7 +8,7 @@ defmodule PhoenixBankingApp.Plaid.Plaid do
   [Plaid API Docs](https://plaid.com/docs/api)
   """
 
-  alias Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client.Request
 
   defmodule MissingClientIdError do
     defexception message: """
@@ -57,11 +57,11 @@ defmodule PhoenixBankingApp.Plaid.Plaid do
   and a 1-arity mapping function argument which is applied to the body of the
   Tesla.Env in the success case to unmarshal JSON into structured data.
 
-  Error cases are diverted into `{:error, Plaid.Error.t}` and `{:error, any()}`
+  Error cases are diverted into `{:error, PhoenixBankingApp.Plaid.Error.t}` and `{:error, any()}`
   for handling Plaid and HTTP failure responses.
   """
   @callback handle_response({:ok, Tesla.Env.t()} | {:error, any()}, mapper) ::
-              {:ok, term} | {:error, Plaid.Error.t()} | {:error, any()}
+              {:ok, term} | {:error, PhoenixBankingApp.Plaid.Error.t()} | {:error, any()}
 
   # Behaviour implementation
 
@@ -78,7 +78,7 @@ defmodule PhoenixBankingApp.Plaid.Plaid do
   end
 
   def handle_response({:ok, %Tesla.Env{} = env}, _mapper) do
-    error = Poison.Decode.transform(env.body, %{as: %Plaid.Error{}})
+    error = Poison.Decode.transform(env.body, %{as: %PhoenixBankingApp.Plaid.Error{}})
     {:error, %{error | http_code: env.status}}
   end
 

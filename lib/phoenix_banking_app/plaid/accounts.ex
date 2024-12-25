@@ -1,22 +1,22 @@
-defmodule Plaid.Accounts do
+defmodule PhoenixBankingApp.Plaid.Accounts do
   @moduledoc """
   Functions for Plaid `accounts` endpoint.
   """
 
-  alias Plaid.Client.Request
-  alias Plaid.Client
+  alias PhoenixBankingApp.Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client
 
   @derive Jason.Encoder
   defstruct accounts: [], item: nil, request_id: nil
 
   @type t :: %__MODULE__{
-          accounts: [Plaid.Accounts.Account.t()],
-          item: Plaid.Item.t(),
+          accounts: [PhoenixBankingApp.Plaid.Accounts.Account.t()],
+          item: PhoenixBankingApp.Plaid.Item.t(),
           request_id: String.t()
         }
   @type params :: %{required(atom) => term}
   @type config :: %{required(atom) => String.t() | keyword}
-  @type error :: {:error, Plaid.Error.t() | any()} | no_return
+  @type error :: {:error, PhoenixBankingApp.Plaid.Error.t() | any()} | no_return
 
   defmodule Account do
     @moduledoc """
@@ -36,8 +36,8 @@ defmodule Plaid.Accounts do
 
     @type t :: %__MODULE__{
             account_id: String.t(),
-            balances: Plaid.Accounts.Account.Balance.t(),
-            owners: [Plaid.Accounts.Account.Owner.t()],
+            balances: PhoenixBankingApp.Plaid.Accounts.Account.Balance.t(),
+            owners: [PhoenixBankingApp.Plaid.Accounts.Account.Owner.t()],
             name: String.t(),
             mask: String.t(),
             official_name: String.t(),
@@ -79,10 +79,10 @@ defmodule Plaid.Accounts do
                 phone_numbers: nil
 
       @type t :: %__MODULE__{
-              addresses: [Plaid.Accounts.Account.Owner.Address.t()],
-              emails: [Plaid.Accounts.Account.Owner.Email.t()],
+              addresses: [PhoenixBankingApp.Plaid.Accounts.Account.Owner.Address.t()],
+              emails: [PhoenixBankingApp.Plaid.Accounts.Account.Owner.Email.t()],
               names: [String.t()],
-              phone_numbers: [Plaid.Accounts.Account.Owner.PhoneNumber.t()]
+              phone_numbers: [PhoenixBankingApp.Plaid.Accounts.Account.Owner.PhoneNumber.t()]
             }
 
       defmodule Address do
@@ -155,7 +155,7 @@ defmodule Plaid.Accounts do
   %{access_token: "access-token"}
   ```
   """
-  @spec get(params, config) :: {:ok, Plaid.Accounts.t()} | error
+  @spec get(params, config) :: {:ok, PhoenixBankingApp.Plaid.Accounts.t()} | error
   def get(params, config \\ %{}) do
     request_operation("accounts/get", params, config)
   end
@@ -174,18 +174,18 @@ defmodule Plaid.Accounts do
     Poison.Decode.transform(
       body,
       %{
-        as: %Plaid.Accounts{
+        as: %PhoenixBankingApp.Plaid.Accounts{
           accounts: [
-            %Plaid.Accounts.Account{
-              balances: %Plaid.Accounts.Account.Balance{},
-              owners: [%Plaid.Accounts.Account.Owner{
-                  addresses: [%Plaid.Accounts.Account.Owner.Address{}],
-                  emails: [%Plaid.Accounts.Account.Owner.Email{}],
-                  phone_numbers: [%Plaid.Accounts.Account.Owner.PhoneNumber{}]
+            %PhoenixBankingApp.Plaid.Accounts.Account{
+              balances: %PhoenixBankingApp.Plaid.Accounts.Account.Balance{},
+              owners: [%PhoenixBankingApp.Plaid.Accounts.Account.Owner{
+                  addresses: [%PhoenixBankingApp.Plaid.Accounts.Account.Owner.Address{}],
+                  emails: [%PhoenixBankingApp.Plaid.Accounts.Account.Owner.Email{}],
+                  phone_numbers: [%PhoenixBankingApp.Plaid.Accounts.Account.Owner.PhoneNumber{}]
               }]
             }
           ],
-          item: %Plaid.Item{}
+          item: %PhoenixBankingApp.Plaid.Item{}
         }
       }
     )
@@ -199,7 +199,7 @@ defmodule Plaid.Accounts do
   %{access_token: "access-token", options: %{account_ids: ["account-id"]}}
   ```
   """
-  @spec get_balance(params, config) :: {:ok, Plaid.Accounts.t()} | error
+  @spec get_balance(params, config) :: {:ok, PhoenixBankingApp.Plaid.Accounts.t()} | error
   def get_balance(params, config \\ %{}) do
     request_operation("accounts/balance/get", params, config)
   end

@@ -1,28 +1,28 @@
-defmodule Plaid.Auth do
+defmodule PhoenixBankingApp.Plaid.Auth do
   @moduledoc """
   Functions for Plaid `auth` endpoint.
   """
 
-  alias Plaid.Client.Request
-  alias Plaid.Client
+  alias PhoenixBankingApp.Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client
 
   @derive Jason.Encoder
   defstruct accounts: [], item: nil, numbers: [], request_id: nil
 
   @type t :: %__MODULE__{
-          accounts: [Plaid.Accounts.Account.t()],
-          item: Plaid.Item.t(),
-          numbers: %Plaid.Auth.Numbers{
-            ach: [Plaid.Auth.Numbers.ACH.t()],
-            eft: [Plaid.Auth.Numbers.EFT.t()],
-            international: [Plaid.Auth.Numbers.International.t()],
-            bacs: [Plaid.Auth.Numbers.BACS.t()]
+          accounts: [PhoenixBankingApp.Plaid.Accounts.Account.t()],
+          item: PhoenixBankingApp.Plaid.Item.t(),
+          numbers: %PhoenixBankingApp.Plaid.Auth.Numbers{
+            ach: [PhoenixBankingApp.Plaid.Auth.Numbers.ACH.t()],
+            eft: [PhoenixBankingApp.Plaid.Auth.Numbers.EFT.t()],
+            international: [PhoenixBankingApp.Plaid.Auth.Numbers.International.t()],
+            bacs: [PhoenixBankingApp.Plaid.Auth.Numbers.BACS.t()]
           },
           request_id: String.t()
         }
   @type params :: %{required(atom) => term}
   @type config :: %{required(atom) => String.t() | keyword}
-  @type error :: {:error, Plaid.Error.t() | any()} | no_return
+  @type error :: {:error, PhoenixBankingApp.Plaid.Error.t() | any()} | no_return
 
   defmodule Numbers do
     @moduledoc """
@@ -35,10 +35,10 @@ defmodule Plaid.Auth do
     defstruct ach: [], eft: [], international: [], bacs: []
 
     @type t :: %__MODULE__{
-            ach: [Plaid.Auth.Numbers.ACH.t()],
-            eft: [Plaid.Auth.Numbers.EFT.t()],
-            international: [Plaid.Auth.Numbers.International.t()],
-            bacs: [Plaid.Auth.Numbers.BACS.t()]
+            ach: [PhoenixBankingApp.Plaid.Auth.Numbers.ACH.t()],
+            eft: [PhoenixBankingApp.Plaid.Auth.Numbers.EFT.t()],
+            international: [PhoenixBankingApp.Plaid.Auth.Numbers.International.t()],
+            bacs: [PhoenixBankingApp.Plaid.Auth.Numbers.BACS.t()]
           }
 
     defmodule ACH do
@@ -118,7 +118,7 @@ defmodule Plaid.Auth do
   }
   ```
   """
-  @spec get(params, config) :: {:ok, Plaid.Auth.t()} | error
+  @spec get(params, config) :: {:ok, PhoenixBankingApp.Plaid.Auth.t()} | error
   def get(params, config \\ %{}) do
     c = config[:client] || Plaid
 
@@ -133,17 +133,17 @@ defmodule Plaid.Auth do
     Poison.Decode.transform(
       body,
       %{
-        as: %Plaid.Auth{
-          numbers: %Plaid.Auth.Numbers{
-            ach: [%Plaid.Auth.Numbers.ACH{}],
-            eft: [%Plaid.Auth.Numbers.EFT{}],
-            international: [%Plaid.Auth.Numbers.International{}],
-            bacs: [%Plaid.Auth.Numbers.BACS{}]
+        as: %PhoenixBankingApp.Plaid.Auth{
+          numbers: %PhoenixBankingApp.Plaid.Auth.Numbers{
+            ach: [%PhoenixBankingApp.Plaid.Auth.Numbers.ACH{}],
+            eft: [%PhoenixBankingApp.Plaid.Auth.Numbers.EFT{}],
+            international: [%PhoenixBankingApp.Plaid.Auth.Numbers.International{}],
+            bacs: [%PhoenixBankingApp.Plaid.Auth.Numbers.BACS{}]
           },
-          item: %Plaid.Item{},
+          item: %PhoenixBankingApp.Plaid.Item{},
           accounts: [
-            %Plaid.Accounts.Account{
-              balances: %Plaid.Accounts.Account.Balance{}
+            %PhoenixBankingApp.Plaid.Accounts.Account{
+              balances: %PhoenixBankingApp.Plaid.Accounts.Account.Balance{}
             }
           ]
         }

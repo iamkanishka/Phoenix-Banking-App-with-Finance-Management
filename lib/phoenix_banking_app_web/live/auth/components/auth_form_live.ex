@@ -1,5 +1,8 @@
 defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
   alias PhoenixBankingAppWeb.Auth.Validators.FormValidator
+  alias Appwrite.Services.Accounts
+  alias Appwrite.Utils
+
   use PhoenixBankingAppWeb, :live_component
 
   @impl true
@@ -102,7 +105,11 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
       %{field: "password", label: "Password", type: "password"}
     ]
 
-    {:ok, assign(socket, form_data: form_data, form_errors: %{})}
+    {:ok,
+     socket
+     |> assign(form_data: form_data)
+     |> assign(form_errors: %{})
+     |> assign(user: nil)}
   end
 
   @impl true
@@ -161,5 +168,26 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
     else
       {:noreply, assign(socket, form_errors: errors)}
     end
+  end
+
+  defp sign_in(email, password, socket) do
+    try do
+      session = Accounts.create_email_password_session(email, password)
+      Utils.Client.set_session(session.secret)
+
+      {:noreply,
+       socket
+       |> push_patch(to: ~p"/")}
+    catch
+      {:error, error} ->
+        {:error, error}
+    end
+  end
+
+  def sign_up(email, password, socket) do
+    session = Accounts.create(nil, email, password)
+    Utils.Client.set_session(session.secret)
+
+    {:noreply, socket}
   end
 end

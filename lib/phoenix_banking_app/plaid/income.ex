@@ -1,26 +1,26 @@
-defmodule Plaid.Income do
+defmodule PhoenixBankingApp.Plaid.Income do
   @moduledoc """
   Functions for Plaid `income` endpoint.
   """
 
-  alias Plaid.Client.Request
-  alias Plaid.Client
+  alias PhoenixBankingApp.Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client
 
   @derive Jason.Encoder
   defstruct item: nil, income: nil, request_id: nil
 
   @type t :: %__MODULE__{
-          item: Plaid.Item.t(),
-          income: Plaid.Income.Income.t(),
+          item: PhoenixBankingApp.Plaid.Item.t(),
+          income: PhoenixBankingApp.Plaid.Income.Income.t(),
           request_id: String.t()
         }
   @type params :: %{required(atom) => term}
   @type config :: %{required(atom) => String.t() | keyword}
-  @type error :: {:error, Plaid.Error.t() | any()} | no_return
+  @type error :: {:error, PhoenixBankingApp.Plaid.Error.t() | any()} | no_return
 
   defmodule Income do
     @moduledoc """
-    Plaid.Income Income data structure.
+    PhoenixBankingApp.Plaid.Income Income data structure.
     """
 
     @derive Jason.Encoder
@@ -33,7 +33,7 @@ defmodule Plaid.Income do
               number_of_income_streams: nil
 
     @type t :: %__MODULE__{
-            income_streams: [Plaid.Income.Income.IncomeStream.t()],
+            income_streams: [PhoenixBankingApp.Plaid.Income.Income.IncomeStream.t()],
             last_year_income: float(),
             last_year_income_before_tax: float(),
             projected_yearly_income: float(),
@@ -44,7 +44,7 @@ defmodule Plaid.Income do
 
     defmodule IncomeStream do
       @moduledoc """
-      Plaid.Income.Income IncomeStream data structure.
+      PhoenixBankingApp.Plaid.Income.Income IncomeStream data structure.
       """
 
       @derive Jason.Encoder
@@ -69,7 +69,7 @@ defmodule Plaid.Income do
   }
   ```
   """
-  @spec get(params, config) :: {:ok, Plaid.Income.t()} | error
+  @spec get(params, config) :: {:ok, PhoenixBankingApp.Plaid.Income.t()} | error
   def get(params, config \\ %{}) do
     c = config[:client] || Plaid
 
@@ -84,11 +84,11 @@ defmodule Plaid.Income do
     Poison.Decode.transform(
       body,
       %{
-        as: %Plaid.Income{
-          item: %Plaid.Item{},
-          income: %Plaid.Income.Income{
+        as: %PhoenixBankingApp.Plaid.Income{
+          item: %PhoenixBankingApp.Plaid.Item{},
+          income: %PhoenixBankingApp.Plaid.Income.Income{
             income_streams: [
-              %Plaid.Income.Income.IncomeStream{}
+              %PhoenixBankingApp.Plaid.Income.Income.IncomeStream{}
             ]
           }
         }

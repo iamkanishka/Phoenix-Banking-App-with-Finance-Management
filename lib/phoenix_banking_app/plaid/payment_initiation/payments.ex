@@ -1,10 +1,10 @@
-defmodule Plaid.PaymentInitiation.Payments do
+defmodule PhoenixBankingApp.Plaid.PaymentInitiation.Payments do
   @moduledoc """
   Functions for Plaid `payment_initiation/payment` endpoints.
   """
 
-  alias Plaid.Client.Request
-  alias Plaid.Client
+  alias PhoenixBankingApp.Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client
 
   @derive Jason.Encoder
   defstruct payments: [],
@@ -12,13 +12,13 @@ defmodule Plaid.PaymentInitiation.Payments do
             request_id: nil
 
   @type t :: %__MODULE__{
-          payments: [Plaid.PaymentInitiation.Payments.Payment.t()],
+          payments: [PhoenixBankingApp.Plaid.PaymentInitiation.Payments.Payment.t()],
           next_cursor: String.t(),
           request_id: String.t()
         }
   @type params :: %{required(atom) => term}
   @type config :: %{required(atom) => String.t() | keyword}
-  @type error :: {:error, Plaid.Error.t() | any()} | no_return
+  @type error :: {:error, PhoenixBankingApp.Plaid.Error.t() | any()} | no_return
 
   defmodule Payment do
     @moduledoc """
@@ -42,11 +42,11 @@ defmodule Plaid.PaymentInitiation.Payments do
             payment_token: String.t(),
             payment_token_expiration_time: String.t(),
             reference: String.t(),
-            amount: Plaid.PaymentInitiation.Payments.Payment.Amount.t(),
+            amount: PhoenixBankingApp.Plaid.PaymentInitiation.Payments.Payment.Amount.t(),
             status: String.t(),
             last_status_update: String.t(),
             recipient_id: String.t(),
-            schedule: Plaid.PaymentInitiation.Payments.Payment.Schedule.t(),
+            schedule: PhoenixBankingApp.Plaid.PaymentInitiation.Payments.Payment.Schedule.t(),
             request_id: String.t()
           }
 
@@ -103,7 +103,7 @@ defmodule Plaid.PaymentInitiation.Payments do
   }
   ```
   """
-  @spec create(params, config) :: {:ok, Plaid.PaymentInitiation.Payments.Payment.t()} | error
+  @spec create(params, config) :: {:ok, PhoenixBankingApp.Plaid.PaymentInitiation.Payments.Payment.t()} | error
   def create(params, config \\ %{}) do
     request_operation("payment_initiation/payment/create", params, config, &map_payment(&1))
   end
@@ -120,7 +120,7 @@ defmodule Plaid.PaymentInitiation.Payments do
 
   defp map_payments(body) do
     Poison.Decode.transform(body, %{
-      as: %Plaid.PaymentInitiation.Payments{payments: [full_struct()]}
+      as: %PhoenixBankingApp.Plaid.PaymentInitiation.Payments{payments: [full_struct()]}
     })
   end
 
@@ -129,9 +129,9 @@ defmodule Plaid.PaymentInitiation.Payments do
   end
 
   defp full_struct do
-    %Plaid.PaymentInitiation.Payments.Payment{
-      amount: %Plaid.PaymentInitiation.Payments.Payment.Amount{},
-      schedule: %Plaid.PaymentInitiation.Payments.Payment.Schedule{}
+    %PhoenixBankingApp.Plaid.PaymentInitiation.Payments.Payment{
+      amount: %PhoenixBankingApp.Plaid.PaymentInitiation.Payments.Payment.Amount{},
+      schedule: %PhoenixBankingApp.Plaid.PaymentInitiation.Payments.Payment.Schedule{}
     }
   end
 
@@ -145,7 +145,7 @@ defmodule Plaid.PaymentInitiation.Payments do
   }
   ```
   """
-  @spec get(params, config) :: {:ok, Plaid.PaymentInitiation.Payments.Payment.t()} | error
+  @spec get(params, config) :: {:ok, PhoenixBankingApp.Plaid.PaymentInitiation.Payments.Payment.t()} | error
   def get(params, config \\ %{}) do
     request_operation("payment_initiation/payment/get", params, config, &map_payment(&1))
   end
@@ -163,7 +163,7 @@ defmodule Plaid.PaymentInitiation.Payments do
   }
   ```
   """
-  @spec list(params, config) :: {:ok, Plaid.PaymentInitiation.Payments.t()} | error
+  @spec list(params, config) :: {:ok, PhoenixBankingApp.Plaid.PaymentInitiation.Payments.t()} | error
   def list(params, config \\ %{}) do
     request_operation("payment_initiation/payment/list", params, config, &map_payments(&1))
   end

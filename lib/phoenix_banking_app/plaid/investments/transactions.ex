@@ -1,10 +1,10 @@
-defmodule Plaid.Investments.Transactions do
+defmodule PhoenixBankingApp.Plaid.Investments.Transactions do
   @moduledoc """
   Functions for Plaid `investments/transactions` endpoints.
   """
 
-  alias Plaid.Client.Request
-  alias Plaid.Client
+  alias PhoenixBankingApp.Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client
 
   @derive Jason.Encoder
   defstruct accounts: [],
@@ -15,16 +15,16 @@ defmodule Plaid.Investments.Transactions do
             request_id: nil
 
   @type t :: %__MODULE__{
-          accounts: [Plaid.Accounts.Account.t()],
-          item: Plaid.Item.t(),
-          securities: [Plaid.Investments.Security.t()],
-          investment_transactions: [Plaid.Investments.Transactions.Transaction.t()],
+          accounts: [PhoenixBankingApp.Plaid.Accounts.Account.t()],
+          item: PhoenixBankingApp.Plaid.Item.t(),
+          securities: [PhoenixBankingApp.Plaid.Investments.Security.t()],
+          investment_transactions: [PhoenixBankingApp.Plaid.Investments.Transactions.Transaction.t()],
           total_investment_transactions: integer,
           request_id: String.t()
         }
   @type params :: %{required(atom) => term}
   @type config :: %{required(atom) => String.t() | keyword}
-  @type error :: {:error, Plaid.Error.t() | any()} | no_return
+  @type error :: {:error, PhoenixBankingApp.Plaid.Error.t() | any()} | no_return
 
   defmodule Transaction do
     @moduledoc """
@@ -80,7 +80,7 @@ defmodule Plaid.Investments.Transactions do
   }
   ```
   """
-  @spec get(params, config) :: {:ok, Plaid.Investments.Transactions.t()} | error
+  @spec get(params, config) :: {:ok, PhoenixBankingApp.Plaid.Investments.Transactions.t()} | error
   def get(params, config \\ %{}) do
     c = config[:client] || Plaid
 
@@ -95,15 +95,15 @@ defmodule Plaid.Investments.Transactions do
     Poison.Decode.transform(
       body,
       %{
-        as: %Plaid.Investments.Transactions{
+        as: %PhoenixBankingApp.Plaid.Investments.Transactions{
           accounts: [
-            %Plaid.Accounts.Account{
-              balances: %Plaid.Accounts.Account.Balance{}
+            %PhoenixBankingApp.Plaid.Accounts.Account{
+              balances: %PhoenixBankingApp.Plaid.Accounts.Account.Balance{}
             }
           ],
-          securities: [%Plaid.Investments.Security{}],
-          investment_transactions: [%Plaid.Investments.Transactions.Transaction{}],
-          item: %Plaid.Item{}
+          securities: [%PhoenixBankingApp.Plaid.Investments.Security{}],
+          investment_transactions: [%PhoenixBankingApp.Plaid.Investments.Transactions.Transaction{}],
+          item: %PhoenixBankingApp.Plaid.Item{}
         }
       }
     )

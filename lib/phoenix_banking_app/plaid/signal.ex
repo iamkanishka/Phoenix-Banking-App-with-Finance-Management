@@ -1,10 +1,10 @@
-defmodule Plaid.Signal do
+defmodule PhoenixBankingApp.Plaid.Signal do
   @moduledoc """
   Functions for Plaid `signal` endpoint.
   """
 
-  alias Plaid.Client.Request
-  alias Plaid.Client
+  alias PhoenixBankingApp.Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client
 
   @derive Jason.Encoder
   defstruct scores: nil,
@@ -14,15 +14,15 @@ defmodule Plaid.Signal do
             request_id: nil
 
   @type t :: %__MODULE__{
-          scores: Plaid.Signal.Scores.t(),
+          scores: PhoenixBankingApp.Plaid.Signal.Scores.t(),
           core_attributes: map(),
-          ruleset: Plaid.Signal.Ruleset.t(),
-          warnings: [Plaid.Signal.Warning.t()],
+          ruleset: PhoenixBankingApp.Plaid.Signal.Ruleset.t(),
+          warnings: [PhoenixBankingApp.Plaid.Signal.Warning.t()],
           request_id: String.t()
         }
   @type params :: %{required(atom) => term}
   @type config :: %{required(atom) => String.t() | keyword}
-  @type error :: {:error, Plaid.Error.t() | any()} | no_return
+  @type error :: {:error, PhoenixBankingApp.Plaid.Error.t() | any()} | no_return
 
   defmodule Scores do
     @moduledoc """
@@ -34,8 +34,8 @@ defmodule Plaid.Signal do
               bank_initiated_return_risk: nil
 
     @type t :: %__MODULE__{
-            customer_initiated_return_risk: Plaid.Signal.Scores.Risk.t(),
-            bank_initiated_return_risk: Plaid.Signal.Scores.Risk.t()
+            customer_initiated_return_risk: PhoenixBankingApp.Plaid.Signal.Scores.Risk.t(),
+            bank_initiated_return_risk: PhoenixBankingApp.Plaid.Signal.Scores.Risk.t()
           }
 
     defmodule Risk do
@@ -119,7 +119,7 @@ defmodule Plaid.Signal do
   }
   ```
   """
-  @spec evaluate(params, config) :: {:ok, Plaid.Signal.t()} | error
+  @spec evaluate(params, config) :: {:ok, PhoenixBankingApp.Plaid.Signal.t()} | error
   def evaluate(params, config \\ %{}) do
     request_operation("signal/evaluate", params, config, &map_signal/1)
   end
@@ -198,13 +198,13 @@ defmodule Plaid.Signal do
     Poison.Decode.transform(
       body,
       %{
-        as: %Plaid.Signal{
-          scores: %Plaid.Signal.Scores{
-            customer_initiated_return_risk: %Plaid.Signal.Scores.Risk{},
-            bank_initiated_return_risk: %Plaid.Signal.Scores.Risk{},
+        as: %PhoenixBankingApp.Plaid.Signal{
+          scores: %PhoenixBankingApp.Plaid.Signal.Scores{
+            customer_initiated_return_risk: %PhoenixBankingApp.Plaid.Signal.Scores.Risk{},
+            bank_initiated_return_risk: %PhoenixBankingApp.Plaid.Signal.Scores.Risk{},
           },
-          warnings: [%Plaid.Signal.Warning{}],
-          ruleset: %Plaid.Signal.Ruleset{}
+          warnings: [%PhoenixBankingApp.Plaid.Signal.Warning{}],
+          ruleset: %PhoenixBankingApp.Plaid.Signal.Ruleset{}
         }
       }
     )

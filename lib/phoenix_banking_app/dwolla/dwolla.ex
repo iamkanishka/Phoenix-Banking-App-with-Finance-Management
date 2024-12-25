@@ -7,7 +7,7 @@ defmodule PhoenixBankingApp.Dwolla.Dwolla do
 
   use HTTPoison.Base
 
-  alias Dwolla.Utils
+  alias PhoenixBankingApp.Dwolla.Utils
 
   @token_endpoint "token"
 

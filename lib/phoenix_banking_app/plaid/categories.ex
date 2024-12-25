@@ -1,17 +1,17 @@
-defmodule Plaid.Categories do
+defmodule PhoenixBankingApp.Plaid.Categories do
   @moduledoc """
   Functions for Plaid `categories` endpoint.
   """
 
-  alias Plaid.Client.Request
-  alias Plaid.Client
+  alias PhoenixBankingApp.Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client
 
   @derive Jason.Encoder
   defstruct categories: [], request_id: nil
 
-  @type t :: %__MODULE__{categories: [Plaid.Categories.Category.t()], request_id: String.t()}
+  @type t :: %__MODULE__{categories: [PhoenixBankingApp.Plaid.Categories.Category.t()], request_id: String.t()}
   @type config :: %{required(atom) => String.t() | keyword}
-  @type error :: {:error, Plaid.Error.t() | any()} | no_return
+  @type error :: {:error, PhoenixBankingApp.Plaid.Error.t() | any()} | no_return
 
   defmodule Category do
     @moduledoc """
@@ -26,7 +26,7 @@ defmodule Plaid.Categories do
   @doc """
   Gets all categories.
   """
-  @spec get(config) :: {:ok, Plaid.Categories.t()} | error
+  @spec get(config) :: {:ok, PhoenixBankingApp.Plaid.Categories.t()} | error
   def get(config \\ %{}) do
     c = config[:client] || Plaid
 
@@ -41,9 +41,9 @@ defmodule Plaid.Categories do
     Poison.Decode.transform(
       body,
       %{
-        as: %Plaid.Categories{
+        as: %PhoenixBankingApp.Plaid.Categories{
           categories: [
-            %Plaid.Categories.Category{}
+            %PhoenixBankingApp.Plaid.Categories.Category{}
           ]
         }
       }

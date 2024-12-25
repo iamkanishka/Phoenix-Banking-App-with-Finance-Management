@@ -1,4 +1,4 @@
-defmodule Dwolla.Errors do
+defmodule PhoenixBankingApp.Dwolla.Errors do
   @moduledoc """
   Dwolla Error response data structure.
   """
@@ -6,7 +6,7 @@ defmodule Dwolla.Errors do
   defstruct code: nil, message: nil, errors: []
   @type t :: %__MODULE__{code: String.t,
                          message: String.t,
-                         errors: [Dwolla.Errors.Error.t]
+                         errors: [PhoenixBankingApp.Dwolla.Errors.Error.t]
                         }
 
   defmodule Error do

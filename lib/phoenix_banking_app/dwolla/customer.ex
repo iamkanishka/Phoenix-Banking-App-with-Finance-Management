@@ -1,9 +1,10 @@
-defmodule Dwolla.Customer do
+defmodule PhoenixBankingApp.Dwolla.Customer do
   @moduledoc """
   Functions for `customers` endpoint.
   """
+  alias PhoenixBankingApp.Dwolla.Dwolla
+ alias PhoenixBankingApp.Dwolla.Utils
 
-  alias Dwolla.Utils
 
   defstruct id: nil, first_name: nil, last_name: nil, email: nil, type: nil,
             status: nil, created: nil, address1: nil, address2: nil, city: nil,
@@ -26,7 +27,7 @@ defmodule Dwolla.Customer do
   @type token :: String.t
   @type id :: String.t
   @type params :: %{required(atom) => String.t | integer}
-  @type error :: HTTPoison.Error.t | Dwolla.Errors.t | atom | tuple
+  @type error :: HTTPoison.Error.t | PhoenixBankingApp.Dwolla.Errors.t | atom | tuple
   @type location :: %{id: String.t}
 
   @endpoint "customers"
@@ -102,7 +103,7 @@ defmodule Dwolla.Customer do
   @doc """
   Updates a customer's metadata.
   """
-  @spec update(token, id, params) :: {:ok, Dwolla.Customer.t} | {:error, error}
+  @spec update(token, id, params) :: {:ok, PhoenixBankingApp.Dwolla.Customer.t} | {:error, error}
   def update(token, id, params) do
     endpoint = @endpoint <> "/#{id}"
     headers = Utils.idempotency_header(params)
@@ -128,7 +129,7 @@ defmodule Dwolla.Customer do
   }
   ```
   """
-  @spec verify(token, id, params) :: {:ok, Dwolla.Customer.t} | {:error, error}
+  @spec verify(token, id, params) :: {:ok, PhoenixBankingApp.Dwolla.Customer.t} | {:error, error}
   def verify(token, id, params) do
     case Utils.validate_params(params, @verify) do
       :ok    -> update(token, id, params)
@@ -139,7 +140,7 @@ defmodule Dwolla.Customer do
   @doc """
   Suspends a customer.
   """
-  @spec suspend(token, id) :: {:ok, Dwolla.Customer.t} | {:error, error}
+  @spec suspend(token, id) :: {:ok, PhoenixBankingApp.Dwolla.Customer.t} | {:error, error}
   def suspend(token, id) do
     update(token, id, %{status: "suspended"})
   end
@@ -152,7 +153,7 @@ defmodule Dwolla.Customer do
   %{limit: 50, offset: 0, search: "Steve"}
   ```
   """
-  @spec search(token, params) :: {:ok, [Dwolla.Customer.t]} | {:error, error}
+  @spec search(token, params) :: {:ok, [PhoenixBankingApp.Dwolla.Customer.t]} | {:error, error}
   def search(token, params \\ %{}) do
     endpoint =
       case Map.keys(params) do
@@ -166,7 +167,7 @@ defmodule Dwolla.Customer do
   @doc """
   Gets a customer by id.
   """
-  @spec get(token, id) :: {:ok, Dwolla.Customer.t} | {:error, error}
+  @spec get(token, id) :: {:ok, PhoenixBankingApp.Dwolla.Customer.t} | {:error, error}
   def get(token, id) do
     endpoint = @endpoint <> "/#{id}"
     Dwolla.make_request_with_token(:get, endpoint, token)
@@ -197,7 +198,7 @@ defmodule Dwolla.Customer do
   @doc """
   Lists a customer's funding sources.
   """
-  @spec list_funding_sources(token, id, boolean) :: {:ok, [Dwolla.FundingSource.t]} | {:error, error}
+  @spec list_funding_sources(token, id, boolean) :: {:ok, [PhoenixBankingApp.Dwolla.FundingSource.t]} | {:error, error}
   def list_funding_sources(token, id, removed \\ true) do
     endpoint =
       case removed do
@@ -216,7 +217,7 @@ defmodule Dwolla.Customer do
   %{startDate: "2017-04-01", endDate: "2017-04-30", status: "pending"}
   ```
   """
-  @spec search_transfers(token, id, params) :: {:ok, [Dwolla.Transfer.t]} | {:error, error}
+  @spec search_transfers(token, id, params) :: {:ok, [PhoenixBankingApp.Dwolla.Transfer.t]} | {:error, error}
   def search_transfers(token, id, params \\ %{}) do
     endpoint =
       case Map.keys(params) do

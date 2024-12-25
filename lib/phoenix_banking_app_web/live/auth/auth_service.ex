@@ -1,5 +1,10 @@
 defmodule PhoenixBankingAppWeb.Auth.AuthService do
-Plaid.Accounts
+
+alias Appwrite.Services.Accounts
+
+
+
+
 
 
 end

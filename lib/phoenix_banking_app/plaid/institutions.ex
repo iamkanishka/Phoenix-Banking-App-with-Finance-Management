@@ -1,22 +1,22 @@
-defmodule Plaid.Institutions do
+defmodule PhoenixBankingApp.Plaid.Institutions do
   @moduledoc """
   Functions for Plaid `institutions` endpoint.
   """
 
-  alias Plaid.Client.Request
-  alias Plaid.Client
+  alias PhoenixBankingApp.Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client
 
   @derive Jason.Encoder
   defstruct institutions: [], request_id: nil, total: nil
 
   @type t :: %__MODULE__{
-          institutions: [Plaid.Institutions.Institution.t()],
+          institutions: [PhoenixBankingApp.Plaid.Institutions.Institution.t()],
           request_id: String.t(),
           total: integer
         }
   @type params :: %{required(atom) => term}
   @type config :: %{required(atom) => String.t() | keyword}
-  @type error :: {:error, Plaid.Error.t() | any()} | no_return
+  @type error :: {:error, PhoenixBankingApp.Plaid.Error.t() | any()} | no_return
 
   defmodule Institution do
     @moduledoc """
@@ -43,7 +43,7 @@ defmodule Plaid.Institutions do
 
     @type t :: %__MODULE__{
             country_codes: [String.t()],
-            credentials: [Plaid.Institutions.Institution.Credentials.t()],
+            credentials: [PhoenixBankingApp.Plaid.Institutions.Institution.Credentials.t()],
             has_mfa: false | true,
             input_spec: String.t(),
             institution_id: String.t(),
@@ -56,7 +56,7 @@ defmodule Plaid.Institutions do
             products: [String.t()],
             request_id: String.t(),
             routing_numbers: [String.t()],
-            status: Plaid.Institutions.Institution.Status.t(),
+            status: PhoenixBankingApp.Plaid.Institutions.Institution.Status.t(),
             url: String.t()
           }
 
@@ -83,11 +83,11 @@ defmodule Plaid.Institutions do
                 identity: nil
 
       @type t :: %__MODULE__{
-              item_logins: Plaid.Institutions.Institution.Status.ItemLogins.t(),
-              transactions_updates: Plaid.Institutions.Institution.Status.TransactionsUpdates.t(),
-              auth: Plaid.Institutions.Institution.Status.Auth.t(),
-              balance: Plaid.Institutions.Institution.Status.Balance.t(),
-              identity: Plaid.Institutions.Institution.Status.Identity.t()
+              item_logins: PhoenixBankingApp.Plaid.Institutions.Institution.Status.ItemLogins.t(),
+              transactions_updates: PhoenixBankingApp.Plaid.Institutions.Institution.Status.TransactionsUpdates.t(),
+              auth: PhoenixBankingApp.Plaid.Institutions.Institution.Status.Auth.t(),
+              balance: PhoenixBankingApp.Plaid.Institutions.Institution.Status.Balance.t(),
+              identity: PhoenixBankingApp.Plaid.Institutions.Institution.Status.Identity.t()
             }
 
       defmodule ItemLogins do
@@ -101,7 +101,7 @@ defmodule Plaid.Institutions do
         @type t :: %__MODULE__{
                 status: String.t(),
                 last_status_change: String.t(),
-                breakdown: Plaid.Institutions.Institution.Status.ItemLogins.Breakdown.t()
+                breakdown: PhoenixBankingApp.Plaid.Institutions.Institution.Status.ItemLogins.Breakdown.t()
               }
 
         defmodule Breakdown do
@@ -131,7 +131,7 @@ defmodule Plaid.Institutions do
         @type t :: %__MODULE__{
                 status: String.t(),
                 last_status_change: String.t(),
-                breakdown: Plaid.Institutions.Institution.Status.TransactionsUpdates.Breakdown.t()
+                breakdown: PhoenixBankingApp.Plaid.Institutions.Institution.Status.TransactionsUpdates.Breakdown.t()
               }
 
         defmodule Breakdown do
@@ -165,7 +165,7 @@ defmodule Plaid.Institutions do
         @type t :: %__MODULE__{
                 status: String.t(),
                 last_status_change: String.t(),
-                breakdown: Plaid.Institutions.Institution.Status.Auth.Breakdown.t()
+                breakdown: PhoenixBankingApp.Plaid.Institutions.Institution.Status.Auth.Breakdown.t()
               }
 
         defmodule Breakdown do
@@ -195,7 +195,7 @@ defmodule Plaid.Institutions do
         @type t :: %__MODULE__{
                 status: String.t(),
                 last_status_change: String.t(),
-                breakdown: Plaid.Institutions.Institution.Status.Balance.Breakdown.t()
+                breakdown: PhoenixBankingApp.Plaid.Institutions.Institution.Status.Balance.Breakdown.t()
               }
 
         defmodule Breakdown do
@@ -225,7 +225,7 @@ defmodule Plaid.Institutions do
         @type t :: %__MODULE__{
                 status: String.t(),
                 last_status_change: String.t(),
-                breakdown: Plaid.Institutions.Institution.Status.Identity.Breakdown.t()
+                breakdown: PhoenixBankingApp.Plaid.Institutions.Institution.Status.Identity.Breakdown.t()
               }
 
         defmodule Breakdown do
@@ -254,7 +254,7 @@ defmodule Plaid.Institutions do
   %{count: 50, offset: 0}
   ```
   """
-  @spec get(params, config) :: {:ok, Plaid.Institutions.t()} | error
+  @spec get(params, config) :: {:ok, PhoenixBankingApp.Plaid.Institutions.t()} | error
   def get(params, config \\ %{}) do
     request_operation("institutions/get", params, config, &map_institutions(&1))
   end
@@ -270,7 +270,7 @@ defmodule Plaid.Institutions do
   end
 
   defp map_institutions(body) do
-    Poison.Decode.transform(body, %{as: %Plaid.Institutions{institutions: [full_struct()]}})
+    Poison.Decode.transform(body, %{as: %PhoenixBankingApp.Plaid.Institutions{institutions: [full_struct()]}})
   end
 
   defp map_institution(%{"institution" => ins, "request_id" => request_id}) do
@@ -280,23 +280,23 @@ defmodule Plaid.Institutions do
   end
 
   defp full_struct do
-    %Plaid.Institutions.Institution{
-      credentials: [%Plaid.Institutions.Institution.Credentials{}],
-      status: %Plaid.Institutions.Institution.Status{
-        item_logins: %Plaid.Institutions.Institution.Status.ItemLogins{
-          breakdown: %Plaid.Institutions.Institution.Status.ItemLogins.Breakdown{}
+    %PhoenixBankingApp.Plaid.Institutions.Institution{
+      credentials: [%PhoenixBankingApp.Plaid.Institutions.Institution.Credentials{}],
+      status: %PhoenixBankingApp.Plaid.Institutions.Institution.Status{
+        item_logins: %PhoenixBankingApp.Plaid.Institutions.Institution.Status.ItemLogins{
+          breakdown: %PhoenixBankingApp.Plaid.Institutions.Institution.Status.ItemLogins.Breakdown{}
         },
-        transactions_updates: %Plaid.Institutions.Institution.Status.TransactionsUpdates{
-          breakdown: %Plaid.Institutions.Institution.Status.TransactionsUpdates.Breakdown{}
+        transactions_updates: %PhoenixBankingApp.Plaid.Institutions.Institution.Status.TransactionsUpdates{
+          breakdown: %PhoenixBankingApp.Plaid.Institutions.Institution.Status.TransactionsUpdates.Breakdown{}
         },
-        auth: %Plaid.Institutions.Institution.Status.Auth{
-          breakdown: %Plaid.Institutions.Institution.Status.Auth.Breakdown{}
+        auth: %PhoenixBankingApp.Plaid.Institutions.Institution.Status.Auth{
+          breakdown: %PhoenixBankingApp.Plaid.Institutions.Institution.Status.Auth.Breakdown{}
         },
-        balance: %Plaid.Institutions.Institution.Status.Balance{
-          breakdown: %Plaid.Institutions.Institution.Status.Balance.Breakdown{}
+        balance: %PhoenixBankingApp.Plaid.Institutions.Institution.Status.Balance{
+          breakdown: %PhoenixBankingApp.Plaid.Institutions.Institution.Status.Balance.Breakdown{}
         },
-        identity: %Plaid.Institutions.Institution.Status.Identity{
-          breakdown: %Plaid.Institutions.Institution.Status.Identity.Breakdown{}
+        identity: %PhoenixBankingApp.Plaid.Institutions.Institution.Status.Identity{
+          breakdown: %PhoenixBankingApp.Plaid.Institutions.Institution.Status.Identity.Breakdown{}
         }
       }
     }
@@ -315,7 +315,7 @@ defmodule Plaid.Institutions do
   ```
   """
   @spec get_by_id(String.t() | params, config) ::
-          {:ok, Plaid.Institutions.Institution.t()} | error
+          {:ok, PhoenixBankingApp.Plaid.Institutions.Institution.t()} | error
   def get_by_id(params, config \\ %{}) do
     params = if is_binary(params), do: %{institution_id: params}, else: params
 
@@ -330,7 +330,7 @@ defmodule Plaid.Institutions do
   %{query: "Wells", products: ["transactions"], options: %{limit: 40, include_display_data: true}}
   ```
   """
-  @spec search(params, config) :: {:ok, Plaid.Institutions.t()} | error
+  @spec search(params, config) :: {:ok, PhoenixBankingApp.Plaid.Institutions.t()} | error
   def search(params, config \\ %{}) do
     request_operation("institutions/search", params, config, &map_institutions(&1))
   end

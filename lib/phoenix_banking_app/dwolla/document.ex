@@ -1,9 +1,9 @@
-defmodule Dwolla.Document do
+defmodule PhoenixBankingApp.Dwolla.Document do
   @moduledoc """
   Functions for `documents` endpoint.
   """
-
-  alias Dwolla.Utils
+  alias PhoenixBankingApp.Dwolla.Dwolla
+  alias PhoenixBankingApp.Dwolla.Utils
 
   defstruct id: nil, type: nil, status: nil, created: nil, failure_reason: nil
 
@@ -16,7 +16,7 @@ defmodule Dwolla.Document do
                    }
   @type token :: String.t
   @type id :: String.t
-  @type error :: HTTPoison.Error.t | Dwolla.Errors.t | tuple
+  @type error :: HTTPoison.Error.t | PhoenixBankingApp.Dwolla.Errors.t | tuple
   @type location :: %{id: String.t}
 
   @endpoint "documents"
@@ -49,7 +49,7 @@ defmodule Dwolla.Document do
   @doc """
   List a customer's documents.
   """
-  @spec list(token, id) :: {:ok, [Dwolla.Document.t]} | {:error, error}
+  @spec list(token, id) :: {:ok, [PhoenixBankingApp.Dwolla.Document.t]} | {:error, error}
   def list(token, customer_id) do
     endpoint = "customers/#{customer_id}/#{@endpoint}"
     Dwolla.make_request_with_token(:get, endpoint, token)
@@ -59,7 +59,7 @@ defmodule Dwolla.Document do
   @doc """
   Get a document.
   """
-  @spec get(token, id) :: {:ok, Dwolla.Document.t} | {:error, error}
+  @spec get(token, id) :: {:ok, PhoenixBankingApp.Dwolla.Document.t} | {:error, error}
   def get(token, id) do
     endpoint = @endpoint <> "/#{id}"
     Dwolla.make_request_with_token(:get, endpoint, token)

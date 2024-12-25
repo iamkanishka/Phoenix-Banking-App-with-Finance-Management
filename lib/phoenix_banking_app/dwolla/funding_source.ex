@@ -1,9 +1,10 @@
-defmodule Dwolla.FundingSource do
+defmodule PhoenixBankingApp.Dwolla.FundingSource do
   @moduledoc """
   Functions for `funding-sources` endpoint.
   """
+  alias PhoenixBankingApp.Dwolla.Dwolla
 
-  alias Dwolla.Utils
+  alias PhoenixBankingApp.Dwolla.Utils
 
   defstruct id: nil, created: nil, name: nil, removed: false, status: nil,
             type: nil, channels: [], bank_name: nil, bank_account_type: nil
@@ -20,7 +21,7 @@ defmodule Dwolla.FundingSource do
                          }
   @type token :: String.t
   @type id :: String.t
-  @type error :: HTTPoison.Error.t | Dwolla.Errors.t | tuple
+  @type error :: HTTPoison.Error.t | PhoenixBankingApp.Dwolla.Errors.t | tuple
 
   @endpoint "funding-sources"
 
@@ -39,7 +40,7 @@ defmodule Dwolla.FundingSource do
   @doc """
   Gets a funding source by id.
   """
-  @spec get(token, id) :: {:ok, Dwolla.FundingSource.t} | {:error, error}
+  @spec get(token, id) :: {:ok, PhoenixBankingApp.Dwolla.FundingSource.t} | {:error, error}
   def get(token, id) do
     endpoint = @endpoint <> "/#{id}"
     Dwolla.make_request_with_token(:get, endpoint, token)
@@ -49,7 +50,7 @@ defmodule Dwolla.FundingSource do
   @doc """
   Updates the name of a funding source.
   """
-  @spec update_name(token, id, String.t) :: {:ok, Dwolla.FundingSource.t} | {:error, error}
+  @spec update_name(token, id, String.t) :: {:ok, PhoenixBankingApp.Dwolla.FundingSource.t} | {:error, error}
   def update_name(token, id, name) do
     update(token, id, %{name: name})
   end
@@ -57,7 +58,7 @@ defmodule Dwolla.FundingSource do
   @doc """
   Removes a funding source.
   """
-  @spec remove(token, id) :: {:ok, Dwolla.FundingSource.t} | {:error, error}
+  @spec remove(token, id) :: {:ok, PhoenixBankingApp.Dwolla.FundingSource.t} | {:error, error}
   def remove(token, id) do
     update(token, id, %{removed: true})
   end
@@ -72,7 +73,7 @@ defmodule Dwolla.FundingSource do
   @doc """
   Gets the balance of a funding source.
   """
-  @spec balance(token, id) :: {:ok, Dwolla.FundingSource.Balance.t} | {:error, error}
+  @spec balance(token, id) :: {:ok, PhoenixBankingApp.Dwolla.FundingSource.Balance.t} | {:error, error}
   def balance(token, id) do
     endpoint = @endpoint <> "/#{id}/balance"
     Dwolla.make_request_with_token(:get, endpoint, token)

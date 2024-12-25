@@ -1,4 +1,4 @@
-defmodule Dwolla.Utils do
+defmodule PhoenixBankingApp.Dwolla.Utils do
   @moduledoc """
   Utility functions.
   """
@@ -112,13 +112,13 @@ defmodule Dwolla.Utils do
   Handles HTTP response from Dwolla.
   """
   @spec handle_resp({:ok, HTTPoison.Response.t()} | {:error, HTTPoison.Error.t()}, atom) ::
-          {:ok, any} | {:error, HTTPoison.Error.t() | Dwolla.Errors.t() | any}
+          {:ok, any} | {:error, HTTPoison.Error.t() | PhoenixBankingApp.Dwolla.Errors.t() | any}
   def handle_resp({:ok, %{body: {:invalid, body}}}, _schema) do
     {:error, body}
   end
 
   def handle_resp({:ok, %{status_code: 200, body: %{"error" => _} = body}}, _schema) do
-    {:error, %Dwolla.Errors{code: body["error"], message: body["error_description"]}}
+    {:error, %PhoenixBankingApp.Dwolla.Errors{code: body["error"], message: body["error_description"]}}
   end
 
   def handle_resp({:ok, %{status_code: code, body: ""} = resp}, _schema) when code in 200..201 do
@@ -172,13 +172,13 @@ defmodule Dwolla.Utils do
   defp map_body(body, :customer) do
     body
     |> to_snake_case()
-    |> Poison.Decode.transform(%{as: %Dwolla.Customer{}})
+    |> Poison.Decode.transform(%{as: %PhoenixBankingApp.Dwolla.Customer{}})
   end
 
   defp map_body(body, :funding_source) do
     body
     |> to_snake_case()
-    |> Poison.Decode.transform(%{as: %Dwolla.FundingSource{}})
+    |> Poison.Decode.transform(%{as: %PhoenixBankingApp.Dwolla.FundingSource{}})
   end
 
   defp map_body(%{"_links" => links} = body, :transfer) do
@@ -186,9 +186,9 @@ defmodule Dwolla.Utils do
       body
       |> to_snake_case()
       |> Poison.Decode.transform(%{
-        as: %Dwolla.Transfer{
-          amount: %Dwolla.Transfer.Amount{},
-          metadata: %Dwolla.Transfer.Metadata{}
+        as: %PhoenixBankingApp.Dwolla.Transfer{
+          amount: %PhoenixBankingApp.Dwolla.Transfer.Amount{},
+          metadata: %PhoenixBankingApp.Dwolla.Transfer.Metadata{}
         }
       })
 
@@ -210,7 +210,7 @@ defmodule Dwolla.Utils do
     event =
       body
       |> to_snake_case()
-      |> Poison.Decode.transform(%{as: %Dwolla.Event{}})
+      |> Poison.Decode.transform(%{as: %PhoenixBankingApp.Dwolla.Event {}})
 
     resource = get_resource_from_body(body)
     %{event | resource: resource}
@@ -219,18 +219,18 @@ defmodule Dwolla.Utils do
   defp map_body(body, :webhook_subscription) do
     body
     |> to_snake_case()
-    |> Poison.Decode.transform(%{as: %Dwolla.WebhookSubscription{}})
+    |> Poison.Decode.transform(%{as: %PhoenixBankingApp.PhoenixBankingApp.Dwolla.WebhookSubscription{}})
   end
 
   defp map_body(body, :webhook) do
     body
     |> to_snake_case()
     |> Poison.Decode.transform(%{
-      as: %Dwolla.Webhook{
+      as: %PhoenixBankingApp.Dwolla.Webhook{
         attempts: [
-          %Dwolla.Webhook.Attempt{
-            request: %Dwolla.Webhook.Attempt.Request{},
-            response: %Dwolla.Webhook.Attempt.Response{}
+          %PhoenixBankingApp.Dwolla.Webhook.Attempt{
+            request: %PhoenixBankingApp.Dwolla.Webhook.Attempt.Request{},
+            response: %PhoenixBankingApp.Dwolla.Webhook.Attempt.Response{}
           }
         ]
       }
@@ -240,32 +240,32 @@ defmodule Dwolla.Utils do
   defp map_body(body, :retry) do
     body
     |> to_snake_case()
-    |> Poison.Decode.transform(%{as: %Dwolla.Webhook.Retry{}})
+    |> Poison.Decode.transform(%{as: %PhoenixBankingApp.Dwolla.Webhook.Retry{}})
   end
 
   defp map_body(body, :failure) do
     body
     |> to_snake_case()
-    |> Poison.Decode.transform(%{as: %Dwolla.Transfer.Failure{}})
+    |> Poison.Decode.transform(%{as: %PhoenixBankingApp.Dwolla.Transfer.Failure{}})
   end
 
   defp map_body(%{"balance" => balance} = body, :balance) do
     body
     |> to_snake_case()
     |> Map.merge(to_snake_case(balance))
-    |> Poison.Decode.transform(%{as: %Dwolla.FundingSource.Balance{}})
+    |> Poison.Decode.transform(%{as: %PhoenixBankingApp.Dwolla.FundingSource.Balance{}})
   end
 
   defp map_body(body, :token) do
     body
     |> to_snake_case()
-    |> Poison.Decode.transform(%{as: %Dwolla.Token{}})
+    |> Poison.Decode.transform(%{as: %PhoenixBankingApp.Dwolla.Token{}})
   end
 
   defp map_body(body, :document) do
     body
     |> to_snake_case()
-    |> Poison.Decode.transform(%{as: %Dwolla.Document{}})
+    |> Poison.Decode.transform(%{as: %PhoenixBankingApp.Dwolla.Document{}})
   end
 
   defp get_transfer_source_from_body(%{"_links" => %{"source" => %{"href" => url}}} = _body) do
@@ -328,7 +328,7 @@ defmodule Dwolla.Utils do
   defp format_error(body) do
     body
     |> to_snake_case()
-    |> Poison.Decode.transform(%{as: %Dwolla.Errors{errors: [%Dwolla.Errors.Error{}]}})
+    |> Poison.Decode.transform(%{as: %PhoenixBankingApp.Dwolla.Errors{errors: [%PhoenixBankingApp.Dwolla.Errors.Error{}]}})
   end
 
   @doc """

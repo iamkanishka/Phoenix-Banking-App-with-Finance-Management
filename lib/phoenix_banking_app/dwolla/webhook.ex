@@ -1,9 +1,10 @@
-defmodule Dwolla.Webhook do
+defmodule PhoenixBankingApp.Dwolla.Webhook do
   @moduledoc """
   Functions for `webhooks` endpoint.
   """
+  alias PhoenixBankingApp.Dwolla.Dwolla
 
-  alias Dwolla.Utils
+  alias PhoenixBankingApp.Dwolla.Utils
 
   defstruct id: nil, topic: nil, account_id: nil, event_id: nil,
             subscription_id: nil, attempts: nil
@@ -13,12 +14,12 @@ defmodule Dwolla.Webhook do
                          account_id: String.t,
                          event_id: String.t,
                          subscription_id: String.t,
-                         attempts: [Dwolla.Webhook.Attempt.t]
+                         attempts: [PhoenixBankingApp.Dwolla.Webhook.Attempt.t]
                         }
 
   @type token :: String.t
   @type id :: String.t
-  @type error :: HTTPoison.Error.t | Dwolla.Errors.t | tuple
+  @type error :: HTTPoison.Error.t | PhoenixBankingApp.Dwolla.Errors.t | tuple
   @type location :: %{id: String.t}
 
   @endpoint "webhooks"
@@ -30,8 +31,8 @@ defmodule Dwolla.Webhook do
 
     defstruct id: nil, request: nil, response: nil
     @type t :: %__MODULE__{id: String.t,
-                           request: Dwolla.Webhook.Attempt.Request.t,
-                           response: Dwolla.Webhook.Attempt.Response.t
+                           request: PhoenixBankingApp.Dwolla.Webhook.Attempt.Request.t,
+                           response: PhoenixBankingApp.Dwolla.Webhook.Attempt.Response.t
                           }
 
     defmodule Request do
@@ -73,7 +74,7 @@ defmodule Dwolla.Webhook do
   @doc """
   Gets a webhook by id.
   """
-  @spec get(token, id) :: {:ok, Dwolla.Webhook.t} | {:error, error}
+  @spec get(token, id) :: {:ok, PhoenixBankingApp.Dwolla.Webhook.t} | {:error, error}
   def get(token, id) do
     endpoint = @endpoint <> "/#{id}"
     Dwolla.make_request_with_token(:get, endpoint, token)
@@ -94,7 +95,7 @@ defmodule Dwolla.Webhook do
   Gets webhook retries by id.
   """
   @spec list_retries(token, id) ::
-    {:ok, [Dwolla.Webhook.Retry.t]} | {:error, error}
+    {:ok, [PhoenixBankingApp.Dwolla.Webhook.Retry.t]} | {:error, error}
   def list_retries(token, id) do
     endpoint = @endpoint <> "/#{id}/retries"
     Dwolla.make_request_with_token(:get, endpoint, token)

@@ -1,4 +1,4 @@
-defmodule Plaid.Investments.Security do
+defmodule PhoenixBankingApp.Plaid.Investments.Security do
   @moduledoc """
   Plaid Investments Security data structure.
   """

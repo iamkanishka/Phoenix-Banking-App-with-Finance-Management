@@ -1,10 +1,10 @@
-defmodule Plaid.WebhookVerificationKey do
+defmodule PhoenixBankingApp.Plaid.WebhookVerificationKey do
   @moduledoc """
   Functions for Plaid `webhook_verification_key` endpoint.
   """
 
-  alias Plaid.Client.Request
-  alias Plaid.Client
+  alias PhoenixBankingApp.Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client
 
   @derive Jason.Encoder
   defstruct key: %{},
@@ -16,7 +16,7 @@ defmodule Plaid.WebhookVerificationKey do
         }
   @type params :: %{required(atom) => term}
   @type config :: %{required(atom) => String.t() | keyword}
-  @type error :: {:error, Plaid.Error.t() | any()} | no_return
+  @type error :: {:error, PhoenixBankingApp.Plaid.Error.t() | any()} | no_return
 
   @doc """
   Gets a webhook verification key (JWK).
@@ -28,7 +28,7 @@ defmodule Plaid.WebhookVerificationKey do
   }
   ```
   """
-  @spec get(params, config) :: {:ok, Plaid.WebhookVerificationKey.t()} | error
+  @spec get(params, config) :: {:ok, PhoenixBankingApp.Plaid.WebhookVerificationKey.t()} | error
   def get(params, config \\ %{}) do
     c = config[:client] || Plaid
 
@@ -36,6 +36,6 @@ defmodule Plaid.WebhookVerificationKey do
     |> struct(method: :post, endpoint: "webhook_verification_key/get", body: params)
     |> Request.add_metadata(config)
     |> c.send_request(Client.new(config))
-    |> c.handle_response(&Poison.Decode.transform(&1, %{as: %Plaid.WebhookVerificationKey{}}))
+    |> c.handle_response(&Poison.Decode.transform(&1, %{as: %PhoenixBankingApp.Plaid.WebhookVerificationKey{}}))
   end
 end

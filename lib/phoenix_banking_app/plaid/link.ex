@@ -1,10 +1,10 @@
-defmodule Plaid.Link do
+defmodule PhoenixBankingApp.Plaid.Link do
   @moduledoc """
   Functions for Plaid `link` endpoint.
   """
 
-  alias Plaid.Client.Request
-  alias Plaid.Client
+  alias PhoenixBankingApp.Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client
 
   @derive Jason.Encoder
   defstruct link_token: nil,
@@ -19,11 +19,11 @@ defmodule Plaid.Link do
           expiration: String.t(),
           request_id: String.t(),
           created_at: String.t(),
-          metadata: Plaid.Link.Metadata.t()
+          metadata: PhoenixBankingApp.Plaid.Link.Metadata.t()
         }
   @type params :: %{required(atom) => term}
   @type config :: %{required(atom) => String.t() | keyword}
-  @type error :: {:error, Plaid.Error.t() | any()} | no_return
+  @type error :: {:error, PhoenixBankingApp.Plaid.Error.t() | any()} | no_return
 
   defmodule Metadata do
     @moduledoc """
@@ -69,7 +69,7 @@ defmodule Plaid.Link do
   }
   ```
   """
-  @spec create_link_token(params, config) :: {:ok, Plaid.Link.t()} | error
+  @spec create_link_token(params, config) :: {:ok, PhoenixBankingApp.Plaid.Link.t()} | error
   def create_link_token(params, config \\ %{}) do
     request_operation("link/token/create", params, config)
   end
@@ -88,7 +88,7 @@ defmodule Plaid.Link do
     Poison.Decode.transform(
       body,
       %{
-        as: %Plaid.Link{metadata: %Plaid.Link.Metadata{}}
+        as: %PhoenixBankingApp.Plaid.Link{metadata: %PhoenixBankingApp.Plaid.Link.Metadata{}}
       }
     )
   end
@@ -103,7 +103,7 @@ defmodule Plaid.Link do
   }
   ```
   """
-  @spec get_link_token(params, config) :: {:ok, Plaid.Link.t()} | error
+  @spec get_link_token(params, config) :: {:ok, PhoenixBankingApp.Plaid.Link.t()} | error
   def get_link_token(params, config \\ %{}) do
     request_operation("link/token/get", params, config)
   end

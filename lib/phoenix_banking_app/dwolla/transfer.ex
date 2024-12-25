@@ -1,9 +1,11 @@
-defmodule Dwolla.Transfer do
+defmodule PhoenixBankingApp.Dwolla.Transfer do
   @moduledoc """
   Functions for `transfers` endpoint.
   """
+    alias PhoenixBankingApp.Dwolla.Dwolla
 
-  alias Dwolla.Utils
+
+  alias PhoenixBankingApp.Dwolla.Utils
 
   defstruct id: nil, created: nil, status: nil, amount: nil, metadata: nil,
             source_resource: nil, source_resource_id: nil,
@@ -13,8 +15,8 @@ defmodule Dwolla.Transfer do
   @type t :: %__MODULE__{id: String.t,
                          created: String.t,
                          status: String.t, # "pending" | "processed" | "cancelled" | "failed" | "reclaimed"
-                         amount: Dwolla.Transfer.Amount.t,
-                         metadata: Dwolla.Transfer.Metadata.t,
+                         amount: PhoenixBankingApp.Dwolla.Transfer.Amount.t,
+                         metadata: PhoenixBankingApp.Dwolla.Transfer.Metadata.t,
                          source_resource: String.t,
                          source_resource_id: String.t,
                          source_funding_source_id: String.t,
@@ -26,7 +28,7 @@ defmodule Dwolla.Transfer do
   @type token :: String.t
   @type id :: String.t
   @type params :: %{required(atom) => any}
-  @type error :: HTTPoison.Error.t | Dwolla.Errors.t | tuple
+  @type error :: HTTPoison.Error.t | PhoenixBankingApp.Dwolla.Errors.t | tuple
   @type location :: %{id: String.t}
 
   @endpoint "transfers"
@@ -100,7 +102,7 @@ defmodule Dwolla.Transfer do
   @doc """
   Gets a transfer by id.
   """
-  @spec get(token, id) :: {:ok, Dwolla.Transfer.t} | {:error, error}
+  @spec get(token, id) :: {:ok, PhoenixBankingApp.Dwolla.Transfer.t} | {:error, error}
   def get(token, id) do
     endpoint = @endpoint <> "/#{id}"
     Dwolla.make_request_with_token(:get, endpoint, token)
@@ -110,7 +112,7 @@ defmodule Dwolla.Transfer do
   @doc """
   Gets reason for a transfer's failure.
   """
-  @spec get_transfer_failure_reason(token, id) :: {:ok, Dwolla.Transfer.Failure} | {:error, error}
+  @spec get_transfer_failure_reason(token, id) :: {:ok, PhoenixBankingApp.Dwolla.Transfer.Failure} | {:error, error}
   def get_transfer_failure_reason(token, id) do
     endpoint = @endpoint <> "/#{id}/failure"
     Dwolla.make_request_with_token(:get, endpoint, token)
@@ -120,7 +122,7 @@ defmodule Dwolla.Transfer do
   @doc """
   Cancels a transfer.
   """
-  @spec cancel(token, id) :: {:ok, Dwolla.Transfer.t} | {:error, error}
+  @spec cancel(token, id) :: {:ok, PhoenixBankingApp.Dwolla.Transfer.t} | {:error, error}
   def cancel(token, id) do
     endpoint = @endpoint <> "/#{id}"
     params = %{status: "cancelled"}

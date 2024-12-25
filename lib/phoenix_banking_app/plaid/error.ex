@@ -1,4 +1,4 @@
-defmodule Plaid.Error do
+defmodule PhoenixBankingApp.Plaid.Error do
   @moduledoc """
   Plaid Error data structure.
   """

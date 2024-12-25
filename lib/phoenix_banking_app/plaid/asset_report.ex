@@ -1,9 +1,9 @@
-defmodule Plaid.AssetReport do
+defmodule PhoenixBankingApp.Plaid.AssetReport do
   @moduledoc """
   Functions for Plaid `asset report` endpoint.
   """
-  alias Plaid.Client.Request
-  alias Plaid.Client
+  alias PhoenixBankingApp.Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client
 
   @derive Jason.Encoder
   defstruct asset_report_id: nil,
@@ -19,17 +19,17 @@ defmodule Plaid.AssetReport do
           client_report_id: String.t(),
           date_generated: String.t(),
           days_requested: integer(),
-          items: [Plaid.AssetReport.Item.t()],
-          user: Plaid.AssetReport.User.t(),
-          warnings: [Plaid.AssetReport.Warning.t()]
+          items: [PhoenixBankingApp.Plaid.AssetReport.Item.t()],
+          user: PhoenixBankingApp.Plaid.AssetReport.User.t(),
+          warnings: [PhoenixBankingApp.Plaid.AssetReport.Warning.t()]
         }
   @type params :: %{required(atom) => term}
   @type config :: %{required(atom) => String.t() | keyword}
-  @type error :: {:error, Plaid.Error.t() | any()} | no_return
+  @type error :: {:error, PhoenixBankingApp.Plaid.Error.t() | any()} | no_return
 
   defmodule Item do
     @moduledoc """
-    Plaid.AssetReport Item data structure.
+    PhoenixBankingApp.Plaid.AssetReport Item data structure.
     """
 
     @derive Jason.Encoder
@@ -44,13 +44,13 @@ defmodule Plaid.AssetReport do
             institution_name: String.t(),
             institution_id: String.t(),
             date_last_updated: String.t(),
-            accounts: [Plaid.Accounts.Account.t()]
+            accounts: [PhoenixBankingApp.Plaid.Accounts.Account.t()]
           }
   end
 
   defmodule User do
     @moduledoc """
-    Plaid.AssetReport User data structure.
+    PhoenixBankingApp.Plaid.AssetReport User data structure.
     """
 
     @derive Jason.Encoder
@@ -75,16 +75,16 @@ defmodule Plaid.AssetReport do
 
   defmodule Warning do
     @moduledoc """
-    Plaid.AssetReport Warning data structure.
+    PhoenixBankingApp.Plaid.AssetReport Warning data structure.
     """
     @derive Jason.Encoder
     defstruct warning_type: nil, warning_code: nil, cause: nil
 
-    @type t :: %__MODULE__{warning_type: String.t(), warning_code: String.t(), cause: Plaid.AssetReport.Warning.Cause.t()}
+    @type t :: %__MODULE__{warning_type: String.t(), warning_code: String.t(), cause: PhoenixBankingApp.Plaid.AssetReport.Warning.Cause.t()}
 
     defmodule Cause do
       @moduledoc """
-      Plaid.AssetReport.Warning Cause data structure.
+      PhoenixBankingApp.Plaid.AssetReport.Warning Cause data structure.
       """
 
       @derive Jason.Encoder
@@ -169,27 +169,27 @@ defmodule Plaid.AssetReport do
 
   defp map_asset_report(%{"report" => report, "warnings" => warnings}) do
     Poison.Decode.transform(Map.put_new(report, "warnings", warnings), %{
-      as: %Plaid.AssetReport{
+      as: %PhoenixBankingApp.Plaid.AssetReport{
         items: [
-          %Plaid.AssetReport.Item{
+          %PhoenixBankingApp.Plaid.AssetReport.Item{
             accounts: [
-              %Plaid.Accounts.Account{
-                balances: %Plaid.Accounts.Account.Balance{},
+              %PhoenixBankingApp.Plaid.Accounts.Account{
+                balances: %PhoenixBankingApp.Plaid.Accounts.Account.Balance{},
                 owners: [
-                  %Plaid.Accounts.Account.Owner{
-                    addresses: [%Plaid.Accounts.Account.Owner.Address{}],
-                    emails: [%Plaid.Accounts.Account.Owner.Email{}],
-                    phone_numbers: [%Plaid.Accounts.Account.Owner.PhoneNumber{}]
+                  %PhoenixBankingApp.Plaid.Accounts.Account.Owner{
+                    addresses: [%PhoenixBankingApp.Plaid.Accounts.Account.Owner.Address{}],
+                    emails: [%PhoenixBankingApp.Plaid.Accounts.Account.Owner.Email{}],
+                    phone_numbers: [%PhoenixBankingApp.Plaid.Accounts.Account.Owner.PhoneNumber{}]
                   }
                 ]
               }
             ]
           }
         ],
-        user: %Plaid.AssetReport.User{},
+        user: %PhoenixBankingApp.Plaid.AssetReport.User{},
         warnings: [
-          %Plaid.AssetReport.Warning{
-            cause: %Plaid.AssetReport.Warning.Cause{}
+          %PhoenixBankingApp.Plaid.AssetReport.Warning{
+            cause: %PhoenixBankingApp.Plaid.AssetReport.Warning.Cause{}
           }
         ]
       }

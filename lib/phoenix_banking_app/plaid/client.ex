@@ -1,8 +1,9 @@
-defmodule Plaid.Client do
+defmodule PhoenixBankingApp.Plaid.Client do
+
   @moduledoc """
   Functions to build a Tesla client for handling HTTP requests.
   """
-
+alias PhoenixBankingApp.Plaid.Plaid
   defmodule Request do
     @moduledoc """
     Data structure for an HTTP request with convenience functions.

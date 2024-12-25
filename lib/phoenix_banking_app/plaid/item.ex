@@ -1,10 +1,10 @@
-defmodule Plaid.Item do
+defmodule PhoenixBankingApp.Plaid.Item do
   @moduledoc """
   Functions for Plaid `item` endpoint.
   """
 
-  alias Plaid.Client.Request
-  alias Plaid.Client
+  alias PhoenixBankingApp.Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client
 
   @derive Jason.Encoder
   defstruct available_products: [],
@@ -26,11 +26,11 @@ defmodule Plaid.Item do
           webhook: String.t(),
           consent_expiration_time: String.t(),
           request_id: String.t(),
-          status: Plaid.Item.Status.t()
+          status: PhoenixBankingApp.Plaid.Item.Status.t()
         }
   @type params :: %{required(atom) => term}
   @type config :: %{required(atom) => String.t() | keyword}
-  @type error :: {:error, Plaid.Error.t() | any()} | no_return
+  @type error :: {:error, PhoenixBankingApp.Plaid.Error.t() | any()} | no_return
 
   defmodule Status do
     @moduledoc """
@@ -43,9 +43,9 @@ defmodule Plaid.Item do
               last_webhook: nil
 
     @type t :: %__MODULE__{
-            investments: Plaid.Item.Status.Investments.t(),
-            transactions: Plaid.Item.Status.Transactions.t(),
-            last_webhook: Plaid.Item.Status.LastWebhook.t()
+            investments: PhoenixBankingApp.Plaid.Item.Status.Investments.t(),
+            transactions: PhoenixBankingApp.Plaid.Item.Status.Transactions.t(),
+            last_webhook: PhoenixBankingApp.Plaid.Item.Status.LastWebhook.t()
           }
 
     defmodule Investments do
@@ -87,7 +87,7 @@ defmodule Plaid.Item do
   %{access_token: "access-env-identifier"}
   ```
   """
-  @spec get(params, config) :: {:ok, Plaid.Item.t()} | error
+  @spec get(params, config) :: {:ok, PhoenixBankingApp.Plaid.Item.t()} | error
   def get(params, config \\ %{}) do
     mapper = fn %{"item" => item, "request_id" => r, "status" => s} ->
       map_item(Map.merge(item, %{"request_id" => r, "status" => s}))
@@ -110,11 +110,11 @@ defmodule Plaid.Item do
     Poison.Decode.transform(
       body,
       %{
-        as: %Plaid.Item{
-          status: %Plaid.Item.Status{
-            investments: %Plaid.Item.Status.Investments{},
-            transactions: %Plaid.Item.Status.Transactions{},
-            last_webhook: %Plaid.Item.Status.LastWebhook{}
+        as: %PhoenixBankingApp.Plaid.Item{
+          status: %PhoenixBankingApp.Plaid.Item.Status{
+            investments: %PhoenixBankingApp.Plaid.Item.Status.Investments{},
+            transactions: %PhoenixBankingApp.Plaid.Item.Status.Transactions{},
+            last_webhook: %PhoenixBankingApp.Plaid.Item.Status.LastWebhook{}
           }
         }
       }
@@ -173,7 +173,7 @@ defmodule Plaid.Item do
   %{access_token: "access-env-identifier", webhook: "http://mywebsite/api"}
   ```
   """
-  @spec update_webhook(params, config) :: {:ok, Plaid.Item.t()} | error
+  @spec update_webhook(params, config) :: {:ok, PhoenixBankingApp.Plaid.Item.t()} | error
   def update_webhook(params, config \\ %{}) do
     mapper = fn %{"item" => item, "request_id" => r} ->
       map_item(Map.merge(item, %{"request_id" => r}))

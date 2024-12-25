@@ -1,24 +1,24 @@
-defmodule Plaid.Transactions do
+defmodule PhoenixBankingApp.Plaid.Transactions do
   @moduledoc """
   Functions for Plaid `transactions` endpoint.
   """
 
-  alias Plaid.Client.Request
-  alias Plaid.Client
+  alias PhoenixBankingApp.Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client
 
   @derive Jason.Encoder
   defstruct accounts: [], item: nil, total_transactions: nil, transactions: [], request_id: nil
 
   @type t :: %__MODULE__{
-          accounts: [Plaid.Accounts.Account.t()],
-          item: Plaid.Item.t(),
+          accounts: [PhoenixBankingApp.Plaid.Accounts.Account.t()],
+          item: PhoenixBankingApp.Plaid.Item.t(),
           total_transactions: integer,
-          transactions: [Plaid.Transactions.Transaction.t()],
+          transactions: [PhoenixBankingApp.Plaid.Transactions.Transaction.t()],
           request_id: String.t()
         }
   @type params :: %{required(atom) => term}
   @type config :: %{required(atom) => String.t() | keyword}
-  @type error :: {:error, Plaid.Error.t() | any()} | no_return
+  @type error :: {:error, PhoenixBankingApp.Plaid.Error.t() | any()} | no_return
 
   defmodule Sync do
     @moduledoc """
@@ -34,11 +34,11 @@ defmodule Plaid.Transactions do
               request_id: nil
 
     @type t :: %__MODULE__{
-            added: [Plaid.Transactions.Transaction.t()],
+            added: [PhoenixBankingApp.Plaid.Transactions.Transaction.t()],
             has_more: boolean(),
-            modified: [Plaid.Transactions.Transaction.t()],
+            modified: [PhoenixBankingApp.Plaid.Transactions.Transaction.t()],
             next_cursor: String.t(),
-            removed: [Plaid.Transactions.RemovedTransaction.t()],
+            removed: [PhoenixBankingApp.Plaid.Transactions.RemovedTransaction.t()],
             request_id: String.t()
           }
   end
@@ -80,9 +80,9 @@ defmodule Plaid.Transactions do
             category: [String.t()],
             category_id: String.t(),
             date: String.t(),
-            location: Plaid.Transactions.Transaction.Location.t(),
+            location: PhoenixBankingApp.Plaid.Transactions.Transaction.Location.t(),
             name: String.t(),
-            payment_meta: Plaid.Transactions.Transaction.PaymentMeta.t(),
+            payment_meta: PhoenixBankingApp.Plaid.Transactions.Transaction.PaymentMeta.t(),
             pending: boolean(),
             pending_transaction_id: String.t(),
             transaction_id: String.t(),
@@ -91,7 +91,7 @@ defmodule Plaid.Transactions do
             authorized_date: String.t(),
             payment_channel: String.t(),
             transaction_code: String.t(),
-            personal_finance_category: Plaid.Transactions.Transaction.PersonalFinanceCategory.t()
+            personal_finance_category: PhoenixBankingApp.Plaid.Transactions.Transaction.PersonalFinanceCategory.t()
           }
 
     defmodule Location do
@@ -199,7 +199,7 @@ defmodule Plaid.Transactions do
   }
   ```
   """
-  @spec get(params, config) :: {:ok, Plaid.Transactions.t()} | error
+  @spec get(params, config) :: {:ok, PhoenixBankingApp.Plaid.Transactions.t()} | error
   def get(params, config \\ %{}) do
     c = config[:client] || Plaid
 
@@ -214,20 +214,20 @@ defmodule Plaid.Transactions do
     Poison.Decode.transform(
       body,
       %{
-        as: %Plaid.Transactions{
+        as: %PhoenixBankingApp.Plaid.Transactions{
           accounts: [
-            %Plaid.Accounts.Account{
-              balances: %Plaid.Accounts.Account.Balance{}
+            %PhoenixBankingApp.Plaid.Accounts.Account{
+              balances: %PhoenixBankingApp.Plaid.Accounts.Account.Balance{}
             }
           ],
           transactions: [
-            %Plaid.Transactions.Transaction{
-              location: %Plaid.Transactions.Transaction.Location{},
-              payment_meta: %Plaid.Transactions.Transaction.PaymentMeta{},
-              personal_finance_category: %Plaid.Transactions.Transaction.PersonalFinanceCategory{}
+            %PhoenixBankingApp.Plaid.Transactions.Transaction{
+              location: %PhoenixBankingApp.Plaid.Transactions.Transaction.Location{},
+              payment_meta: %PhoenixBankingApp.Plaid.Transactions.Transaction.PaymentMeta{},
+              personal_finance_category: %PhoenixBankingApp.Plaid.Transactions.Transaction.PersonalFinanceCategory{}
             }
           ],
-          item: %Plaid.Item{}
+          item: %PhoenixBankingApp.Plaid.Item{}
         }
       }
     )
@@ -245,7 +245,7 @@ defmodule Plaid.Transactions do
   }
   ```
   """
-  @spec sync(params, config) :: {:ok, Plaid.Transactions.Sync.t()} | error
+  @spec sync(params, config) :: {:ok, PhoenixBankingApp.Plaid.Transactions.Sync.t()} | error
   def sync(params, config \\ %{}) do
     c = config[:client] || Plaid
 
@@ -260,23 +260,23 @@ defmodule Plaid.Transactions do
     Poison.Decode.transform(
       body,
       %{
-        as: %Plaid.Transactions.Sync{
+        as: %PhoenixBankingApp.Plaid.Transactions.Sync{
           added: [
-            %Plaid.Transactions.Transaction{
-              location: %Plaid.Transactions.Transaction.Location{},
-              payment_meta: %Plaid.Transactions.Transaction.PaymentMeta{},
-              personal_finance_category: %Plaid.Transactions.Transaction.PersonalFinanceCategory{}
+            %PhoenixBankingApp.Plaid.Transactions.Transaction{
+              location: %PhoenixBankingApp.Plaid.Transactions.Transaction.Location{},
+              payment_meta: %PhoenixBankingApp.Plaid.Transactions.Transaction.PaymentMeta{},
+              personal_finance_category: %PhoenixBankingApp.Plaid.Transactions.Transaction.PersonalFinanceCategory{}
             }
           ],
           modified: [
-            %Plaid.Transactions.Transaction{
-              location: %Plaid.Transactions.Transaction.Location{},
-              payment_meta: %Plaid.Transactions.Transaction.PaymentMeta{},
-              personal_finance_category: %Plaid.Transactions.Transaction.PersonalFinanceCategory{}
+            %PhoenixBankingApp.Plaid.Transactions.Transaction{
+              location: %PhoenixBankingApp.Plaid.Transactions.Transaction.Location{},
+              payment_meta: %PhoenixBankingApp.Plaid.Transactions.Transaction.PaymentMeta{},
+              personal_finance_category: %PhoenixBankingApp.Plaid.Transactions.Transaction.PersonalFinanceCategory{}
             }
           ],
           removed: [
-            %Plaid.Transactions.RemovedTransaction{}
+            %PhoenixBankingApp.Plaid.Transactions.RemovedTransaction{}
           ]
         }
       }

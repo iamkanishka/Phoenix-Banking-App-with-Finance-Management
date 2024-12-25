@@ -1,24 +1,24 @@
-defmodule Plaid.Investments.Holdings do
+defmodule PhoenixBankingApp.Plaid.Investments.Holdings do
   @moduledoc """
   Functions for Plaid `investments/holdings` endpoints.
   """
 
-  alias Plaid.Client.Request
-  alias Plaid.Client
+  alias PhoenixBankingApp.Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client
 
   @derive Jason.Encoder
   defstruct accounts: [], item: nil, securities: [], holdings: [], request_id: nil
 
   @type t :: %__MODULE__{
-          accounts: [Plaid.Accounts.Account.t()],
-          item: Plaid.Item.t(),
-          securities: [Plaid.Investments.Security.t()],
-          holdings: [Plaid.Investments.Holdings.Holding.t()],
+          accounts: [PhoenixBankingApp.Plaid.Accounts.Account.t()],
+          item: PhoenixBankingApp.Plaid.Item.t(),
+          securities: [PhoenixBankingApp.Plaid.Investments.Security.t()],
+          holdings: [PhoenixBankingApp.Plaid.Investments.Holdings.Holding.t()],
           request_id: String.t()
         }
   @type params :: %{required(atom) => term}
   @type config :: %{required(atom) => String.t() | keyword}
-  @type error :: {:error, Plaid.Error.t() | any()} | no_return
+  @type error :: {:error, PhoenixBankingApp.Plaid.Error.t() | any()} | no_return
 
   defmodule Holding do
     @moduledoc """
@@ -62,7 +62,7 @@ defmodule Plaid.Investments.Holdings do
   }
   ```
   """
-  @spec get(params, config) :: {:ok, Plaid.Investments.Holdings.t()} | error
+  @spec get(params, config) :: {:ok, PhoenixBankingApp.Plaid.Investments.Holdings.t()} | error
   def get(params, config \\ %{}) do
     c = config[:client] || Plaid
 
@@ -77,15 +77,15 @@ defmodule Plaid.Investments.Holdings do
     Poison.Decode.transform(
       body,
       %{
-        as: %Plaid.Investments.Holdings{
+        as: %PhoenixBankingApp.Plaid.Investments.Holdings{
           accounts: [
-            %Plaid.Accounts.Account{
-              balances: %Plaid.Accounts.Account.Balance{}
+            %PhoenixBankingApp.Plaid.Accounts.Account{
+              balances: %PhoenixBankingApp.Plaid.Accounts.Account.Balance{}
             }
           ],
-          securities: [%Plaid.Investments.Security{}],
-          holdings: [%Plaid.Investments.Holdings.Holding{}],
-          item: %Plaid.Item{}
+          securities: [%PhoenixBankingApp.Plaid.Investments.Security{}],
+          holdings: [%PhoenixBankingApp.Plaid.Investments.Holdings.Holding{}],
+          item: %PhoenixBankingApp.Plaid.Item{}
         }
       }
     )

@@ -1,22 +1,22 @@
-defmodule Plaid.Identity do
+defmodule PhoenixBankingApp.Plaid.Identity do
   @moduledoc """
   Functions for Plaid `identity` endpoint.
   """
 
-  alias Plaid.Client.Request
-  alias Plaid.Client
+  alias PhoenixBankingApp.Plaid.Client.Request
+  alias PhoenixBankingApp.Plaid.Client
 
   @derive Jason.Encoder
   defstruct accounts: [], item: nil, request_id: nil
 
   @type t :: %__MODULE__{
-          accounts: [Plaid.Accounts.Account.t()],
-          item: Plaid.Item.t(),
+          accounts: [PhoenixBankingApp.Plaid.Accounts.Account.t()],
+          item: PhoenixBankingApp.Plaid.Item.t(),
           request_id: String.t()
         }
   @type params :: %{required(atom) => term}
   @type config :: %{required(atom) => String.t() | keyword}
-  @type error :: {:error, Plaid.Error.t() | any()} | no_return
+  @type error :: {:error, PhoenixBankingApp.Plaid.Error.t() | any()} | no_return
 
   @doc """
   Gets identity data associated with an Item.
@@ -28,7 +28,7 @@ defmodule Plaid.Identity do
   }
   ```
   """
-  @spec get(params, config) :: {:ok, Plaid.Identity.t()} | error
+  @spec get(params, config) :: {:ok, PhoenixBankingApp.Plaid.Identity.t()} | error
   def get(params, config \\ %{}) do
     c = config[:client] || Plaid
 
@@ -43,16 +43,16 @@ defmodule Plaid.Identity do
     Poison.Decode.transform(
       body,
       %{
-        as: %Plaid.Identity{
-          item: %Plaid.Item{},
+        as: %PhoenixBankingApp.Plaid.Identity{
+          item: %PhoenixBankingApp.Plaid.Item{},
           accounts: [
-            %Plaid.Accounts.Account{
-              balances: %Plaid.Accounts.Account.Balance{},
+            %PhoenixBankingApp.Plaid.Accounts.Account{
+              balances: %PhoenixBankingApp.Plaid.Accounts.Account.Balance{},
               owners: [
-                %Plaid.Accounts.Account.Owner{
-                  addresses: [%Plaid.Accounts.Account.Owner.Address{}],
-                  emails: [%Plaid.Accounts.Account.Owner.Email{}],
-                  phone_numbers: [%Plaid.Accounts.Account.Owner.PhoneNumber{}]
+                %PhoenixBankingApp.Plaid.Accounts.Account.Owner{
+                  addresses: [%PhoenixBankingApp.Plaid.Accounts.Account.Owner.Address{}],
+                  emails: [%PhoenixBankingApp.Plaid.Accounts.Account.Owner.Email{}],
+                  phone_numbers: [%PhoenixBankingApp.Plaid.Accounts.Account.Owner.PhoneNumber{}]
                 }
               ]
             }

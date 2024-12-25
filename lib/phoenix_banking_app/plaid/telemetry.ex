@@ -1,4 +1,4 @@
-defmodule Plaid.Telemetry do
+defmodule PhoenixBankingApp.Plaid.Telemetry do
   @moduledoc """
   Custom implementation of `telemetry` using Tesla Middleware.
   """
