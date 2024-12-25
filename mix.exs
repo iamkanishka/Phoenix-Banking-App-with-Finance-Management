@@ -61,6 +61,7 @@ defmodule PhoenixBankingApp.MixProject do
       {:timex, "~> 3.7"},
       {:appwrite, "~> 0.1.8"},
       {:tesla, "~> 1.13"},
+      {:recase, "~> 0.8.1"}
      ]
   end
 
