@@ -1,4 +1,5 @@
 defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
+  alias Appwrite.Services.Database
   alias PhoenixBankingApp.Dwolla.Customer
   alias PhoenixBankingAppWeb.Auth.Validators.FormValidator
   alias Appwrite.Services.Accounts
@@ -30,21 +31,33 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
         </div>
       </header>
 
-      <%= if @user != nil do %>
-        <div class="flex flex-col gap-4">
+
+
+      <div class="flex flex-col gap-4">
           <.live_component
             module={PhoenixBankingAppWeb.CustomComponents.PlaidLinkLive}
             id={:plaidlink}
-            user={%{}}
-            ready={true}
+            user={@user}
+           variant="primary"
           />
         </div>
+
+      <%= if @user != nil do %>
+        <%!-- <div class="flex flex-col gap-4">
+          <.live_component
+            module={PhoenixBankingAppWeb.CustomComponents.PlaidLinkLive}
+            id={:plaidlink}
+            user={:user}
+            ready={true}
+            variant="primary"
+          />
+        </div> --%>
       <% else %>
         <%!-- <.simple_form for={@form} phx-change="validate" phx-submit="save"> --%>
         <.simple_form for={@form} phx-submit="save" phx-change="validate" phx-target={@myself}>
-          <%= for  %{field: field, label: label, type: type}  <- @form_fields do %>
+          <%= for  %{field: field, label: label, type: type, placeholder: placeholder }  <- @form_fields do %>
             <%= if (@type == "sign-in" and field in [:email, :password]) or  @type == "sign-up" do %>
-              <.input type={type} field={@form[field]} label={label} />
+              <.input type={type} field={@form[field]} label={label} placeholder={placeholder} />
               <%= if @form_errors[field] do %>
                 <span class="error-message">{@form_errors[field]}</span>
               <% end %>
@@ -89,7 +102,7 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
             patch={~p"/#{if @type == "sign-in", do: "auth/sign-up", else: "auth/sign-in"}"}
             class="form-link"
           >
-          <p>{if(@type == "sign-in", do: "Sign Up", else: "Sign In")} </p>
+            <p>{if(@type == "sign-in", do: "Sign Up", else: "Sign In")}</p>
           </.link>
         </footer>
       <% end %>
@@ -100,16 +113,16 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
   @impl true
   def update(assigns, socket) do
     form_fields = [
-      %{field: :first_name, label: "First Name", type: "text"},
-      %{field: :last_name, label: "Last Name", type: "text"},
-      %{field: :address1, label: "Address", type: "text"},
-      %{field: :city, label: "City", type: "text"},
-      %{field: :state, label: "State", type: "text"},
-      %{field: :postal_code, label: "Postal Code", type: "text"},
-      %{field: :date_of_birth, label: "Date Of Birth", type: "text"},
-      %{field: :ssn, label: "SSN", type: "text"},
-      %{field: :email, label: "Email", type: "text"},
-      %{field: :password, label: "Password", type: "text"}
+      %{field: :first_name, label: "First Name", type: "text", placeholder: "First Name"},
+      %{field: :last_name, label: "Last Name", type: "text", placeholder: "Last Name"},
+      %{field: :address1, label: "Address", type: "text", placeholder: "123, Main St"},
+      %{field: :city, label: "City", type: "text", placeholder: "Your City"},
+      %{field: :state, label: "State", type: "text", placeholder: "NY"},
+      %{field: :postal_code, label: "Postal Code", type: "text", placeholder: "12345"},
+      %{field: :date_of_birth, label: "Date Of Birth", type: "text", placeholder: "YYYY-MM-DD"},
+      %{field: :ssn, label: "SSN", type: "text", placeholder: "123-45-6789"},
+      %{field: :email, label: "Email", type: "text", placeholder: "your_email@example.com"},
+      %{field: :password, label: "Password", type: "text", placeholder: "Your Password"}
     ]
 
     form = Phoenix.HTML.FormData.to_form(%{}, as: :form)
@@ -195,7 +208,7 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
     else
       params = Map.merge(params, %{"type" => "personal"})
 
-      sign_up(params,socket)
+      sign_up(params, socket)
     end
 
     {:noreply, socket}
@@ -203,11 +216,17 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
 
   defp sign_in(email, password, socket) do
     try do
-      session = Accounts.create_email_password_session(email, password)
-      Utils.Client.set_session(session.secret)
+      assign_loader(socket, true)
+
+      user_data =
+        Accounts.create_email_password_session(email, password)
+
+      Utils.Client.set_session(user_data.secret)
 
       {:noreply,
        socket
+       |> assign_loader(false)
+       #  |> assign_user(user_data)
        |> push_patch(to: ~p"/")}
     catch
       {:error, error} ->
@@ -216,27 +235,79 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
   end
 
   defp sign_up(user_data, socket) do
-    # session = Accounts.create(nil, user_data["email"], user_data["password"])
-    # Utils.Client.set_session(session.secret)
+    assign_loader(socket, true)
+    full_name = "#{user_data["first_name"]} #{user_data["last_name"]}"
+    new_user = Accounts.create(nil, user_data["email"], user_data["password"], full_name)
+
     token = "ritHSyiR6KZXcOOmkGGOTdOiI9c9oUygQbJbeEMGAPzLUlhBZB"
-    # map = %{"name" => "kabnsihka"}
+    atomized_user_data = Map.new(user_data, fn {key, value} -> {String.to_atom(key), value} end)
 
-    IO.inspect(user_data, label: "user_data")
+    # Update the User state
+    updated_user_state_data = update_user_state_field(atomized_user_data)
 
-    atomized_map = Map.new(user_data, fn {key, value} -> {String.to_atom(key), value} end)
-    # Output: %{name: "kabnsihka"}
-    IO.inspect(atomized_map, label: "atomized_map")
-    # Update the state
-updated_map = Map.update!(atomized_map, :state, fn state ->
-  state
-  |> String.slice(0, 2) # Take the first 2 characters
-  |> String.upcase()    # Convert them to uppercase
-end)
-IO.inspect(updated_map, label: "updated_map")
+    dwolla_id = Customer.create_verified(token, updated_user_state_data)
 
-    location = Customer.create_verified(token, updated_map)
-    IO.inspect(location)
+    user_session =
+      Accounts.create_email_password_session(user_data["email"], user_data["password"])
 
-    {:noreply, socket}
+    Utils.Client.set_session(user_session.secret)
+
+    updated_user_data =
+      Map.merge(user_data, %{"dwolla_id" => dwolla_id, "user_id" => new_user["$id"]})
+
+    user_doc =
+      Database.create_document(
+        get_appwrite_database_id(),
+        get_user_collection_id(),
+        nil,
+        updated_user_data
+      )
+
+    {:noreply,
+     socket
+     |> assign_loader(false)
+     |> assign_user(user_doc)}
+  end
+
+  defp update_user_state_field(user_data) do
+    Map.update!(user_data, :state, fn state ->
+      state
+      # Take the first 2 characters
+      |> String.slice(0, 2)
+      # Convert them to uppercase
+      |> String.upcase()
+    end)
+  end
+
+  defp get_appwrite_database_id() do
+    case Application.get_env(get_app_name(), :appwrite_database_id) do
+      nil ->
+        nil
+
+      database_id ->
+        database_id
+    end
+  end
+
+  defp get_user_collection_id() do
+    case Application.get_env(get_app_name(), :appwrite_user_collection_id) do
+      nil ->
+        nil
+
+      user_collection_id ->
+        user_collection_id
+    end
+  end
+
+  def get_app_name do
+    Mix.Project.config()[:app]
+  end
+
+  defp assign_loader(socket, loader_status) do
+    assign(socket, :is_loading, loader_status)
+  end
+
+  defp assign_user(socket, user) do
+    assign(socket, :user, user)
   end
 end
