@@ -23,8 +23,11 @@ import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
 let Hooks = {};
-import FileInput from "./ClipboardCopy";
-Hooks.FileInput = FileInput;
+import ClipboardCopy from "./ClipboardCopy";
+import PlaidConnect from "./PlaidConnect";
+Hooks.ClipboardCopy = ClipboardCopy;
+Hooks.PlaidConnect = PlaidConnect;
+
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
