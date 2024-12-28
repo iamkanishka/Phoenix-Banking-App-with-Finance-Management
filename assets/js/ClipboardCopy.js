@@ -1,6 +1,4 @@
-let Hooks = {};
-
-Hooks.ClipboardCopy = {
+export default {
   mounted() {
     this.el.addEventListener("click", () => {
       const textToCopy = this.el.getAttribute("data-clipboard");
@@ -16,4 +14,3 @@ Hooks.ClipboardCopy = {
   }
 };
 
-export default Hooks;
