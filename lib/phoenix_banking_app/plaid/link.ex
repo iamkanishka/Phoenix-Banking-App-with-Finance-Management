@@ -5,6 +5,7 @@ defmodule PhoenixBankingApp.Plaid.Link do
 
   alias PhoenixBankingApp.Plaid.Client.Request
   alias PhoenixBankingApp.Plaid.Client
+  alias PhoenixBankingApp.Plaid.Plaid
 
   @derive Jason.Encoder
   defstruct link_token: nil,

@@ -5,6 +5,8 @@ defmodule PhoenixBankingApp.Plaid.Accounts do
 
   alias PhoenixBankingApp.Plaid.Client.Request
   alias PhoenixBankingApp.Plaid.Client
+  alias PhoenixBankingApp.Plaid.Plaid
+
 
   @derive Jason.Encoder
   defstruct accounts: [], item: nil, request_id: nil

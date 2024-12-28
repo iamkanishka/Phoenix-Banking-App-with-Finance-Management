@@ -5,6 +5,9 @@ defmodule PhoenixBankingApp.Plaid.Item do
 
   alias PhoenixBankingApp.Plaid.Client.Request
   alias PhoenixBankingApp.Plaid.Client
+  alias PhoenixBankingApp.Plaid.Plaid
+
+
 
   @derive Jason.Encoder
   defstruct available_products: [],
