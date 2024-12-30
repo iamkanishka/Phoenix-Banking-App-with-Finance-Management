@@ -6,20 +6,43 @@ defmodule PhoenixBankingAppWeb.CustomComponents.PlaidLinkLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
-      <%= if @variant == "primary" do %>
-        <.button
-          id="plaid-link-button"
-          phx-hook="PlaidConnect"
-          data-link-token={@link_token}
-          phx-target={@myself}
-          class="plaidlink-primary"
-        >
-          Connect bank
-        </.button>
-      <% end %>
+    <section class="auth-form">
+      <header class="flex flex-col gap-5 md:gap-8">
+        <.link navigate={~p"/"} class="cursor-pointer flex items-center gap-1">
+          <img src="/images/logo.svg" width={34} height={34} alt="Horizon logo" />
+          <h1 class="text-26 font-ibm-plex-serif font-bold text-black-1">Horizon</h1>
+        </.link>
 
-      <%!-- <% else %>
+        <div class="flex flex-col gap-1 md:gap-3">
+          <h1 class="text-24 lg:text-36 font-semibold text-gray-900">
+            Link Account
+            <p class="text-16 font-normal text-gray-600">
+              Link your account to get started
+            </p>
+          </h1>
+        </div>
+      </header>
+
+      <div>
+        <%= if @variant == "primary" do %>
+          <.button
+            id="plaid-link-button"
+            phx-hook="PlaidConnect"
+            data-link-token={@link_token}
+            phx-target={@myself}
+            class={"" <> if !@ready and @link_token != nil, do: "plaidlink-primary", else: "plaidlink-ghost"}
+            disabled={@ready and @link_token == nil}
+          >
+            <p>
+              {"" <>
+                if !@ready and @link_token != nil and @loader,
+                  do: "Connecting...",
+                  else: "Connect bank"}
+            </p>
+          </.button>
+        <% end %>
+
+        <%!-- <% else %>
         <%= if @variant == "ghost" do %>
           <.button phx-click="open" class="plaidlink-ghost">
             <img src="/images/connect-bank.svg" alt="connect bank" width={24} height={24} />
@@ -32,7 +55,8 @@ defmodule PhoenixBankingAppWeb.CustomComponents.PlaidLinkLive do
           </.button>
         <% end %>
       <% end %> --%>
-    </div>
+      </div>
+    </section>
     """
   end
 
@@ -41,51 +65,37 @@ defmodule PhoenixBankingAppWeb.CustomComponents.PlaidLinkLive do
     {
       :ok,
       socket
-      |> assign(:link_token, "link-sandbox-70812bd5-5ccb-4383-8f5d-f1a59cfb4741")
-      |> assign(:ready, false)
+      |> assign(:link_token, nil)
+      |> assign(:ready, true)
       |> assign(assigns)
-      # |> generate_link_token()
+      |> generate_link_token()
     }
   end
 
   defp generate_link_token(socket) do
     try do
       user = socket.assigns.user
-      # params = %{
-      #   client_name: "#{user[:first_name]} #{user[:last_name]}",
-      #   language: "en",
-      #   country_codes: "US",
-      #   products: ["auth"],
-      #   user: %{client_user_id: user[:user_id]}
-      # }
 
       params = %{
-        client_name: "Knaishka Naik",
+        client_name: "#{user["first_name"]} #{user["last_name"]}",
         language: "en",
         country_codes: ["US"],
         products: ["auth"],
-        user: %{client_user_id: "180f1a8450a94c5fafabcaf1979ff23d"}
+        user: %{client_user_id: user["user_id"]}
       }
 
       # Use your backend logic to generate a link token
       {:ok, create_link_token_res} = Link.create_link_token(params)
 
-      #     {:ok,
-      #  %PhoenixBankingApp.Plaid.Link{
-      #    link_token: "link-sandbox-70051614-ecee-4efc-87bb-be0ae0997728",
-      #    expiration: "2024-12-28T04:44:31Z",
-      #    request_id: "2TmrB0vOcZDwgYT",
-      #    created_at: nil,
-      #    metadata: nil
-      #  }}
-
-      IO.inspect(create_link_token_res)
-
-      {:ok,
-       socket
-       |> assign(:link_token, create_link_token_res["link_token"])}
+      socket
+      |> assign(:ready, false)
+      |> assign(:link_token, create_link_token_res.link_token)
     catch
       {:error, error} ->
+        socket
+        |> assign(:ready, true)
+        |> assign(:link_token, nil)
+
         IO.inspect(error)
         raise error
     end
