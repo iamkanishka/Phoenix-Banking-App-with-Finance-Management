@@ -4,12 +4,12 @@ defmodule PhoenixBankingApp.Utils.CryptoUtil do
 
   # Encrypt data
   def encrypt(data) do
-    Plug.Crypto.MessageEncryptor.encrypt(data, @secret_key_base, "")
+    Plug.Crypto.MessageEncryptor.encrypt(data, @secret_key_base, @secret_key_base, [])
   end
 
   # Decrypt data
   def decrypt(encrypted_data) do
-    Plug.Crypto.MessageEncryptor.decrypt(encrypted_data, @secret_key_base, "")
+    Plug.Crypto.MessageEncryptor.decrypt(encrypted_data, @secret_key_base,  @secret_key_base, [])
   end
 end
 

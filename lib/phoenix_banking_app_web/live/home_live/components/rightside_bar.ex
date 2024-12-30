@@ -43,7 +43,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
           </.link>
         </div>
 
-        <%= if @banks.length > 0 do %>
+        <%= if length(@banks) > 0 do %>
           <div class="relative flex flex-1 flex-col items-center justify-center gap-5">
             <div class="relative z-10">
               <%!-- <BankCard
@@ -107,6 +107,8 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
   def update(assigns, socket) do
     {:ok,
      socket
+     |> assign(:categories, [])
+
      |> assign(assigns)}
   end
 end

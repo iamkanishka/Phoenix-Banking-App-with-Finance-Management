@@ -133,11 +133,11 @@ defmodule PhoenixBankingApp.Dwolla.Dwolla do
     Application.get_env(:dwolla, :httpoison_options, [])
   end
 
-  defp get_client_id do
+  def get_client_id do
     Application.get_env(:dwolla, :client_id) || :not_found
   end
 
-  defp get_client_secret do
+  def get_client_secret do
     Application.get_env(:dwolla, :client_secret) || :not_found
   end
 end
