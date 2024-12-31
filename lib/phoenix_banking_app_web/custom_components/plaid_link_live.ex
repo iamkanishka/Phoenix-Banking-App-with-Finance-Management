@@ -35,7 +35,7 @@ defmodule PhoenixBankingAppWeb.CustomComponents.PlaidLinkLive do
           >
             <p>
               {"" <>
-                if !@ready and @link_token != nil and @loader,
+                if @status,
                   do: "Connecting...",
                   else: "Connect bank"}
             </p>
@@ -62,7 +62,7 @@ defmodule PhoenixBankingAppWeb.CustomComponents.PlaidLinkLive do
 
   @impl true
   def update(assigns, socket) do
-    {
+   {
       :ok,
       socket
       |> assign(:link_token, nil)
