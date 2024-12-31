@@ -1,97 +1,89 @@
 defmodule PhoenixBankingAppWeb.Auth.SignUp do
+alias PhoenixBankingAppWeb.Auth.Services.AuthService
   use PhoenixBankingAppWeb, :live_view
 
-  alias PhoenixBankingApp.Dwolla.Customer
-  alias PhoenixBankingApp.Plaid.Item
-  alias PhoenixBankingApp.Plaid.Accounts
 
 
   @impl true
   def render(assigns) do
     ~H"""
+      <main class="flex min-h-screen w-full justify-between font-inter">
     <section class="flex-center size-full max-sm:px-6">
-      <.live_component
-        module={PhoenixBankingAppWeb.Auth.Components.AuthFormLive}
-        id="{:authform}"
-        type="sign-up"
-      />
+      <%= if @user == nil do %>
+        <.live_component
+          module={PhoenixBankingAppWeb.Auth.Components.AuthFormLive}
+          id="{:authform}"
+          type="sign-up"
+        />
+      <% else %>
+        <div class="flex flex-col gap-4">
+          <.live_component
+            module={PhoenixBankingAppWeb.CustomComponents.PlaidLinkLive}
+            id={:plaidlink}
+            user={@user}
+            variant="primary"
+            status={@connect_bank_status}
+             />
+        </div>
+      <% end %>
     </section>
+
+
+    <div class="auth-asset">
+        <div>
+          <img
+            src="/images/auth-image.svg"
+            alt="Auth image"
+            width={500}
+            height={500}
+            class="rounded-l-xl object-contain"
+          />
+        </div>
+      </div>
+    </main>
+
     """
   end
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    {:ok,
+     socket
+     |> assign_loader(false)
+     |> assign(:user, nil)}
   end
 
   @impl true
   def handle_event("plaid_success", %{"public_token" => public_token}, socket) do
     IO.inspect(public_token, label: "Public Token")
-
-    case exchange_public_token(public_token) do
+    socket = assign_loader(socket,true)
+    IO.inspect(socket.assigns.connect_bank_status)
+    case AuthService.exchange_public_token(public_token, socket) do
       {:ok, result} ->
         IO.inspect(result, label: "exchange_public_token_res")
-        {:noreply, socket |> push_patch(to: ~p"/")}
+        {:noreply, socket
+         |>  assign_loader(false)
+
+        |>  push_navigate(to: "/", replace: true)}
 
       {:error, reason} ->
         IO.inspect(reason, label: "Exchange Public Token Error")
-        {:noreply, socket}
-    end
-  end
-
-  defp exchange_public_token(public_token) do
-    try do
-      # user = socket.assigns.user
-
-      {:ok, public_token_exchange_res} = Item.exchange_public_token(%{public_token: public_token})
-
-      IO.inspect(public_token_exchange_res, label: "public_token_exchange_res")
-
-      {:ok, accounts_res} =
-        Accounts.get(%{access_token: public_token_exchange_res[:access_token]})
-
-      IO.inspect(accounts_res, label: "accounts_res")
-
-      account_data = Enum.at(accounts_res.accounts, 0)
-
-      IO.inspect(account_data, label: "account_data")
-
-      #  Create a processor token for Dwolla using the access token and account ID
-      processor_token_create_request_params = %{
-        access_token: public_token_exchange_res[:access_token],
-        account_id: account_data.account_id,
-        processor: "dwolla"
+        {:noreply,
+        socket
+        |>  assign_loader(false)
       }
-
-      IO.inspect(processor_token_create_request_params,
-        label: "processor_token_create_request_params"
-      )
-
-      {:ok, processor_token_create_response} =
-        Item.create_processor_token(processor_token_create_request_params, %{})
-
-      IO.inspect(processor_token_create_response, label: "processor_token_create_response")
-
-      {:ok, funding_source_response} =
-        Customer.create_funding_source(
-          "SBKXQ1yfOCYY4uluMd2mikOqghgSw7sg7Dz6EyGIKDvl1U8Dxv",
-          "073b22f1-da56-45a0-a686-9737b4ff271b",
-          %{
-            name: account_data.name,
-            plaidToken: processor_token_create_response[:processor_token]
-          }
-        )
-
-      IO.inspect(funding_source_response, label: "funding_source_response")
-
-      {:ok,
-       %{
-         publicTokenExchange: "complete"
-       }}
-    catch
-      {:error, error} ->
-        IO.inspect(error)
-        raise error
     end
   end
+
+
+  def handle_info({:user, user}, socket) do
+    {:noreply,
+     socket
+     |> assign(:user, user)}
+  end
+
+  defp assign_loader(socket, status) do
+    assign(socket, :connect_bank_status, status)
+  end
+
 end
