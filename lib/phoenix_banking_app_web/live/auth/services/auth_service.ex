@@ -1,4 +1,16 @@
 defmodule PhoenixBankingAppWeb.Auth.Services.AuthService do
+
+  alias PhoenixBankingApp.Dwolla.Dwolla
+  alias PhoenixBankingApp.Dwolla.Customer
+  alias PhoenixBankingApp.Plaid.Item
+  alias PhoenixBankingApp.Plaid.Accounts
+  alias PhoenixBankingApp.Utils.CryptoUtil
+  alias PhoenixBankingApp.Constants.EnvKeysFetcher
+  alias PhoenixBankingApp.Dwolla.Token
+  alias Appwrite.Services.Database
+
+
+
   @spec exchange_public_token(any(), any()) :: {:ok, %{publicTokenExchange: <<_::64>>}}
   def exchange_public_token(public_token, socket) do
     try do
@@ -33,12 +45,15 @@ defmodule PhoenixBankingAppWeb.Auth.Services.AuthService do
 
       IO.inspect(processor_token_create_response, label: "processor_token_create_response")
 
-      {:ok, dwolla_token_details} = Token.get(nil)
+      dwolla_creds = %{client_id: Dwolla.get_client_id(), client_secret: Dwolla.get_client_secret()}
+
+      {:ok, dwolla_token_details} = Token.get(dwolla_creds)
+
 
       {:ok, funding_source_response} =
         Customer.create_funding_source(
           dwolla_token_details.access_token,
-          user[:dwolla_id],
+          user["dwolla_id"],
           %{
             name: account_data.name,
             plaidToken: processor_token_create_response[:processor_token]
@@ -48,12 +63,13 @@ defmodule PhoenixBankingAppWeb.Auth.Services.AuthService do
       IO.inspect(funding_source_response, label: "funding_source_response")
 
       bank_data = %{
-        user_id: user["user_id"],
-        bank_id: public_token_exchange_res[:item_id],
-        bank_name: account_data.name,
-        funding_source_id: funding_source_response[:id],
-        shareable_id: CryptoUtil.encrypt(account_data.account_id),
-        access_token: public_token_exchange_res[:access_token]
+        "user_id" => user["user_id"],
+        "bank_id" => public_token_exchange_res[:item_id],
+        "bank_name" => account_data.name,
+        "funding_source_id" => funding_source_response[:id],
+        # shareable_id" => CryptoUtil.encrypt(account_data.account_id),
+        "shareable_id" =>  account_data.account_id,
+         "access_token" => public_token_exchange_res[:access_token]
       }
 
       IO.inspect(bank_data)
@@ -62,8 +78,9 @@ defmodule PhoenixBankingAppWeb.Auth.Services.AuthService do
         Database.create_document(
           EnvKeysFetcher.get_appwrite_database_id(),
           EnvKeysFetcher.get_bank_collection_id(),
-          nil,
-          bank_data
+          user["user_id"],
+          bank_data,
+          nil
         )
 
       IO.inspect(bank_doc, label: "bank_doc")
