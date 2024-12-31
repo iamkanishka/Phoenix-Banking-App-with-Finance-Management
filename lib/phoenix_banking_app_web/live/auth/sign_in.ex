@@ -5,27 +5,41 @@ defmodule PhoenixBankingAppWeb.Auth.SignIn do
   @impl true
   def render(assigns) do
     ~H"""
-    <section class="flex-center size-full max-sm:px-6">
-      <%= if @user == nil  do %>
-        <.live_component
-          module={PhoenixBankingAppWeb.Auth.Components.AuthFormLive}
-          id="{:authform}"
-          type="sign-in"
-        />
-      <% end %>
-
-      <%= if @user !=nil and @need_bank_connectivity do %>
-        <div class="flex flex-col gap-4">
+    <main class="flex min-h-screen w-full justify-between font-inter">
+      <section class="flex-center size-full max-sm:px-6">
+        <%= if @user == nil  do %>
           <.live_component
-            module={PhoenixBankingAppWeb.CustomComponents.PlaidLinkLive}
-            id={:plaidlink}
-            user={@user}
-            variant="primary"
-            loader={@connect_bank_loader}
+            module={PhoenixBankingAppWeb.Auth.Components.AuthFormLive}
+            id="{:authform}"
+            type="sign-in"
+          />
+        <% end %>
+
+        <%= if @user !=nil do %>
+          <div class="flex flex-col gap-4">
+            <.live_component
+              module={PhoenixBankingAppWeb.CustomComponents.PlaidLinkLive}
+              id={:plaidlink}
+              user={@user}
+              variant="primary"
+              status={@connect_bank_status}
+            />
+          </div>
+        <% end %>
+      </section>
+
+      <div class="auth-asset">
+        <div>
+          <img
+            src="/images/auth-image.svg"
+            alt="Auth image"
+            width={500}
+            height={500}
+            class="rounded-l-xl object-contain"
           />
         </div>
-      <% end %>
-    </section>
+      </div>
+    </main>
     """
   end
 
@@ -67,6 +81,6 @@ defmodule PhoenixBankingAppWeb.Auth.SignIn do
   end
 
   defp assign_loader(socket, loader_value) do
-    assign(socket, :connect_bank_loader, loader_value)
+    assign(socket, :connect_bank_status, loader_value)
   end
 end
