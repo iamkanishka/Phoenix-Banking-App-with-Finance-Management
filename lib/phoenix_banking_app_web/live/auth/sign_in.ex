@@ -1,5 +1,5 @@
 defmodule PhoenixBankingAppWeb.Auth.SignIn do
-  alias PhoenixBankingAppWeb.Auth.Services.AuthService
+  alias PhoenixBankingApp.Services.AuthService
   use PhoenixBankingAppWeb, :live_view
 
   @impl true
