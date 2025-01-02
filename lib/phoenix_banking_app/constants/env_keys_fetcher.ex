@@ -29,6 +29,17 @@ defmodule PhoenixBankingApp.Constants.EnvKeysFetcher do
     end
   end
 
+
+  def get_transaction_collection_id() do
+    case Application.get_env(get_app_name(), :appwrite_transaction_collection_id) do
+      nil ->
+        nil
+
+      appwrite_bank_collection_id ->
+        appwrite_bank_collection_id
+    end
+  end
+
   defp get_app_name do
     Mix.Project.config()[:app]
   end
