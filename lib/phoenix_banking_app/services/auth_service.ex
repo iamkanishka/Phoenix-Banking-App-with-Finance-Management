@@ -1,17 +1,125 @@
 defmodule PhoenixBankingApp.Services.AuthService do
-
+  alias Appwrite.Utils
   alias PhoenixBankingApp.Dwolla.Dwolla
   alias PhoenixBankingApp.Dwolla.Customer
   alias PhoenixBankingApp.Plaid.Item
-  alias PhoenixBankingApp.Plaid.Accounts
+  alias PhoenixBankingApp.Plaid.Accounts, as: PlaidAccounts
+  alias Appwrite.Services.Accounts, as: AppwriteAccounts
   alias PhoenixBankingApp.Utils.CryptoUtil
   alias PhoenixBankingApp.Constants.EnvKeysFetcher
   alias PhoenixBankingApp.Dwolla.Token
   alias Appwrite.Services.Database
 
 
+  @form_fields [
+    %{field: :first_name, label: "First Name", type: "text", placeholder: "First Name"},
+    %{field: :last_name, label: "Last Name", type: "text", placeholder: "Last Name"},
+    %{field: :address1, label: "Address", type: "text", placeholder: "123, Main St"},
+    %{field: :city, label: "City", type: "text", placeholder: "Your City"},
+    %{field: :state, label: "State", type: "text", placeholder: "NY"},
+    %{field: :postal_code, label: "Postal Code", type: "text", placeholder: "50314"},
+    %{field: :date_of_birth, label: "Date Of Birth", type: "text", placeholder: "YYYY-MM-DD"},
+    %{field: :ssn, label: "SSN", type: "text", placeholder: "123-45-6789"},
+    %{field: :email, label: "Email", type: "text", placeholder: "your_email@example.com"},
+    %{field: :password, label: "Password", type: "text", placeholder: "Your Password"}
+  ]
 
-  @spec exchange_public_token(any(), any()) :: {:ok, %{publicTokenExchange: <<_::64>>}}
+
+
+  def sign_in(email, password) do
+    try do
+
+      {:ok, user_auth_data} =
+        AppwriteAccounts.create_email_password_session(email, password)
+
+      Utils.Client.set_session(user_auth_data["secret"])
+      {:ok, need_bank_connectivity} = check_user_bank_connectivity(user_auth_data)
+
+      if need_bank_connectivity do
+        {:ok, user_doc} = check_user_existence(user_auth_data["userId"])
+
+        notify_parent({:user, user_doc})
+
+        {:ok, need_bank_connectivity}
+      else
+        {:ok, need_bank_connectivity}
+      end
+    catch
+      {:error, error} ->
+         {:error, error}
+    end
+  end
+
+  def sign_up(user_data) do
+    try do
+      full_name = "#{user_data["first_name"]} #{user_data["last_name"]}"
+
+      {:ok, new_user} =
+        AppwriteAccounts.create(nil, user_data["email"], user_data["password"], full_name)
+
+      IO.inspect(new_user, label: "new_user")
+
+      atomized_user_data = Map.new(user_data, fn {key, value} -> {String.to_atom(key), value} end)
+
+      # Update the User state
+      updated_user_state_data = update_user_state_field(atomized_user_data)
+
+      dwolla_creds = %{
+        client_id: Dwolla.get_client_id(),
+        client_secret: Dwolla.get_client_secret()
+      }
+
+      {:ok, dwolla_token_details} = Token.get(dwolla_creds)
+
+      {:ok, dwolla_id} =
+        Customer.create_verified(dwolla_token_details.access_token, updated_user_state_data)
+
+      {:ok, user_session} =
+        AppwriteAccounts.create_email_password_session(user_data["email"], user_data["password"])
+
+      Utils.Client.set_session(user_session["secret"])
+
+      updated_user_data =
+        Map.merge(user_data, %{"dwolla_id" => dwolla_id[:id], "user_id" => new_user["$id"]})
+
+      IO.inspect(updated_user_data, label: "updated_user_data")
+
+      {:ok, user_doc} = add_user(updated_user_data)
+
+      IO.inspect(user_doc, label: "user_doc")
+
+      notify_parent({:user, user_doc})
+      {:ok, user_doc}
+    catch
+      {:error, error} ->
+        {:error, error}
+    end
+  end
+
+  defp update_user_state_field(user_data) do
+    # Update the User state with two letter and capitalize it
+    Map.update!(user_data, :state, fn state ->
+      state
+      # Take the first 2 characters
+      |> String.slice(0, 2)
+      # Convert them to uppercase
+      |> String.upcase()
+    end)
+  end
+
+  defp notify_parent(msg), do: send(self(), msg)
+
+  defp add_user(user_data) do
+    # Add user to database
+    Database.create_document(
+      EnvKeysFetcher.get_appwrite_database_id(),
+      EnvKeysFetcher.get_user_collection_id(),
+      user_data["user_id"],
+      user_data,
+      nil
+    )
+  end
+
   def exchange_public_token(public_token, socket) do
     try do
       user = socket.assigns.user
@@ -21,7 +129,7 @@ defmodule PhoenixBankingApp.Services.AuthService do
       IO.inspect(public_token_exchange_res, label: "public_token_exchange_res")
 
       {:ok, accounts_res} =
-        Accounts.get(%{access_token: public_token_exchange_res[:access_token]})
+        PlaidAccounts.get(%{access_token: public_token_exchange_res[:access_token]})
 
       IO.inspect(accounts_res, label: "accounts_res")
 
@@ -45,10 +153,12 @@ defmodule PhoenixBankingApp.Services.AuthService do
 
       IO.inspect(processor_token_create_response, label: "processor_token_create_response")
 
-      dwolla_creds = %{client_id: Dwolla.get_client_id(), client_secret: Dwolla.get_client_secret()}
+      dwolla_creds = %{
+        client_id: Dwolla.get_client_id(),
+        client_secret: Dwolla.get_client_secret()
+      }
 
       {:ok, dwolla_token_details} = Token.get(dwolla_creds)
-
 
       {:ok, funding_source_response} =
         Customer.create_funding_source(
@@ -68,8 +178,8 @@ defmodule PhoenixBankingApp.Services.AuthService do
         "bank_name" => account_data.name,
         "funding_source_id" => funding_source_response[:id],
         # shareable_id" => CryptoUtil.encrypt(account_data.account_id),
-        "shareable_id" =>  account_data.account_id,
-         "access_token" => public_token_exchange_res[:access_token]
+        "shareable_id" => account_data.account_id,
+        "access_token" => public_token_exchange_res[:access_token]
       }
 
       IO.inspect(bank_data)
@@ -94,6 +204,44 @@ defmodule PhoenixBankingApp.Services.AuthService do
         IO.inspect(error)
         raise error
     end
+  end
+
+
+
+  def check_user_bank_connectivity(user_auth_data) do
+    try do
+      {:ok, user_bank_data} =
+        Database.get_document(
+          EnvKeysFetcher.get_appwrite_database_id(),
+          EnvKeysFetcher.get_bank_collection_id(),
+          user_auth_data["userId"],
+          nil
+        )
+
+      need_connectivity =
+        if Map.has_key?(user_bank_data, "code") and user_bank_data["code"] == 404,
+          do: true,
+          else: false
+
+      {:ok, need_connectivity}
+    catch
+      {:error, error} ->
+        IO.inspect(error)
+        {:error, false}
+    end
+  end
+
+  defp check_user_existence(user_id) do
+    Database.get_document(
+      EnvKeysFetcher.get_appwrite_database_id(),
+      EnvKeysFetcher.get_user_collection_id(),
+      user_id,
+      nil
+    )
+  end
+
+  def get_form_fields do
+    @form_fields
   end
 
 
