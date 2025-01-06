@@ -27,11 +27,11 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
       <.simple_form for={@form} phx-submit="save" phx-change="validate" phx-target={@myself}>
         <%= for  %{field: field, label: label, type: type, placeholder: placeholder }  <- @form_fields do %>
           <%= if (@type == "sign-in" and field in [:email, :password]) or  @type == "sign-up" do %>
-            <%!-- <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4"> --%>
+            <%!-- <div class="flex grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4"> --%>
             <.input type={type} field={@form[field]} label={label} placeholder={placeholder} />
             <%!-- </div> --%>
             <%= if @form_errors[field] do %>
-              <span class="error-message">{@form_errors[field]}</span>
+              <span class=" text-sm text-red-600">{@form_errors[field]}</span>
             <% end %>
           <% end %>
         <% end %>
@@ -91,12 +91,18 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
   @impl true
   def handle_event("validate", %{"form" => params}, socket) do
     # Define validation rules
-    IO.inspect(params, label: "Params")
+     IO.inspect(params, label: "Params")
 
     errors = FormValidator.validate_form(params, socket.assigns.type)
+    IO.inspect(errors, label: "Errors")
 
+    atomized_form_errors = Map.new(errors, fn {key, value} -> {String.to_atom(key), value} end)
     # {:noreply, assign(socket,form_errors: errors)}
-    {:noreply, socket}
+    {:noreply,
+    socket
+    # |> assign(socket.assigns)
+    #  |> assign(:form_errors, atomized_form_errors)
+  }
   end
 
   @impl true
@@ -118,9 +124,9 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
 
     assign_loader(socket, true)
 
-    if(socket.assigns.type == "sign-in") do
+    if socket.assigns.type == "sign-in" do
       case AuthService.sign_in(params["email"], params["password"]) do
-        {:ok, need_bank_connectivity} ->
+        {:ok, need_bank_connectivity, user_id} ->
           assign_loader(socket, false)
 
           if need_bank_connectivity do
@@ -136,7 +142,7 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
              socket
              |> assign_loader(false)
              |> put_flash(:info, "Logged in successfully")
-             |> push_navigate(to: "/", replace: true)}
+             |> push_navigate(to: "/#{user_id}", replace: true)}
           end
 
         {:error, error} ->
