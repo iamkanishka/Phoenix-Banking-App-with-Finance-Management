@@ -5,7 +5,7 @@ defmodule PhoenixBankingApp.Utils.SessionManager do
 
   @table_name :session_store
   # 1 hour in seconds
-  @default_max_age 3600
+  @default_max_age 3600 * 24
 
   @doc """
   Initializes the ETS table for storing session data.
@@ -17,8 +17,8 @@ defmodule PhoenixBankingApp.Utils.SessionManager do
   @doc """
   Stores a session token with a given `key` and optional `max_age`.
   """
-  def put_session(key, token, iso_timestamp) when is_binary(key) and is_binary(token) do
-    :ets.insert(@table_name, {key, token, iso_timestamp})
+  def put_session(key, token) when is_binary(key) and is_binary(token) do
+    :ets.insert(@table_name, {key, token})
     :ok
   end
 
@@ -28,9 +28,22 @@ defmodule PhoenixBankingApp.Utils.SessionManager do
   """
   def get_session(key) when is_binary(key) do
     case :ets.lookup(@table_name, key) do
-      [{^key, token, expires_at}] ->
-        {:ok, future_time, _} = DateTime.from_iso8601(expires_at)
+      [{^key, token}] ->
+        # {:ok, future_time, _} = DateTime.from_iso8601(expires_at)
+        # current_time = DateTime.utc_now()
+        # seconds_diff = DateTime.diff(future_time, current_time, :second)
+
+        # Calculate the future time (24 hours from now)
         current_time = DateTime.utc_now()
+        future_time = DateTime.add(current_time, @default_max_age, :second)
+
+        # Get the ISO8601 string for the expiration time
+        expires_at = DateTime.to_iso8601(future_time)
+
+        # Parse the ISO8601 string
+        {:ok, future_time, _} = DateTime.from_iso8601(expires_at)
+
+        # Calculate the difference in seconds between the future and current time
         seconds_diff = DateTime.diff(future_time, current_time, :second)
 
         if seconds_diff > 0 do

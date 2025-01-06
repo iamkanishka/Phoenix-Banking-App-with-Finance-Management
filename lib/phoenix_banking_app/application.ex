@@ -2,14 +2,18 @@ defmodule PhoenixBankingApp.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
+  alias PhoenixBankingApp.Utils.SessionManager
 
   use Application
 
   @impl true
   def start(_type, _args) do
+    SessionManager.init()
+
     children = [
       PhoenixBankingAppWeb.Telemetry,
-      {DNSCluster, query: Application.get_env(:phoenix_banking_app, :dns_cluster_query) || :ignore},
+      {DNSCluster,
+       query: Application.get_env(:phoenix_banking_app, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: PhoenixBankingApp.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: PhoenixBankingApp.Finch},
