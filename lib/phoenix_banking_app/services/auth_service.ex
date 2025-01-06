@@ -1,5 +1,8 @@
 defmodule PhoenixBankingApp.Services.AuthService do
+  alias PhoenixBankingApp.Utils.SessionManager
   alias Appwrite.Utils
+  alias Appwrite.Utils.Query
+  alias Appwrite.Types.Document
   alias PhoenixBankingApp.Dwolla.Dwolla
   alias PhoenixBankingApp.Dwolla.Customer
   alias PhoenixBankingApp.Plaid.Item
@@ -10,7 +13,6 @@ defmodule PhoenixBankingApp.Services.AuthService do
   alias PhoenixBankingApp.Dwolla.Token
   alias Appwrite.Services.Database
 
-
   @form_fields [
     %{field: :first_name, label: "First Name", type: "text", placeholder: "First Name"},
     %{field: :last_name, label: "Last Name", type: "text", placeholder: "Last Name"},
@@ -18,21 +20,24 @@ defmodule PhoenixBankingApp.Services.AuthService do
     %{field: :city, label: "City", type: "text", placeholder: "Your City"},
     %{field: :state, label: "State", type: "text", placeholder: "NY"},
     %{field: :postal_code, label: "Postal Code", type: "text", placeholder: "50314"},
-    %{field: :date_of_birth, label: "Date Of Birth", type: "text", placeholder: "YYYY-MM-DD"},
+    %{field: :date_of_birth, label: "Date Of Birth", type: "date", placeholder: "YYYY-MM-DD"},
     %{field: :ssn, label: "SSN", type: "text", placeholder: "123-45-6789"},
     %{field: :email, label: "Email", type: "text", placeholder: "your_email@example.com"},
     %{field: :password, label: "Password", type: "text", placeholder: "Your Password"}
   ]
 
-
-
   def sign_in(email, password) do
     try do
-
       {:ok, user_auth_data} =
         AppwriteAccounts.create_email_password_session(email, password)
 
-      Utils.Client.set_session(user_auth_data["secret"])
+      SessionManager.put_session(
+        user_auth_data["userId"],
+        user_auth_data["secret"]
+      )
+
+
+
       {:ok, need_bank_connectivity} = check_user_bank_connectivity(user_auth_data)
 
       if need_bank_connectivity do
@@ -42,11 +47,11 @@ defmodule PhoenixBankingApp.Services.AuthService do
 
         {:ok, need_bank_connectivity}
       else
-        {:ok, need_bank_connectivity}
+        {:ok, need_bank_connectivity, user_auth_data["userId"]}
       end
     catch
       {:error, error} ->
-         {:error, error}
+        {:error, error}
     end
   end
 
@@ -56,8 +61,6 @@ defmodule PhoenixBankingApp.Services.AuthService do
 
       {:ok, new_user} =
         AppwriteAccounts.create(nil, user_data["email"], user_data["password"], full_name)
-
-      IO.inspect(new_user, label: "new_user")
 
       atomized_user_data = Map.new(user_data, fn {key, value} -> {String.to_atom(key), value} end)
 
@@ -120,6 +123,25 @@ defmodule PhoenixBankingApp.Services.AuthService do
     )
   end
 
+  def get_logged_in_user(session_key) do
+    {:ok, session} = SessionManager.get_session(session_key)
+
+    case AppwriteAccounts.get(%{"X-Appwrite-Session" => session}) do
+      {:ok, user} ->
+         case get_user_info(user["$id"]) do
+          {:ok, user_details} ->
+            {:ok, user_details}
+
+          {:error, error} ->
+            IO.inspect(error)
+            {:error, error}
+        end
+
+      {:error, error} ->
+        {:error, error}
+    end
+  end
+
   def exchange_public_token(public_token, socket) do
     try do
       user = socket.assigns.user
@@ -179,6 +201,7 @@ defmodule PhoenixBankingApp.Services.AuthService do
         "funding_source_id" => funding_source_response[:id],
         # shareable_id" => CryptoUtil.encrypt(account_data.account_id),
         "shareable_id" => account_data.account_id,
+         "account_id" => account_data.account_id,
         "access_token" => public_token_exchange_res[:access_token]
       }
 
@@ -205,8 +228,6 @@ defmodule PhoenixBankingApp.Services.AuthService do
         raise error
     end
   end
-
-
 
   def check_user_bank_connectivity(user_auth_data) do
     try do
@@ -240,9 +261,24 @@ defmodule PhoenixBankingApp.Services.AuthService do
     )
   end
 
+  defp get_user_info(user_id) do
+    get_user =
+      Database.list_documents(
+        EnvKeysFetcher.get_appwrite_database_id(),
+        EnvKeysFetcher.get_user_collection_id(),
+        [Query.equal("user_id", [user_id])]
+      )
+
+    case get_user do
+      {:ok, user_docs} ->
+         {:ok, user_docs}
+
+      {:error, error} ->
+        {:error, error}
+    end
+  end
+
   def get_form_fields do
     @form_fields
   end
-
-
 end
