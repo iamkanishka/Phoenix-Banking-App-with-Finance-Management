@@ -36,16 +36,14 @@ defmodule PhoenixBankingApp.Services.AuthService do
         user_auth_data["secret"]
       )
 
-
-
-      {:ok, need_bank_connectivity} = check_user_bank_connectivity(user_auth_data)
+      {:ok, need_bank_connectivity } = check_user_bank_connectivity(user_auth_data)
 
       if need_bank_connectivity do
         {:ok, user_doc} = check_user_existence(user_auth_data["userId"])
 
         notify_parent({:user, user_doc})
 
-        {:ok, need_bank_connectivity}
+        {:ok, need_bank_connectivity, user_auth_data["userId"]}
       else
         {:ok, need_bank_connectivity, user_auth_data["userId"]}
       end
@@ -80,9 +78,7 @@ defmodule PhoenixBankingApp.Services.AuthService do
       {:ok, user_session} =
         AppwriteAccounts.create_email_password_session(user_data["email"], user_data["password"])
 
-      Utils.Client.set_session(user_session["secret"])
-
-      updated_user_data =
+     updated_user_data =
         Map.merge(user_data, %{"dwolla_id" => dwolla_id[:id], "user_id" => new_user["$id"]})
 
       IO.inspect(updated_user_data, label: "updated_user_data")
@@ -90,6 +86,12 @@ defmodule PhoenixBankingApp.Services.AuthService do
       {:ok, user_doc} = add_user(updated_user_data)
 
       IO.inspect(user_doc, label: "user_doc")
+
+      SessionManager.put_session(
+        user_session["userId"],
+        user_session["secret"]
+      )
+
 
       notify_parent({:user, user_doc})
       {:ok, user_doc}
@@ -128,7 +130,7 @@ defmodule PhoenixBankingApp.Services.AuthService do
 
     case AppwriteAccounts.get(%{"X-Appwrite-Session" => session}) do
       {:ok, user} ->
-         case get_user_info(user["$id"]) do
+        case get_user_info(user["$id"]) do
           {:ok, user_details} ->
             {:ok, user_details}
 
@@ -201,7 +203,8 @@ defmodule PhoenixBankingApp.Services.AuthService do
         "funding_source_id" => funding_source_response[:id],
         # shareable_id" => CryptoUtil.encrypt(account_data.account_id),
         "shareable_id" => account_data.account_id,
-         "account_id" => account_data.account_id,
+        "processor_token" => processor_token_create_response[:processor_token],
+        "account_id" => account_data.account_id,
         "access_token" => public_token_exchange_res[:access_token]
       }
 
@@ -271,7 +274,7 @@ defmodule PhoenixBankingApp.Services.AuthService do
 
     case get_user do
       {:ok, user_docs} ->
-         {:ok, user_docs}
+        {:ok, user_docs}
 
       {:error, error} ->
         {:error, error}
