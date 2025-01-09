@@ -278,6 +278,18 @@ defmodule PhoenixBankingApp.Plaid.Item do
     request_operation("processor/token/create", params, config, mapper)
   end
 
+
+  @spec create_sandbox_processor_token(params, config) :: {:ok, map} | error
+  def create_sandbox_processor_token(params, config) do
+    mapper = fn %{"processor_token" => t, "request_id" => r} ->
+      %{processor_token: t, request_id: r}
+    end
+
+    request_operation("sandbox/processor_token/create", params, config, mapper)
+  end
+
+
+
   @doc """
   [Creates a stripe bank account token](https://stripe.com/docs/ach)
   used to create an authenticated funding source with Stripe.
