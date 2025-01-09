@@ -3,8 +3,10 @@ defmodule PhoenixBankingApp.Plaid.Institutions do
   Functions for Plaid `institutions` endpoint.
   """
 
+  alias PhoenixBankingApp.Plaid.Plaid
   alias PhoenixBankingApp.Plaid.Client.Request
   alias PhoenixBankingApp.Plaid.Client
+
 
   @derive Jason.Encoder
   defstruct institutions: [], request_id: nil, total: nil
