@@ -1,39 +1,39 @@
 <div class="flex">
-    <div>
-      <.live_component module={PhoenixBankingAppWeb.CustomComponents.SidebarLive} id={:header}
-      />
-    </div>
-    <div>
-  
-      <div class="transactions">
-        <div class="transactions-header">
-     
-          <.live_component
-          module={PhoenixBankingAppWeb.CustomComponents.HeaderBoxLive }
-          id={:headerbox}   title={"Transaction History"} user={"Guest"}
-          subtext={"See your bank details and transactions."}
-          />
-        </div>
-  
-        <div class="space-y-6">
-          <div class="transactions-account">
-            <div class="flex flex-col gap-2">
-              <h2 class="text-18 font-bold text-white">{@account?.data.name}</h2>
-              <p class="text-14 text-blue-25">
-                {@account?.data.officialName}
-              </p>
-              <p class="text-14 font-semibold tracking-[1.1px] text-white">
-                ●●●● ●●●● ●●●● {@account?.data.mask}
-              </p>
-            </div>
-            
-            <div class='transactions-account-balance'>
-              <p class="text-14">Current balance</p>
-              <p class="text-24 text-center font-bold">{format_amount(@account?.data.currentBalance)}</p>
-            </div>
+  <div>
+    <.live_component module={PhoenixBankingAppWeb.CustomComponents.SidebarLive}
+    current_url={@current_url} id={:header} />
+  </div>
+  <div>
+    <div class="transactions">
+      <div class="transactions-header">
+        <.live_component
+        module={PhoenixBankingAppWeb.CustomComponents.HeaderBoxLive }
+        id={:headerbox} title={"Transaction History"} user={"Guest"} type={"greeting"}
+        subtext={"See your bank details and transactions."} />
+      </div>
+
+      <div class="space-y-6">
+        <div class="transactions-account">
+          <div class="flex flex-col gap-2">
+            <h2 class="text-18 font-bold text-white">{@account[:name]}</h2>
+            <p class="text-14 text-blue-25">{@account[:official_name]}</p>
+            <p class="text-14 font-semibold tracking-[1.1px] text-white">
+              ●●●● ●●●● ●●●● {@account[:mask]}
+            </p>
           </div>
-          <section class="flex w-full flex-col gap-6">
-  
+
+          <div class="transactions-account-balance">
+            <p class="text-14">Current balance</p>
+            <p class="text-24 text-center font-bold">
+                <!--
+              {format_amount(@account[:current_balance])}
+              -->
+              { @account[:current_balance]}
+
+            </p>
+          </div>
+        </div>
+        <section class="flex w-full flex-col gap-6">
           <!--
             <TransactionsTable 
               transactions={currentTransactions}
@@ -44,31 +44,15 @@
                 </div>
               )} -->
 
-              <div  class="flex w-full flex-col gap-6">
-                <.live_component
-                  module={PhoenixBankingAppWeb.CustomComponents.TransactionTable}
-                  id={:bank_transaction_table}
-                  transactions={@transactions}
-                  appwrite_item_id={@appwrite_item_id}
-                  url={@url}
-                />
-              </div>
-        
-              <%= if @total_pages > 1 do %>
-                <div class="my-4 w-full">
-                  <.live_component
-                    module={PhoenixBankingAppWeb.CustomComponents.Pagination}
-                    id={:bank_transaction_pagination}
-                    page={@page}
-                    url={@url}
-                    total_pages={@total_pages}
-                  />
-                </div>
-              <% end %>
-
-          </section>
-        </div>
+          <div class="flex w-full flex-col gap-6">
+            <.live_component
+            module={PhoenixBankingAppWeb.CustomComponents.TransactionTable}
+            id={:bank_transaction_table} transactions={@transactions}
+            appwrite_item_id={@appwrite_item_id} url={@url} />
+          </div>
+ 
+        </section>
       </div>
     </div>
   </div>
-  
+</div>
