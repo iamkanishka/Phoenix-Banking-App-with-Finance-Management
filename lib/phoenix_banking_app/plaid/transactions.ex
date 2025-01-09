@@ -3,6 +3,7 @@ defmodule PhoenixBankingApp.Plaid.Transactions do
   Functions for Plaid `transactions` endpoint.
   """
 
+  alias PhoenixBankingApp.Plaid.Plaid
   alias PhoenixBankingApp.Plaid.Client.Request
   alias PhoenixBankingApp.Plaid.Client
 
@@ -204,7 +205,7 @@ defmodule PhoenixBankingApp.Plaid.Transactions do
     c = config[:client] || Plaid
 
     Request
-    |> struct(method: :post, endpoint: "transactions/get", body: params)
+    |> struct(method: :post, endpoint: "processor/transactions/get", body: params)
     |> Request.add_metadata(config)
     |> c.send_request(Client.new(config))
     |> c.handle_response(&map_transactions(&1))
@@ -250,7 +251,7 @@ defmodule PhoenixBankingApp.Plaid.Transactions do
     c = config[:client] || Plaid
 
     Request
-    |> struct(method: :post, endpoint: "transactions/sync", body: params)
+    |> struct(method: :post, endpoint: "/processor/transactions/sync", body: params)
     |> Request.add_metadata(config)
     |> c.send_request(Client.new(config))
     |> c.handle_response(&map_sync_transactions(&1))
