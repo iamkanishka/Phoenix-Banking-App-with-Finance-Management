@@ -40,6 +40,19 @@ defmodule PhoenixBankingApp.Constants.EnvKeysFetcher do
     end
   end
 
+
+  def get_secret_key() do
+    case Application.get_env(get_app_name(), :secret_key_base) do
+      nil ->
+        nil
+
+      database_id ->
+        database_id
+    end
+  end
+
+
+
   defp get_app_name do
     Mix.Project.config()[:app]
   end
