@@ -3,7 +3,7 @@ defmodule PhoenixBankingApp.Constants.SidebarLinks do
  @sidebar_links_consts [
     %{
       imgURL: "/images/home.svg",
-      route: "/home",
+      route: "/",
       label: "Home",
     },
     %{

@@ -4,7 +4,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
   @impl true
   def render(assigns) do
     ~H"""
-    <aside class="right-sidebar">
+    <aside class="right-sidebar" style="700px !important">
       <section class="flex flex-col pb-8">
         <div class="profile-banner" />
         <div class="profile">
@@ -43,7 +43,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
           </.link>
         </div>
 
-        <%= if @banks.length > 0 do %>
+        <%= if length(@banks) > 0 do %>
           <div class="relative flex flex-1 flex-col items-center justify-center gap-5">
             <div class="relative z-10">
               <%!-- <BankCard
@@ -57,7 +57,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
                 id={"bank_card#{Enum.at(@banks, 0)["$id"]}"}
                 appwrite_item_id={@appwrite_item_id}
                 account={Enum.at(@banks, 0)}
-                userName={"#{@user.firstName} #{@user.lastName}"}
+                userName={"#{@user["first_name"]} #{@user["last_name"]}"}
                 showBalance={false}
               />
             </div>
@@ -75,7 +75,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
                   id={"bank_card#{Enum.at(@banks, 1)["$id"]}"}
                   appwrite_item_id={@appwrite_item_id}
                   account={Enum.at(@banks, 1)}
-                  userName={"#{@user.firstName} #{@user.lastName}"}
+                  userName={"#{@user["first_name"]} #{@user["last_name"]}"}
                   showBalance={false}
                 />
               </div>
@@ -107,6 +107,8 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
   def update(assigns, socket) do
     {:ok,
      socket
+     |> assign(:categories, [])
+
      |> assign(assigns)}
   end
 end

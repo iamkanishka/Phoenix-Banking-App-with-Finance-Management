@@ -58,9 +58,11 @@ defmodule PhoenixBankingApp.MixProject do
       {:bandit, "~> 1.5"},
       {:salad_ui, "~> 0.14.4"},
       {:number, "~> 1.0"},
-      {:timex, "~> 3.7"}
-
-    ]
+      {:timex, "~> 3.7"},
+      {:appwrite, "~> 0.1.8"},
+      {:tesla, "~> 1.13"},
+      {:recase, "~> 0.8.1"}
+     ]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.

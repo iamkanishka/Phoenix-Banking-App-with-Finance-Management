@@ -19,11 +19,10 @@ defmodule PhoenixBankingAppWeb.CustomComponents.SidebarLive do
         </.link>
 
         <%= for %{label: label, imgURL: img_url, route: route}  <- SidebarLinks.get_sidebar_links() do %>
-          <%!-- <% is_active = @current_path == link.route or String.starts_with?(@current_path, "#{link.route}/") %> --%> <% is_active =
-            false %>
+          <% is_active =  @current_url == route %>
           <.link
             navigate={route}
-            class={"sidebar-link" <> if is_active, do: "bg-bank-gradient", else: ""}
+            class={"sidebar-link " <> if is_active, do: "bg-bank-gradient", else: ""}
           >
             <div class="relative size-6">
               <img
@@ -33,7 +32,7 @@ defmodule PhoenixBankingAppWeb.CustomComponents.SidebarLive do
               />
             </div>
 
-            <p class={"sidebar-label" <> if is_active, do: "!text-white", else: ""}>
+            <p class={"sidebar-label " <> if is_active, do: "!text-white", else: ""}>
               {label}
             </p>
           </.link>
@@ -47,5 +46,12 @@ defmodule PhoenixBankingAppWeb.CustomComponents.SidebarLive do
       />
     </section>
     """
+  end
+
+  @impl true
+  def update(assigns, socket) do
+    {:ok,
+     socket
+     |> assign(assigns)}
   end
 end

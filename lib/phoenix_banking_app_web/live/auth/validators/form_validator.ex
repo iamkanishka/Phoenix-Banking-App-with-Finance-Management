@@ -52,8 +52,8 @@ defmodule PhoenixBankingAppWeb.Auth.Validators.FormValidator do
       ...> ])
       %{"name" => "Name is required"}
   """
-  def validate_form(form_data, rules) do
-    rules
+  def validate_form(form_data, type) do
+    get_form_rules(type)
     |> Enum.reduce(%{}, fn {field, _expected, _validator, _error_msg} = rule, errors ->
       value = Map.get(form_data, Atom.to_string(field)) || nil
       case validate(field, value, [rule]) do
@@ -62,4 +62,29 @@ defmodule PhoenixBankingAppWeb.Auth.Validators.FormValidator do
       end
     end)
   end
+
+
+  defp get_form_rules(type) do
+    if type == "sign-up" do
+      [
+        {:first_name, :string, &(&1 != ""), "First Name is required"},
+        {:last_name, :string, &(&1 != ""), "Last Name is required"},
+        {:address1, :string, &(&1 != ""), "Address is required"},
+        {:city, :string, &(&1 != ""), "City is required"},
+        {:state, :string, &(&1 != ""), "State is required"},
+        {:postal_code, :integer, &(&1 != ""), "Postal Code is required"},
+        {:date_of_birth, :string, &(&1 != ""), "Date of birth is required"},
+        {:ssn, :string, &(&1 != ""), "SSN is required"},
+        {:email, :string, &String.contains?(&1 || "", "@"), "Email must be valid"},
+        {:password, :string, &(&1 != ""), "Password is required"}
+
+      ]
+    else
+      [
+        {:email, :string, &String.contains?(&1 || "", "@"), "Email must be valid"},
+        {:password, :string, &(&1 != ""), "Password is required"}
+      ]
+    end
+  end
+
 end

@@ -13,7 +13,7 @@ defmodule PhoenixBankingAppWeb.CustomComponents.BankCard do
             </h1>
 
             <p class="font-ibm-plex-serif font-black text-white">
-              {format_amount(@account.currentBalance)}
+              {format_amount(@account.current_balance)}
             </p>
           </div>
 
@@ -29,7 +29,7 @@ defmodule PhoenixBankingAppWeb.CustomComponents.BankCard do
             </div>
 
             <p class="text-14 font-semibold tracking-[1.1px] text-white">
-              ●●●● ●●●● ●●●● <span class="text-16">{@account?.mask}</span>
+              ●●●● ●●●● ●●●● <span class="text-16">{@account.mask}</span>
             </p>
           </article>
         </div>
@@ -49,7 +49,7 @@ defmodule PhoenixBankingAppWeb.CustomComponents.BankCard do
       </.link>
 
       <%= if @showBalance do %>
-        <.button phx-hook="ClipboardCopy" data-clipboard={@account?.shareableId}>
+        <.button phx-hook="ClipboardCopy" data-clipboard={@account.shareableId}>
           Copy to Clipboard
         </.button>
       <% end %>

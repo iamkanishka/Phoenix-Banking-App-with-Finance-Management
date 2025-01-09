@@ -14,16 +14,9 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
                 phx-click="bank_change"
                 phx-value-id={account["appwrite_item_id"]}
                 phx-target={@myself}
-                class={"inline-block p-4 border-b-2 rounded-t-lg " <>
-          if String.to_integer(to_string(@appwrite_item_id)) == String.to_integer(to_string(account["appwrite_item_id"])) do
-            "text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500"
-
-          else
-            "border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-
-          end}
+                class={"inline-block p-4 border-b-2 rounded-t-lg " <> if @appwrite_item_id ==  account[:appwrite_item_id], do: "text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500", else: "border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"}
               >
-                {account["name"]}
+                {account[:name]}
               </a>
             </li>
           <% end %>
@@ -32,10 +25,10 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
        <%!-- Bank Info --%>
       <div>
         <%= for account <- @accounts do %>
-          <%= if String.to_integer(to_string(@appwrite_item_id)) == String.to_integer(to_string(account["appwrite_item_id"])) do %>
+          <%= if @appwrite_item_id ==  account[:appwrite_item_id] do %>
             <.live_component
               module={PhoenixBankingAppWeb.HomeLive.Components.BankInfo}
-              id={account["name"]}
+              id={account[:name]}
               appwrite_item_id={@appwrite_item_id}
               url={@url}
               type="full"

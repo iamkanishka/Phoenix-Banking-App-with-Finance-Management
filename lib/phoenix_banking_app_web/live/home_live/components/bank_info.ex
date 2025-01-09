@@ -8,14 +8,14 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankInfo do
     <div
       phx-click="bank_change"
       phx-target={@myself}
-      class={"bank-info #{@colors["bg"]}" <> if  @type == "card" and  String.to_integer(to_string(@appwrite_item_id)) == String.to_integer(to_string(@account["appwrite_item_id"])), do: "bg-bank-gradient", else: if @type == "card", do: "rounded-xl hover:shadow-sm cursor-pointer" ,else: "" }
+      class={"bank-info #{@colors["bg"]}" <> if  @type == "card" and   @appwrite_item_id ==  @account[:appwrite_item_id], do: "bg-bank-gradient", else: if @type == "card", do: "rounded-xl hover:shadow-sm cursor-pointer" ,else: "" }
     >
       <figure class={"flex-center h-fit rounded-full bg-blue-100 #{@colors["lightBg"]}"}>
         <img
           src="/images/connect-bank.svg"
           width={20}
           height={20}
-          alt={@account["subtype"]}
+          alt={@account[:subtype]}
           class="m-2 min-w-5"
         />
       </figure>
@@ -23,18 +23,18 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankInfo do
       <div class="flex w-full flex-1 flex-col justify-center gap-1">
         <div class="bank-info_content">
           <h2 class={"text-16 line-clamp-1 flex-1 font-bold text-blue-900 #{@colors["title"]}"}>
-            {@account["name"]}
+            {@account[:name]}
           </h2>
 
           <%= if  @type == "full" do %>
             <p class={"text-12 rounded-full px-3 py-1 font-medium text-blue-700 #{@colors["subText"]} #{@colors["lightBg"]}"}>
-              {@account["subtype"]}
+              {@account[:subtype]}
             </p>
           <% end %>
         </div>
 
         <p class={"text-16 font-medium text-blue-700 #{@colors["subText"]}"}>
-          {format_amount(@account["currentBalance"])}
+          {format_amount(@account[:current_balance])}
         </p>
       </div>
     </div>

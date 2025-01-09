@@ -182,8 +182,41 @@ body {
 
   /* Right sidebar */
   .right-sidebar {
-    @apply no-scrollbar hidden h-screen max-h-screen flex-col border-l border-gray-200 xl:flex w-[355px] xl:overflow-y-scroll !important;
+    @apply no-scrollbar hidden h-screen max-h-screen flex-col border-l border-gray-200 xl:flex w-[700px] xl:overflow-y-scroll !important;
   }
+
+
+  /* Right sidebar */
+
+.right-sidebar {
+  display: none !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  width: 700px !important;
+  flex-direction: column !important;
+  border-left-width: 1px !important;
+  --tw-border-opacity: 1 !important;
+  border-color: rgb(234 236 240 / var(--tw-border-opacity)) !important;
+}
+
+.right-sidebar::-webkit-scrollbar {
+  display: none !important;
+}
+
+.right-sidebar {
+  -ms-overflow-style: none !important;
+ 
+  scrollbar-width: none !important;
+ 
+}
+
+@media (min-width: 1280px) {
+  .right-sidebar {
+    display: flex !important;
+    overflow-y: scroll !important;
+  }
+}
+
 
   .profile-banner {
     @apply h-[120px] w-full bg-gradient-mesh bg-cover bg-no-repeat;

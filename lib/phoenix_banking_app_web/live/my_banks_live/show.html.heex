@@ -1,40 +1,27 @@
 <div class="flex">
   <div>
     <.live_component module={PhoenixBankingAppWeb.CustomComponents.SidebarLive}
-    id={:header} />
+    current_url={@current_url} id={:header} />
   </div>
   <div>
-    <section className="flex">
-      <div className="my-banks">
-        <!--
-        <HeaderBox 
-          title="My Bank Accounts"
-          subtext="Effortlessly manage your banking activites."
-        />
-        -->
-
+    <section class="flex">
+      <div class="my-banks">
         <.live_component
         module={PhoenixBankingAppWeb.CustomComponents.HeaderBoxLive}
-        id={:headerbox} title={"My Bank Accounts"} user={"Guest"}
-        subtext={"Effortlessly manage your banking activites."} />
+        id={:headerbox} title={"My Bank Accounts"} type={"greeting"}
+        user={@logged_in["first_name"] || "Guest"} subtext={"Effortlessly manage
+        your banking activites."} />
 
-        <div className="space-y-4">
-          <h2 className="header-2">Your cards</h2>
-          <div className="flex flex-wrap gap-6">
-            <!--
-            {accounts && accounts.data.map((a: Account) => (
-              <BankCard 
-                key={accounts.id}
-                account={a}
-                userName={loggedIn?.firstName}
-              />
-            ))}
-         
-      -->
-            <%= for account <- @accounts.data do %> <.live_component
+        <div class="space-y-4">
+          <h2 class="header-2">Your cards</h2>
+          <div class="flex flex-wrap gap-6">
+      
+            <%= for account <- @accounts_data do %> <.live_component
             module={PhoenixBankingAppWeb.CustomComponents.BankCard}
-            id={"my_banks_bank_card#{Enum.at(@accounts, 0)["$id"]}"}
-            account={account} userName={"#{@user.firstName} "} /> <%= end %>
+            id={"#{account[:account_id]}"}
+            appwrite_item_id={account[:appwrite_item_id]}
+            userName={"#{@logged_in["first_name"]} #{@logged_in["last_name"]}"}
+            showBalance={false} account={account} /> <% end %>
           </div>
         </div>
       </div>
