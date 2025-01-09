@@ -9,20 +9,20 @@ defmodule PhoenixBankingApp.Services.TransactionService do
       {:ok, sender_transactions} =
         Database.list_documents(
           EnvKeysFetcher.get_appwrite_database_id(),
-          EnvKeysFetcher.get_bank_collection_id(),
-          [Jason.decode!(Query.equal("sender_bank_id", [bank_id]))]
+          EnvKeysFetcher.get_transaction_collection_id(),
+          [Query.equal("sender_bank_id", [bank_id])]
         )
 
       {:ok, reciever_transactions} =
         Database.list_documents(
           EnvKeysFetcher.get_appwrite_database_id(),
-          EnvKeysFetcher.get_bank_collection_id(),
-          [Jason.decode!(Query.equal("reciever_bank_id", [bank_id]))]
+          EnvKeysFetcher.get_transaction_collection_id(),
+          [Query.equal("reciever_bank_id", [bank_id])]
         )
 
       transaction = %{
-        total: length(sender_transactions) + length(reciever_transactions),
-        documents: sender_transactions ++ reciever_transactions
+        total: length(sender_transactions["documents"]) + length(reciever_transactions["documents"]),
+        documents: sender_transactions["documents"] ++ reciever_transactions["documents"]
       }
 
       {:ok, transaction}
