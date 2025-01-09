@@ -25,8 +25,12 @@ import topbar from "../vendor/topbar"
 let Hooks = {};
 import ClipboardCopy from "./ClipboardCopy";
 import PlaidConnect from "./PlaidConnect";
+import DonutChart from "./DonutChart";
+
 Hooks.ClipboardCopy = ClipboardCopy;
 Hooks.PlaidConnect = PlaidConnect;
+Hooks.DonutChart = DonutChart;
+
 
 
 let csrfToken = document
