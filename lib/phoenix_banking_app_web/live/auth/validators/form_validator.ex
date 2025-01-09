@@ -67,8 +67,8 @@ defmodule PhoenixBankingAppWeb.Auth.Validators.FormValidator do
   defp get_form_rules(type) do
     if type == "sign-up" do
       [
-        {:first_name, :string, &(&1 != ""), "First Nam is required"},
-        {:last_name, :string, &(&1 != ""), "Last Nam is required"},
+        {:first_name, :string, &(&1 != ""), "First Name is required"},
+        {:last_name, :string, &(&1 != ""), "Last Name is required"},
         {:address1, :string, &(&1 != ""), "Address is required"},
         {:city, :string, &(&1 != ""), "City is required"},
         {:state, :string, &(&1 != ""), "State is required"},
