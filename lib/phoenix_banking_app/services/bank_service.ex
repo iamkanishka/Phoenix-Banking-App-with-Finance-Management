@@ -1,4 +1,5 @@
 defmodule PhoenixBankingApp.Services.BankService do
+  alias PhoenixBankingApp.Utils.DateUtil
   alias PhoenixBankingApp.Services.TransactionService
   alias PhoenixBankingApp.Dwolla.Transfer
   alias PhoenixBankingApp.Plaid.Transactions
@@ -14,13 +15,17 @@ defmodule PhoenixBankingApp.Services.BankService do
   def get_accounts(user_id) do
     try do
       {:ok, banks} = get_banks(user_id)
+      IO.inspect(banks)
 
       accounts =
         Enum.map(banks["documents"], fn bank ->
           {:ok, accounts_res} =
             Accounts.get(%{access_token: bank["access_token"]})
+            IO.inspect(accounts_res)
 
           account_data = Enum.at(accounts_res.accounts, 0)
+      # for account_data <- accounts_res.accounts do
+
           {:ok, institution} = get_institution(accounts_res.item.institution_id)
 
           account = %{
@@ -62,7 +67,6 @@ defmodule PhoenixBankingApp.Services.BankService do
     try do
       {:ok, bank_data} = get_bank(appwrite_item_id)
 
-
       IO.inspect(bank_data)
 
       bank = Enum.at(bank_data["documents"], 0)
@@ -83,7 +87,7 @@ defmodule PhoenixBankingApp.Services.BankService do
           %{
             id: transfer_data["$id"],
             name: transfer_data["name"],
-            amount:  transfer_data["amount"]|> String.to_float() |> trunc(),
+            amount: transfer_data["amount"] |> String.to_float() |> trunc(),
             date: transfer_data["$createdAt"],
             payment_channel: transfer_data["channel"],
             category: transfer_data["category"],
@@ -97,7 +101,6 @@ defmodule PhoenixBankingApp.Services.BankService do
       {:ok, bank_transactions} = get_transactions(bank["processor_token"])
 
       IO.inspect(bank_transactions)
-
 
       account = %{
         id: account_data.account_id,
@@ -114,8 +117,9 @@ defmodule PhoenixBankingApp.Services.BankService do
       }
 
       all_transactions =
-        (bank_transactions ++ transfer_transactions)
-        # |> Enum.sort_by(&Date.from_iso8601!(&1.date), :desc)
+        bank_transactions ++ transfer_transactions
+
+      # |> Enum.sort_by(&Date.from_iso8601!(&1.date), :desc)
 
       {:ok, %{account: account, transaction: all_transactions}}
     catch
@@ -162,52 +166,61 @@ defmodule PhoenixBankingApp.Services.BankService do
     end
   end
 
-  def get_transactions(processorToken) do
-    IO.inspect(processorToken, label: "Procerssor Token")
-    transaction_data = fetch_transactions(processorToken, true, []) |> Enum.reverse()
-     {:ok, transaction_data}
+  def get_transactions(processor_token) do
+    IO.inspect(processor_token)
+    transaction_data = fetch_transactions(processor_token, true, [], 0) |> Enum.reverse()
+    {:ok, transaction_data}
+    # IO.inspect(fetch_transactions(processor_token, true, []))
+    # IO.inspect(fetch_transactions(processor_token, true, []) |> Enum.reverse())
   end
 
-  defp fetch_transactions(_access_token, false, transactions), do: transactions
+  defp fetch_transactions(_access_token, false, transactions, count), do: transactions
 
-  defp fetch_transactions(processorToken, true, transactions) do
-    # Transactions.sync(%{
-    #   access_token: processorToken,
-    #   count: 20
-    # })
+  defp fetch_transactions(processor_token, true, transactions_data, count) do
+    count = count + 1
+    IO.inspect(processor_token)
 
-    case Transactions.sync(%{
-         processor_token: processorToken,
-           count: 20,
-           cursor: "last-request-cursor-value"
-         }) do
-      {:ok, transactions} ->
-        IO.inspect(transactions)
+    request = %{
+      processor_token: processor_token,
+      count: 20
+      # cursor: "last-request-cursor-value"
+    }
+
+    IO.inspect(request)
+
+    case Transactions.sync(request) do
+      {:ok, %PhoenixBankingApp.Plaid.Transactions.Sync{added: transactions, has_more: has_more}} ->
         new_transactions =
-          Enum.map(transactions["added"], fn transaction ->
+          Enum.map(transactions, fn transaction ->
             %{
-              id: transaction["transaction_id"],
-              name: transaction["name"],
-              payment_channel: transaction["payment_channel"],
-              type: transaction["payment_channel"],
-              account_id: transaction["account_id"],
-              amount: transaction["amount"],
-              pending: transaction["pending"],
-              category: List.first(transaction["category"] || []),
-              date: transaction["date"],
-              image: transaction["logo_url"]
+              id: transaction.transaction_id,
+              name: transaction.name,
+              payment_channel: transaction.payment_channel,
+              type: transaction.payment_channel,
+              account_id: transaction.account_id,
+              amount: transaction.amount,
+              pending: transaction.pending,
+              category: List.first(transaction.category || []),
+              date: transaction.date
+              # image: transaction.logo_url
             }
           end)
 
+    IO.inspect(count)
+
+        has_more = if count == 5, do: false, else: has_more
+       IO.inspect(length(new_transactions ++ transactions_data))
+
         fetch_transactions(
-          processorToken,
-          transactions["has_more"],
-          new_transactions ++ transactions
+          processor_token,
+          has_more,
+          new_transactions ++ transactions_data,
+          count
         )
 
       {:error, error} ->
         IO.puts("An error occurred while getting the transactions: #{inspect(error)}")
-        transactions
+        transactions_data
     end
   end
 
