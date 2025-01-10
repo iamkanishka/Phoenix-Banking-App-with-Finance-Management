@@ -10,8 +10,8 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
     <section class="auth-form">
       <header class="flex flex-col gap-5 md:gap-8">
         <.link navigate={~p"/"} class="cursor-pointer flex items-center gap-1">
-          <img src="/images/app_logo.svg" width={34} height={34} alt="Horizon logo" />
-          <h1 class="text-26 font-ibm-plex-serif font-bold text-black-1">Horizon</h1>
+          <img src="/images/applogophxbank.png" width={34} height={34} alt="Horizon logo" />
+          <h1 class="text-26 font-ibm-plex-serif font-bold text-black-1">Phoenix Bank</h1>
         </.link>
 
         <div class="flex flex-col gap-1 md:gap-3">
