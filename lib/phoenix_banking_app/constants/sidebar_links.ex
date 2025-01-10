@@ -8,17 +8,17 @@ defmodule PhoenixBankingApp.Constants.SidebarLinks do
     },
     %{
       imgURL: "/images/dollar-circle.svg",
-      route: "/my-banks",
+      route: "/my-banks/",
       label: "My Banks",
     },
     %{
       imgURL: "/images/transaction.svg",
-      route: "/transaction-history",
+      route: "/transaction-history/",
       label: "Transaction History",
     },
     %{
       imgURL: "/images/money-send.svg",
-      route: "/payment-transfer",
+      route: "/payment-transfer/",
       label: "Transfer Funds",
     },
   ]
