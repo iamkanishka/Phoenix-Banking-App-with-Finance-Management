@@ -1,9 +1,9 @@
 <div class="flex">
-  <div>
-    <.live_component module={PhoenixBankingAppWeb.CustomComponents.SidebarLive}
+ 
+    <.live_component module={PhoenixBankingAppWeb.CustomComponents.SidebarLive} key={@key}
     current_url={@current_url} id={:header} />
-  </div>
-  <div>
+ 
+ 
     <section class="flex">
       <div class="my-banks">
         <.live_component
@@ -18,7 +18,7 @@
       
             <%= for account <- @accounts_data do %> <.live_component
             module={PhoenixBankingAppWeb.CustomComponents.BankCard}
-            id={"#{account[:account_id]}"}
+            id={"#{account[:id]}"}
             appwrite_item_id={account[:appwrite_item_id]}
             userName={"#{@logged_in["first_name"]} #{@logged_in["last_name"]}"}
             showBalance={false} account={account} /> <% end %>
@@ -26,5 +26,5 @@
         </div>
       </div>
     </section>
-  </div>
+ 
 </div>

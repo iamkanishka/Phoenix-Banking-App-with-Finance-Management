@@ -1,13 +1,6 @@
 <div class="flex">
-  <div>
-    <.live_component module={PhoenixBankingAppWeb.CustomComponents.SidebarLive}
-    id={:header} current_url={@current_url} />
-  </div>
-  <div>
- 
-    <.live_component
-    module={PhoenixBankingAppWeb.PaymentTransferLive.PaymentForm} 
-    id={:payment_form} accounts_data={@accounts_data}  />
- 
-  </div>
+  <.live_component module={PhoenixBankingAppWeb.CustomComponents.SidebarLive} key={@key}
+  id={:header} current_url={@current_url} /> <.live_component
+  module={PhoenixBankingAppWeb.PaymentTransferLive.PaymentForm}
+  id={:payment_form} accounts_data={@accounts_data} />
 </div>

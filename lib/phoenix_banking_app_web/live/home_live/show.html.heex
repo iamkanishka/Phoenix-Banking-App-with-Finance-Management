@@ -1,6 +1,6 @@
 <div class="flex">
   <.live_component module={PhoenixBankingAppWeb.CustomComponents.SidebarLive}
-  id={:header} current_url={@current_url} />
+  id={:header} current_url={@current_url} key={@key} />
 
   <section class="home">
     <div class="home-content">
@@ -9,13 +9,11 @@
         module={PhoenixBankingAppWeb.CustomComponents.HeaderBoxLive }
         id={:headerbox} type={"greeting"} title={"Welcome"}
         user={@logged_in["first_name"] || "Guest"} subtext={"Access and manage
-        your account and transactions efficiently."} />
-
-        
-      <.live_component
-      module={PhoenixBankingAppWeb.HomeLive.Components.TotalBalanceBox}
-      id={:total_balance_box} accounts={@accounts_data}  total_current_balance={@total_current_balance} total_banks={@total_banks}  />
-
+        your account and transactions efficiently."} /> <.live_component
+        module={PhoenixBankingAppWeb.HomeLive.Components.TotalBalanceBox}
+        id={:total_balance_box} accounts={@accounts_data}
+        total_current_balance={@total_current_balance}
+        total_banks={@total_banks} />
       </header>
 
       <!-- Recent transaction -->
@@ -23,7 +21,7 @@
       <.live_component
       module={PhoenixBankingAppWeb.HomeLive.Components.RecentTransaction}
       id={:recent_transaction} appwrite_item_id={@appwrite_item_id} url={@url}
-      accounts={@accounts_data} transactions={@transactions} page={@page} />
+      accounts={@accounts_data} transactions={@transactions} page={@page} key={@key} />
     </div>
   </section>
   <!-- Right Side Bar -->
