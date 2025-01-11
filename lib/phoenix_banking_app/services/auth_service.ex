@@ -36,7 +36,7 @@ defmodule PhoenixBankingApp.Services.AuthService do
         user_auth_data["secret"]
       )
 
-      {:ok, need_bank_connectivity } = check_user_bank_connectivity(user_auth_data)
+      {:ok, need_bank_connectivity} = check_user_bank_connectivity(user_auth_data["userId"])
 
       if need_bank_connectivity do
         {:ok, user_doc} = check_user_existence(user_auth_data["userId"])
@@ -78,7 +78,7 @@ defmodule PhoenixBankingApp.Services.AuthService do
       {:ok, user_session} =
         AppwriteAccounts.create_email_password_session(user_data["email"], user_data["password"])
 
-     updated_user_data =
+      updated_user_data =
         Map.merge(user_data, %{"dwolla_id" => dwolla_id[:id], "user_id" => new_user["$id"]})
 
       IO.inspect(updated_user_data, label: "updated_user_data")
@@ -91,7 +91,6 @@ defmodule PhoenixBankingApp.Services.AuthService do
         user_session["userId"],
         user_session["secret"]
       )
-
 
       notify_parent({:user, user_doc})
       {:ok, user_doc}
@@ -157,69 +156,89 @@ defmodule PhoenixBankingApp.Services.AuthService do
 
       IO.inspect(accounts_res, label: "accounts_res")
 
-      account_data = Enum.at(accounts_res.accounts, 0)
+      # account_data = Enum.at(accounts_res.accounts, 0)
 
-      IO.inspect(account_data, label: "account_data")
+      for account_data <- accounts_res.accounts do
+        # body of the loop
 
-      #  Create a processor token for Dwolla using the access token and account ID
-      processor_token_create_request_params = %{
-        access_token: public_token_exchange_res[:access_token],
-        account_id: account_data.account_id,
-        processor: "dwolla"
-      }
+        IO.inspect(account_data, label: "account_data")
 
-      IO.inspect(processor_token_create_request_params,
-        label: "processor_token_create_request_params"
-      )
+        sandbox_processor_token_create_request_params = %{
+          institution_id: accounts_res.item.institution_id
+        }
 
-      {:ok, processor_token_create_response} =
-        Item.create_processor_token(processor_token_create_request_params, %{})
-
-      IO.inspect(processor_token_create_response, label: "processor_token_create_response")
-
-      dwolla_creds = %{
-        client_id: Dwolla.get_client_id(),
-        client_secret: Dwolla.get_client_secret()
-      }
-
-      {:ok, dwolla_token_details} = Token.get(dwolla_creds)
-
-      {:ok, funding_source_response} =
-        Customer.create_funding_source(
-          dwolla_token_details.access_token,
-          user["dwolla_id"],
-          %{
-            name: account_data.name,
-            plaidToken: processor_token_create_response[:processor_token]
-          }
+        IO.inspect(sandbox_processor_token_create_request_params,
+          label: "sandbox_processor_token_create_request_params"
         )
 
-      IO.inspect(funding_source_response, label: "funding_source_response")
+        {:ok, sandbox_processor_token_create_response} =
+          Item.create_sandbox_processor_token(sandbox_processor_token_create_request_params, %{})
 
-      bank_data = %{
-        "user_id" => user["user_id"],
-        "bank_id" => public_token_exchange_res[:item_id],
-        "bank_name" => account_data.name,
-        "funding_source_id" => funding_source_response[:id],
-        # shareable_id" => CryptoUtil.encrypt(account_data.account_id),
-        "shareable_id" => account_data.account_id,
-        "processor_token" => processor_token_create_response[:processor_token],
-        "account_id" => account_data.account_id,
-        "access_token" => public_token_exchange_res[:access_token]
-      }
-
-      IO.inspect(bank_data)
-
-      bank_doc =
-        Database.create_document(
-          EnvKeysFetcher.get_appwrite_database_id(),
-          EnvKeysFetcher.get_bank_collection_id(),
-          user["user_id"],
-          bank_data,
-          nil
+        IO.inspect(sandbox_processor_token_create_response,
+          label: "sandbox_processor_token_create_response"
         )
 
-      IO.inspect(bank_doc, label: "bank_doc")
+        #  Create a processor token for Dwolla using the access token and account ID
+        processor_token_create_request_params = %{
+          access_token: public_token_exchange_res[:access_token],
+          account_id: account_data.account_id,
+          processor: "dwolla"
+        }
+
+        IO.inspect(processor_token_create_request_params,
+          label: "processor_token_create_request_params"
+        )
+
+        {:ok, processor_token_create_response} =
+          Item.create_processor_token(processor_token_create_request_params, %{})
+
+        IO.inspect(processor_token_create_response, label: "processor_token_create_response")
+
+        dwolla_creds = %{
+          client_id: Dwolla.get_client_id(),
+          client_secret: Dwolla.get_client_secret()
+        }
+
+        {:ok, dwolla_token_details} = Token.get(dwolla_creds)
+
+        {:ok, funding_source_response} =
+          Customer.create_funding_source(
+            dwolla_token_details.access_token,
+            user["dwolla_id"],
+            %{
+              name: account_data.name,
+              plaidToken: processor_token_create_response[:processor_token]
+            }
+          )
+
+        IO.inspect(funding_source_response, label: "funding_source_response")
+
+        bank_data = %{
+          "user_id" => user["user_id"],
+          "bank_id" => public_token_exchange_res[:item_id],
+          "bank_name" => account_data.name,
+          "funding_source_id" => funding_source_response[:id],
+          # shareable_id" => CryptoUtil.encrypt(account_data.account_id),
+          "shareable_id" => account_data.account_id,
+          "processor_token" => processor_token_create_response[:processor_token],
+          "sandbox_processor_token" => sandbox_processor_token_create_response[:processor_token],
+          "account_id" => account_data.account_id,
+          "access_token" => public_token_exchange_res[:access_token]
+        }
+
+        IO.inspect(bank_data)
+
+        bank_doc =
+          Database.create_document(
+            EnvKeysFetcher.get_appwrite_database_id(),
+            EnvKeysFetcher.get_bank_collection_id(),
+            nil,
+            bank_data,
+            nil
+          )
+
+        IO.inspect(bank_doc, label: "bank_doc")
+      end
 
       {:ok,
        %{
@@ -232,18 +251,20 @@ defmodule PhoenixBankingApp.Services.AuthService do
     end
   end
 
-  def check_user_bank_connectivity(user_auth_data) do
+  @spec check_user_bank_connectivity(any()) :: {:error, false} | {:ok, boolean()}
+  def check_user_bank_connectivity(user_id) do
     try do
-      {:ok, user_bank_data} =
-        Database.get_document(
+      {:ok, docs} =
+        get_list_documents(
           EnvKeysFetcher.get_appwrite_database_id(),
           EnvKeysFetcher.get_bank_collection_id(),
-          user_auth_data["userId"],
-          nil
+          [
+            Query.equal("user_id", [user_id])
+          ]
         )
 
       need_connectivity =
-        if Map.has_key?(user_bank_data, "code") and user_bank_data["code"] == 404,
+        if length(docs["documents"]) == 0 ,
           do: true,
           else: false
 
@@ -255,13 +276,22 @@ defmodule PhoenixBankingApp.Services.AuthService do
     end
   end
 
-  defp check_user_existence(user_id) do
-    Database.get_document(
-      EnvKeysFetcher.get_appwrite_database_id(),
-      EnvKeysFetcher.get_user_collection_id(),
-      user_id,
-      nil
-    )
+  def check_user_existence(user_id) do
+    try do
+      {:ok, docs} =
+        get_list_documents(
+        EnvKeysFetcher.get_appwrite_database_id(),
+        EnvKeysFetcher.get_user_collection_id(),
+        [
+          Query.equal("user_id", [user_id])
+        ]
+      )
+
+      {:ok, Enum.at(docs["documents"],0)}
+    catch
+      {:error, error} ->
+        {:error, error}
+    end
   end
 
   defp get_user_info(user_id) do
@@ -276,6 +306,28 @@ defmodule PhoenixBankingApp.Services.AuthService do
       {:ok, user_docs} ->
         {:ok, user_docs}
 
+      {:error, error} ->
+        {:error, error}
+    end
+  end
+
+  defp get_list_documents(appwrite_database_id, collection_id, query) do
+    try do
+      list_documents =
+        Database.list_documents(
+          EnvKeysFetcher.get_appwrite_database_id(),
+          EnvKeysFetcher.get_user_collection_id(),
+          query
+        )
+
+      case list_documents do
+        {:ok, docs} ->
+          {:ok, docs}
+
+        {:error, error} ->
+          {:error, error}
+      end
+    catch
       {:error, error} ->
         {:error, error}
     end
