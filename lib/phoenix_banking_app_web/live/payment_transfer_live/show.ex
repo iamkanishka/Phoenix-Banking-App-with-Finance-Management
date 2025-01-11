@@ -17,7 +17,8 @@ defmodule PhoenixBankingAppWeb.PaymentTransferLive.Show do
     {:ok,
      socket
      |> assign(:accounts_data, accounts[:data])
-     |> assign(:current_url, "/payment-transfer")}
+     |> assign(:key, params["key"])
+     |> assign(:current_url, "/payment-transfer/")}
   end
 
   @impl true

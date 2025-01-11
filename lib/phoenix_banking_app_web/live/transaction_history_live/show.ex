@@ -12,29 +12,25 @@ defmodule PhoenixBankingAppWeb.TransactionHistoryLive.Show do
 
     # bank_id = get_bank_id(params, accounts[:data])
 
-
-
-
-    {:ok, account_res} = get_account_data("c8c5267936784c9883a2dcf64a6c643e")
+    {:ok, account_res} = get_account_data("61209a50524643ba87d3f82d18d69aa9")
     IO.inspect(account_res)
 
     {:ok,
      socket
-    #  |> assign(:accounts_data, accounts[:data])
-    #  |> assign(:logged_in, Enum.at(user_details["documents"], 0))
-       |> assign(:appwrite_item_id, get_bank_id(params, [account_res[:account]]))
-      |> assign(:account, account_res[:account])
-      |> assign(:transactions, account_res[:transaction])
-
-     |> assign(:current_url, "/transaction-history")
-    }
+     #  |> assign(:accounts_data, accounts[:data])
+     #  |> assign(:logged_in, Enum.at(user_details["documents"], 0))
+     |> assign(:appwrite_item_id, get_bank_id(params, [account_res[:account]]))
+     |> assign(:account, account_res[:account])
+     |> assign(:transactions, account_res[:transaction])
+     |> assign(:key, params["key"])
+     |> assign(:current_url, "/transaction-history/")}
   end
 
   @impl true
   def handle_params(_unsigned_params, uri, socket) do
-    {:noreply, socket
-    |>   assign(:url, uri)
-  }
+    {:noreply,
+     socket
+     |> assign(:url, uri)}
   end
 
   def format_amount(amount) when is_number(amount) do

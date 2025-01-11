@@ -14,7 +14,8 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
      socket
      |> assign(:accounts_data, accounts[:data])
      |> assign(:total_current_balance,accounts[:total_current_balance])
-     |> assign(:total_banks, accounts[:total_banks])
+     |> assign(:key, params["key"])
+      |> assign(:total_banks, accounts[:total_banks])
      |> assign(:appwrite_item_id, get_id(params, accounts[:data]))
      |> assign(:logged_in, Enum.at(user_details["documents"], 0))
      |> assign(:current_url, "/")}

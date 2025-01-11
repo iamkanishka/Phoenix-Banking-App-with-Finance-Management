@@ -3,7 +3,6 @@ defmodule PhoenixBankingAppWeb.MyBanksLive.Show do
   alias PhoenixBankingApp.Services.BankService
   alias PhoenixBankingApp.Services.AuthService
 
-
   @impl true
   def mount(params, _session, socket) do
     {:ok, user_details} = get_user_data(params)
@@ -15,11 +14,12 @@ defmodule PhoenixBankingAppWeb.MyBanksLive.Show do
      socket
      |> assign(:accounts_data, accounts[:data])
      |> assign(:logged_in, Enum.at(user_details["documents"], 0))
-     |> assign(:current_url, "/my-banks")}
+     |> assign(:key, params["key"])
+     |> assign(:current_url, "/my-banks/")}
   end
 
   @impl true
-   def handle_params(_unsigned_params, _uri, socket) do
+  def handle_params(_unsigned_params, _uri, socket) do
     {:noreply, socket}
   end
 
