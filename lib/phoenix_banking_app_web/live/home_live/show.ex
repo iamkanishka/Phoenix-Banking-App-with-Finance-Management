@@ -5,7 +5,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
 
   @impl true
   def mount(params, _session, socket) do
-     send(self(), {:load_critical_data, params})
+    send(self(), {:load_critical_data, params})
 
     {:ok,
      socket
@@ -16,9 +16,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
      |> assign(:total_banks, [])
      |> assign(:appwrite_item_id, "")
      |> assign(:logged_in, %{})
-     |> assign(:is_loading, true)
-
-    }
+     |> assign(:is_loading, true)}
   end
 
   @impl true
