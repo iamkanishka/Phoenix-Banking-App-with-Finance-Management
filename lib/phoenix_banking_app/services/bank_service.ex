@@ -67,12 +67,8 @@ defmodule PhoenixBankingApp.Services.BankService do
     try do
       {:ok, bank_data} = get_bank(appwrite_item_id)
 
-      IO.inspect(bank_data)
-
       bank = Enum.at(bank_data["documents"], 0)
-      IO.inspect(bank)
-
-      {:ok, accounts_res} =
+       {:ok, accounts_res} =
         Accounts.get(%{access_token: bank["access_token"]})
 
       account_data = Enum.at(accounts_res.accounts, 0)
@@ -97,12 +93,12 @@ defmodule PhoenixBankingApp.Services.BankService do
 
       {:ok, institution} = get_institution(accounts_res.item.institution_id)
 
-      IO.inspect(bank["processor_token"])
-      IO.inspect(bank["sanbox_processor_token"])
+      # IO.inspect(bank["processor_token"])
+      # IO.inspect(bank["sanbox_processor_token"])
 
       {:ok, bank_transactions} = get_transactions(bank["sandbox_processor_token"])
 
-      IO.inspect(bank_transactions)
+      # IO.inspect(bank_transactions)
 
       account = %{
         id: account_data.account_id,
