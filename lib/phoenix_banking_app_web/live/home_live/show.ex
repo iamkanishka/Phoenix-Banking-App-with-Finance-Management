@@ -5,35 +5,24 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
 
   @impl true
   def mount(params, _session, socket) do
-    {:ok, user_details} = get_user_data(params)
-    user_id = Enum.at(user_details["documents"], 0)["user_id"]
-    {:ok, accounts} = get_accounts_data(user_id)
-    IO.inspect(accounts)
+     send(self(), {:load_critical_data, params})
 
     {:ok,
      socket
-     |> assign(:accounts_data, accounts[:data])
-     |> assign(:total_current_balance,accounts[:total_current_balance])
      |> assign(:key, params["key"])
-      |> assign(:total_banks, accounts[:total_banks])
-     |> assign(:appwrite_item_id, get_id(params, accounts[:data]))
-     |> assign(:logged_in, Enum.at(user_details["documents"], 0))
-     |> assign(:current_url, "/")}
+     |> assign(:current_url, "/")
+     |> assign(:accounts_data, [])
+     |> assign(:total_current_balance, 0)
+     |> assign(:total_banks, [])
+     |> assign(:appwrite_item_id, "")
+     |> assign(:logged_in, %{})
+     |> assign(:is_loading, true)
+
+    }
   end
 
   @impl true
   def handle_params(params, uri, socket) do
-    # accounts = [
-    #   %{
-    #     "name" => "Plaid saving",
-    #     "subtype" => "Saving",
-    #     "currentBalance" => 12365,
-    #     "appwrite_item_id" => 1235,
-    #     "type" => :depository
-    #   },
-
-    # ]
-
     {:noreply,
      socket
      |> assign(:page, get_page(params, 1))
@@ -98,5 +87,22 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
       {:ok, accounts} -> {:ok, accounts}
       {:error, reason} -> {:error, reason}
     end
+  end
+
+  @impl true
+  def handle_info({:load_critical_data, params}, socket) do
+    {:ok, user_details} = get_user_data(params)
+    user_id = Enum.at(user_details["documents"], 0)["user_id"]
+    {:ok, accounts} = get_accounts_data(user_id)
+    IO.inspect(accounts)
+
+    {:noreply,
+     socket
+     |> assign(:accounts_data, accounts[:data])
+     |> assign(:total_current_balance, accounts[:total_current_balance])
+     |> assign(:total_banks, accounts[:total_banks])
+     |> assign(:appwrite_item_id, get_id(params, accounts[:data]))
+     |> assign(:logged_in, Enum.at(user_details["documents"], 0))
+     |> assign(:is_loading, false)}
   end
 end

@@ -5,17 +5,15 @@ defmodule PhoenixBankingAppWeb.MyBanksLive.Show do
 
   @impl true
   def mount(params, _session, socket) do
-    {:ok, user_details} = get_user_data(params)
-    user_id = Enum.at(user_details["documents"], 0)["user_id"]
-    {:ok, accounts} = get_accounts_data(user_id)
-    IO.inspect(accounts)
+    send(self(), {:load_critical_data, params})
 
     {:ok,
      socket
-     |> assign(:accounts_data, accounts[:data])
-     |> assign(:logged_in, Enum.at(user_details["documents"], 0))
      |> assign(:key, params["key"])
-     |> assign(:current_url, "/my-banks/")}
+     |> assign(:current_url, "/my-banks/")
+     |> assign(:accounts_data, [])
+     |> assign(:logged_in, %{})
+     |> assign(:is_loading, true)}
   end
 
   @impl true
@@ -41,5 +39,19 @@ defmodule PhoenixBankingAppWeb.MyBanksLive.Show do
       {:ok, accounts} -> {:ok, accounts}
       {:error, reason} -> {:error, reason}
     end
+  end
+
+  @impl true
+  def handle_info({:load_critical_data, params}, socket) do
+    {:ok, user_details} = get_user_data(params)
+    user_id = Enum.at(user_details["documents"], 0)["user_id"]
+    {:ok, accounts} = get_accounts_data(user_id)
+
+    {:noreply,
+     socket
+     |> assign(:accounts_data, accounts[:data])
+     |> assign(:logged_in, Enum.at(user_details["documents"], 0))
+     |> assign(:is_loading, false)
+     |> assign(:is_loading, false)}
   end
 end

@@ -5,25 +5,16 @@ defmodule PhoenixBankingAppWeb.TransactionHistoryLive.Show do
 
   @impl true
   def mount(params, _session, socket) do
-    # {:ok, user_details} = get_user_data(params)
-    # user_id = Enum.at(user_details["documents"], 0)["user_id"]
-    # {:ok, accounts} = get_accounts_data(user_id)
-    # IO.inspect(accounts)
-
-    # bank_id = get_bank_id(params, accounts[:data])
-
-    {:ok, account_res} = get_account_data("61209a50524643ba87d3f82d18d69aa9")
-    IO.inspect(account_res)
+    send(self(), {:load_critical_data, params})
 
     {:ok,
      socket
-     #  |> assign(:accounts_data, accounts[:data])
-     #  |> assign(:logged_in, Enum.at(user_details["documents"], 0))
-     |> assign(:appwrite_item_id, get_bank_id(params, [account_res[:account]]))
-     |> assign(:account, account_res[:account])
-     |> assign(:transactions, account_res[:transaction])
      |> assign(:key, params["key"])
-     |> assign(:current_url, "/transaction-history/")}
+     |> assign(:current_url, "/transaction-history/")
+     |> assign(:is_loading, true)
+     |> assign(:appwrite_item_id, "")
+     |> assign(:account, %{})
+     |> assign(:transactions, [])}
   end
 
   @impl true
@@ -75,5 +66,22 @@ defmodule PhoenixBankingAppWeb.TransactionHistoryLive.Show do
         # For example, assign a default value or redirect
         Enum.at(accounts, 0)[:appwrite_item_id]
     end
+  end
+
+  @impl true
+  def handle_info({:load_critical_data, params}, socket) do
+    {:ok, user_details} = get_user_data(params)
+    user_id = Enum.at(user_details["documents"], 0)["user_id"]
+    {:ok, accounts} = get_accounts_data(user_id)
+
+    {:ok, account_res} = get_account_data(get_bank_id(params, accounts[:data]))
+    IO.inspect(account_res)
+
+    {:noreply,
+     socket
+     |> assign(:appwrite_item_id, get_bank_id(params, accounts[:data]))
+     |> assign(:account, account_res[:account])
+     |> assign(:transactions, account_res[:transaction])
+     |> assign(:is_loading, false)}
   end
 end
