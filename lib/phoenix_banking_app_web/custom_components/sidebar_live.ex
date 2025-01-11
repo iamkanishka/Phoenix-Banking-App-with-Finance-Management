@@ -7,21 +7,21 @@ defmodule PhoenixBankingAppWeb.CustomComponents.SidebarLive do
     ~H"""
     <section class="sidebar">
       <nav class="flex flex-col gap-4">
-        <.link navigate={~p"/"} class="mb-12 cursor-pointer flex items-center gap-2">
+        <.link navigate={~p"/#{@key}"} class="mb-12 cursor-pointer flex items-center gap-2">
           <img
-            src="/images/app_logo.svg"
+            src="/images/applogophxbank.png"
             alt="Horizon logo"
-            width="34"
+            width="64"
             class="size-[24px] max-xl:size-14"
-            height="34"
+            height="64"
           />
           <h1 class="sidebar-logo">Horizon</h1>
         </.link>
 
         <%= for %{label: label, imgURL: img_url, route: route}  <- SidebarLinks.get_sidebar_links() do %>
-          <% is_active =  @current_url == route %>
+          <% is_active = @current_url == route %>
           <.link
-            navigate={route}
+            navigate={"#{route}#{@key}"}
             class={"sidebar-link " <> if is_active, do: "bg-bank-gradient", else: ""}
           >
             <div class="relative size-6">
@@ -36,6 +36,7 @@ defmodule PhoenixBankingAppWeb.CustomComponents.SidebarLive do
               {label}
             </p>
           </.link>
+
         <% end %>
       </nav>
 
