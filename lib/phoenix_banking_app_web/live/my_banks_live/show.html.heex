@@ -1,30 +1,28 @@
 <div class="flex">
- 
-    <.live_component module={PhoenixBankingAppWeb.CustomComponents.SidebarLive} key={@key}
-    current_url={@current_url} id={:header} />
- 
- 
-    <section class="flex">
-      <div class="my-banks">
-        <.live_component
-        module={PhoenixBankingAppWeb.CustomComponents.HeaderBoxLive}
-        id={:headerbox} title={"My Bank Accounts"} type={"greeting"}
-        user={@logged_in["first_name"] || "Guest"} subtext={"Effortlessly manage
-        your banking activites."} />
+  <.live_component module={PhoenixBankingAppWeb.CustomComponents.SidebarLive}
+  key={@key} current_url={@current_url} id={:header} />
 
-        <div class="space-y-4">
-          <h2 class="header-2">Your cards</h2>
-          <div class="flex flex-wrap gap-6">
-      
-            <%= for account <- @accounts_data do %> <.live_component
-            module={PhoenixBankingAppWeb.CustomComponents.BankCard}
-            id={"#{account[:id]}"}
-            appwrite_item_id={account[:appwrite_item_id]}
-            userName={"#{@logged_in["first_name"]} #{@logged_in["last_name"]}"}
-            showBalance={false} account={account} /> <% end %>
-          </div>
+  <section class="flex w-full">
+    <div class="my-banks">
+      <%= if @is_loading do %> <.live_component
+      module={PhoenixBankingAppWeb.CustomComponents.Loader}
+      id={:home_transaction} /> <% else %> <.live_component
+      module={PhoenixBankingAppWeb.CustomComponents.HeaderBoxLive}
+      id={:headerbox} title={"My Bank Accounts"} type={"greeting"}
+      user={@logged_in["first_name"] || "Guest"} subtext={"Effortlessly manage
+      your banking activites."} />
+
+      <div class="space-y-4">
+        <h2 class="header-2">Your cards</h2>
+        <div class="flex flex-wrap gap-6">
+          <%= for account <- @accounts_data do %> <.live_component
+          module={PhoenixBankingAppWeb.CustomComponents.BankCard}
+          id={"#{account[:id]}"} appwrite_item_id={account[:appwrite_item_id]}
+          userName={"#{@logged_in["first_name"]} #{@logged_in["last_name"]}"}
+          showBalance={false} account={account} /> <% end %>
         </div>
       </div>
-    </section>
- 
+      <% end %>
+    </div>
+  </section>
 </div>

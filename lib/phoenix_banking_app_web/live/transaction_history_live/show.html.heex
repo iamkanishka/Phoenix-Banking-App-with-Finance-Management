@@ -2,8 +2,16 @@
   <.live_component module={PhoenixBankingAppWeb.CustomComponents.SidebarLive}
   current_url={@current_url} id={:header} key={@key} />
 
-  <div class="transactions">
+  <div class="transactions w-full">
+
+    <%= if @is_loading do %> <.live_component
+    module={PhoenixBankingAppWeb.CustomComponents.Loader}
+    id={:home_transaction} /> <% else %> 
+
     <div class="transactions-header">
+
+
+
       <.live_component
       module={PhoenixBankingAppWeb.CustomComponents.HeaderBoxLive }
       id={:headerbox} title={"Transaction History"} user={""} type={"greeting"}
@@ -31,15 +39,7 @@
         </div>
       </div>
       <section class="flex w-full flex-col gap-6">
-        <!--
-            <TransactionsTable 
-              transactions={currentTransactions}
-            />
-              {totalPages > 1 && (
-                <div class="my-4 w-full">
-                  <Pagination totalPages={totalPages} page={currentPage} />
-                </div>
-              )} -->
+    
 
         <div class="flex w-full flex-col gap-6">
           <.live_component
@@ -49,5 +49,6 @@
         </div>
       </section>
     </div>
+    <% end %> 
   </div>
 </div>

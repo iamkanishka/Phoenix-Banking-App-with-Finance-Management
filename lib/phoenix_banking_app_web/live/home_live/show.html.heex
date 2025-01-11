@@ -2,8 +2,11 @@
   <.live_component module={PhoenixBankingAppWeb.CustomComponents.SidebarLive}
   id={:header} current_url={@current_url} key={@key} />
 
-  <section class="home">
+  <section class="home w-full">
     <div class="home-content">
+      <%= if @is_loading do %> <.live_component
+      module={PhoenixBankingAppWeb.CustomComponents.Loader}
+      id={:home_transaction} /> <% else %>
       <header class="home-header">
         <.live_component
         module={PhoenixBankingAppWeb.CustomComponents.HeaderBoxLive }
@@ -21,12 +24,13 @@
       <.live_component
       module={PhoenixBankingAppWeb.HomeLive.Components.RecentTransaction}
       id={:recent_transaction} appwrite_item_id={@appwrite_item_id} url={@url}
-      accounts={@accounts_data} transactions={@transactions} page={@page} key={@key} />
+      accounts={@accounts_data} transactions={@transactions} page={@page}
+      key={@key} /> <% end %>
     </div>
   </section>
   <!-- Right Side Bar -->
-  <.live_component
+  <%= if !@is_loading do %> <.live_component
   module={PhoenixBankingAppWeb.HomeLive.Components.RightsideBar}
   id={:right_side_bar} user={@logged_in} transactions={@transactions}
-  banks={@accounts_data} appwrite_item_id={@appwrite_item_id} />
+  banks={@accounts_data} appwrite_item_id={@appwrite_item_id} /> <% end %>
 </div>
