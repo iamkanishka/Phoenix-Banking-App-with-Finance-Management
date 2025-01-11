@@ -8,7 +8,10 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RecentTransaction do
       <header class="flex items-center justify-between">
         <h2 class="recent-transactions-label">Recent transactions</h2>
 
-        <.link navigate={"~p/transaction-history/?id=#{@appwrite_item_id}"} class="view-all-btn">
+        <.link
+          navigate={~p"/transaction-history/#{@key}/?id=#{@appwrite_item_id}"}
+          class="view-all-btn"
+        >
           View all
         </.link>
       </header>
