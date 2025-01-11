@@ -18,13 +18,13 @@ defmodule PhoenixBankingApp.Services.BankService do
       IO.inspect(banks)
 
       accounts =
-        Enum.map(banks["documents"], fn bank ->
+        Enum.map(Enum.with_index(banks["documents"]), fn {bank, index} ->
           {:ok, accounts_res} =
             Accounts.get(%{access_token: bank["access_token"]})
-            IO.inspect(accounts_res)
 
-          account_data = Enum.at(accounts_res.accounts, 0)
-      # for account_data <- accounts_res.accounts do
+          IO.inspect(accounts_res)
+
+          account_data = Enum.at(accounts_res.accounts, index)
 
           {:ok, institution} = get_institution(accounts_res.item.institution_id)
 
@@ -98,7 +98,9 @@ defmodule PhoenixBankingApp.Services.BankService do
       {:ok, institution} = get_institution(accounts_res.item.institution_id)
 
       IO.inspect(bank["processor_token"])
-      {:ok, bank_transactions} = get_transactions(bank["processor_token"])
+      IO.inspect(bank["sanbox_processor_token"])
+
+      {:ok, bank_transactions} = get_transactions(bank["sandbox_processor_token"])
 
       IO.inspect(bank_transactions)
 
@@ -174,7 +176,7 @@ defmodule PhoenixBankingApp.Services.BankService do
     # IO.inspect(fetch_transactions(processor_token, true, []) |> Enum.reverse())
   end
 
-  defp fetch_transactions(_access_token, false, transactions, count), do: transactions
+  defp fetch_transactions(_processor_token, false, transactions, _count), do: transactions
 
   defp fetch_transactions(processor_token, true, transactions_data, count) do
     count = count + 1
@@ -206,10 +208,10 @@ defmodule PhoenixBankingApp.Services.BankService do
             }
           end)
 
-    IO.inspect(count)
+        IO.inspect(count)
 
         has_more = if count == 5, do: false, else: has_more
-       IO.inspect(length(new_transactions ++ transactions_data))
+        IO.inspect(length(new_transactions ++ transactions_data))
 
         fetch_transactions(
           processor_token,
