@@ -1,4 +1,5 @@
 defmodule PhoenixBankingAppWeb.CustomComponents.TransactionTable do
+  alias Appwrite.Utils.General
   use PhoenixBankingAppWeb, :live_component
 
   def render(assigns) do
@@ -28,7 +29,7 @@ defmodule PhoenixBankingAppWeb.CustomComponents.TransactionTable do
         <:col :let={t} label="Status" class="pl-2 pr-10">
           <.live_component
             module={PhoenixBankingAppWeb.CustomComponents.CategoryBadge}
-            id={"category_status_#{t.id}"}
+            id={"category_status_#{General.generate_uniqe_id()}"}
             category={get_transaction_status(t.date)}
           />
         </:col>
@@ -44,7 +45,7 @@ defmodule PhoenixBankingAppWeb.CustomComponents.TransactionTable do
         <:col :let={t} label="Category" class="pl-2 pr-10 max-md:hidden">
           <.live_component
             module={PhoenixBankingAppWeb.CustomComponents.CategoryBadge}
-            id={"category_badge_#{t.id}"}
+            id={"category_badge_#{General.generate_uniqe_id()}"}
             category={t.category}
           />
         </:col>
@@ -66,12 +67,23 @@ defmodule PhoenixBankingAppWeb.CustomComponents.TransactionTable do
 
   # Formats a date to a readable format, e.g., "Dec 18, 2024".
   defp format_date_time(transaction_date) do
-    {:ok, date} = Timex.parse(transaction_date, "{ISO:Extended}")
+    t_date =
+      if String.contains?(transaction_date, "T"),
+        do: transaction_date,
+        else: convert_date_to_native_time(transaction_date)
+
+    {:ok, date} = Timex.parse(t_date, "{ISO:Extended}")
+
     Timex.format!(date, "{Mshort} {D}, {YYYY}")
   end
 
   defp get_transaction_status(transaction_date) do
-    {:ok, date} = Timex.parse(transaction_date, "{ISO:Extended}")
+    t_date =
+      if String.contains?(transaction_date, "T"),
+        do: transaction_date,
+        else: convert_date_to_native_time(transaction_date)
+
+    {:ok, date} = Timex.parse(t_date, "{ISO:Extended}")
 
     if Timex.before?(date, Timex.now()) do
       "Success"
@@ -83,5 +95,18 @@ defmodule PhoenixBankingAppWeb.CustomComponents.TransactionTable do
   # Removes special characters from a string.
   defp remove_special_characters(string) do
     String.replace(string, ~r/[^a-zA-Z0-9\s]/, "")
+  end
+
+  defp convert_date_to_native_time(transaction_date) do
+    {:ok, date} = Date.from_iso8601(transaction_date)
+
+    # Convert the `Date` to a `NaiveDateTime` (time defaults to midnight)
+    naive_datetime = NaiveDateTime.new!(date, ~T[00:00:00])
+
+    # Convert the `NaiveDateTime` to a UTC `DateTime`
+    datetime = DateTime.from_naive!(naive_datetime, "Etc/UTC")
+
+    # Convert the `DateTime` to an ISO 8601 string
+    DateTime.to_iso8601(datetime)
   end
 end
