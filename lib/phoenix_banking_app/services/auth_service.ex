@@ -45,7 +45,12 @@ defmodule PhoenixBankingApp.Services.AuthService do
       if need_bank_connectivity do
         {:ok, user_doc} = check_user_existence(user_auth_data["userId"])
 
-        notify_parent({:user, user_doc})
+        updated_user_doc_with_secret =
+          Map.merge(user_doc, %{
+            "session_key" => cust_or_autogen_session_key
+          })
+
+        notify_parent({:user, updated_user_doc_with_secret})
 
         {:ok, need_bank_connectivity, cust_or_autogen_session_key}
       else
