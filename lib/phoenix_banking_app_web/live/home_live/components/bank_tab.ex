@@ -81,6 +81,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
     {:noreply,
      socket
      |> push_patch(to: ~p"/#{socket.assigns.key}?id=#{id}")}
+
   end
 
   def paginate(transactions, page, rows_per_page \\ 10) do
