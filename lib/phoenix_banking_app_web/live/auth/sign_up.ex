@@ -62,7 +62,7 @@ defmodule PhoenixBankingAppWeb.Auth.SignUp do
         {:noreply,
          socket
          |> assign_loader(false)
-         |> push_navigate(to: "/#{socket.assigns.user["user_id"]}", replace: true)}
+         |> push_navigate(to: "/#{socket.assigns.user["session_key"]}", replace: true)}
 
       {:error, reason} ->
         IO.inspect(reason, label: "Exchange Public Token Error")
