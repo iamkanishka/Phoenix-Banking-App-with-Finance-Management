@@ -29,24 +29,11 @@ defmodule PhoenixBankingApp.Utils.SessionManager do
   def get_session(key) when is_binary(key) do
     case :ets.lookup(@table_name, key) do
       [{^key, token}] ->
-        # {:ok, future_time, _} = DateTime.from_iso8601(expires_at)
-        # current_time = DateTime.utc_now()
-        # seconds_diff = DateTime.diff(future_time, current_time, :second)
+        # Calculate the expiration time
+        expiration_time = DateTime.add(DateTime.utc_now(), @default_max_age, :second)
 
-        # Calculate the future time (24 hours from now)
-        current_time = DateTime.utc_now()
-        future_time = DateTime.add(current_time, @default_max_age, :second)
-
-        # Get the ISO8601 string for the expiration time
-        expires_at = DateTime.to_iso8601(future_time)
-
-        # Parse the ISO8601 string
-        {:ok, future_time, _} = DateTime.from_iso8601(expires_at)
-
-        # Calculate the difference in seconds between the future and current time
-        seconds_diff = DateTime.diff(future_time, current_time, :second)
-
-        if seconds_diff > 0 do
+        # Check if the session is still valid
+        if DateTime.compare(expiration_time, DateTime.utc_now()) == :gt do
           {:ok, token}
         else
           delete_session(key)
