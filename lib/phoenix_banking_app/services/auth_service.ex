@@ -323,8 +323,8 @@ defmodule PhoenixBankingApp.Services.AuthService do
     try do
       list_documents =
         Database.list_documents(
-          EnvKeysFetcher.get_appwrite_database_id(),
-          EnvKeysFetcher.get_user_collection_id(),
+          appwrite_database_id,
+          collection_id,
           query
         )
 
