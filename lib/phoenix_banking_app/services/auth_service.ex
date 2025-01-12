@@ -32,11 +32,11 @@ defmodule PhoenixBankingApp.Services.AuthService do
       {:ok, user_auth_data} =
         AppwriteAccounts.create_email_password_session(email, password)
 
-      cust_or_autogen_document_id =
+      cust_or_autogen_session_key =
         String.replace(to_string(General.generate_uniqe_id()), "-", "")
 
       SessionManager.put_session(
-        cust_or_autogen_document_id,
+        cust_or_autogen_session_key,
         user_auth_data["secret"]
       )
 
@@ -91,8 +91,11 @@ defmodule PhoenixBankingApp.Services.AuthService do
 
       IO.inspect(user_doc, label: "user_doc")
 
+      cust_or_autogen_session_key =
+        String.replace(to_string(General.generate_uniqe_id()), "-", "")
+
       SessionManager.put_session(
-        user_session["userId"],
+        cust_or_autogen_session_key,
         user_session["secret"]
       )
 
