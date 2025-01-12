@@ -24,6 +24,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RecentTransaction do
         accounts={@accounts}
         transactions={@transactions}
         page={@page}
+        key={@key}
       />
     </section>
     """
