@@ -126,7 +126,7 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
 
     if socket.assigns.type == "sign-in" do
       case AuthService.sign_in(params["email"], params["password"]) do
-        {:ok, need_bank_connectivity, user_id} ->
+        {:ok, need_bank_connectivity, unique_id} ->
           assign_loader(socket, false)
 
           if need_bank_connectivity do
@@ -142,7 +142,7 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
              socket
              |> assign_loader(false)
              |> put_flash(:info, "Logged in successfully")
-             |> push_navigate(to: "/#{user_id}", replace: true)}
+             |> push_navigate(to: "/#{unique_id}", replace: true)}
           end
 
         {:error, error} ->
