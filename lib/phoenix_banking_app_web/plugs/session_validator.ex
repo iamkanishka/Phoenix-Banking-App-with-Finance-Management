@@ -1,4 +1,4 @@
-defmodule PhoenixBankingAppWeb.SessionValidator do
+defmodule PhoenixBankingAppWeb.Plugs.SessionValidator do
   alias PhoenixBankingApp.Utils.SessionManager
   import Plug.Conn
   import Phoenix.Controller
