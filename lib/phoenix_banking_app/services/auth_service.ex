@@ -47,9 +47,9 @@ defmodule PhoenixBankingApp.Services.AuthService do
 
         notify_parent({:user, user_doc})
 
-        {:ok, need_bank_connectivity, user_auth_data["userId"]}
+        {:ok, need_bank_connectivity, cust_or_autogen_session_key}
       else
-        {:ok, need_bank_connectivity, user_auth_data["userId"]}
+        {:ok, need_bank_connectivity, cust_or_autogen_session_key}
       end
     catch
       {:error, error} ->
@@ -89,17 +89,18 @@ defmodule PhoenixBankingApp.Services.AuthService do
 
       {:ok, user_doc} = add_user(updated_user_data)
 
-      IO.inspect(user_doc, label: "user_doc")
-
       cust_or_autogen_session_key =
         String.replace(to_string(General.generate_uniqe_id()), "-", "")
 
-      SessionManager.put_session(
-        cust_or_autogen_session_key,
-        user_session["secret"]
-      )
+      updated_user_doc_with_secret =
+        Map.merge(user_doc, %{
+          "session_key" => cust_or_autogen_session_key,
+          "session_secret" => user_session["secret"]
+        })
 
-      notify_parent({:user, user_doc})
+      IO.inspect(updated_user_doc_with_secret, label: "user_doc")
+
+      notify_parent({:user, updated_user_doc_with_secret})
       {:ok, user_doc}
     catch
       {:error, error} ->
