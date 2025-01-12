@@ -8,7 +8,10 @@ defmodule PhoenixBankingAppWeb.Router do
     plug :put_root_layout, html: {PhoenixBankingAppWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+  end
 
+  pipeline :authenticated_browser do
+    plug PhoenixBankingAppWeb.Plugs.SessionValidator
   end
 
   pipeline :api do
@@ -16,11 +19,15 @@ defmodule PhoenixBankingAppWeb.Router do
   end
 
   scope "/", PhoenixBankingAppWeb do
-    pipe_through :browser
+    pipe_through [:browser, :authenticated_browser]
 
     # auth routes
     live "/auth/sign-in", Auth.SignIn, :sign_in
     live "/auth/sign-up", Auth.SignUp, :sign_up
+  end
+
+  scope "/", PhoenixBankingAppWeb do
+    pipe_through :browser
 
     # module routes
     live "/:key", HomeLive.Show, :show
