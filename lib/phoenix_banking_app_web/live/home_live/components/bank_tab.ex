@@ -8,11 +8,12 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
       <div class="text-sm font-medium text-center text-gray-500 dark:text-gray-400 dark:border-gray-700">
         <ul class="flex flex-wrap -mb-px">
           <%= for account <- @accounts do %>
+
             <li class="me-2">
               <a
                 href="#"
                 phx-click="bank_change"
-                phx-value-id={account["appwrite_item_id"]}
+                phx-value-id={account[:appwrite_item_id]}
                 phx-target={@myself}
                 class={"inline-block p-4 border-b-2 rounded-t-lg " <> if @appwrite_item_id ==  account[:appwrite_item_id], do: "text-blue-600 border-blue-600 dark:text-blue-500 dark:border-blue-500", else: "border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"}
               >
@@ -79,7 +80,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
   def handle_event("bank_change", %{"id" => id}, socket) do
     {:noreply,
      socket
-     |> push_patch(to: ~p"/?id=#{id}")}
+     |> push_patch(to: ~p"/#{socket.assigns.key}?id=#{id}")}
   end
 
   def paginate(transactions, page, rows_per_page \\ 10) do
