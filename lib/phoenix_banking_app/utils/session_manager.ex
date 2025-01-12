@@ -53,18 +53,23 @@ defmodule PhoenixBankingApp.Utils.SessionManager do
     :ok
   end
 
-  @doc """
-  Checks if a session token is valid without retrieving it.
-  """
-  def valid_session?(key) when is_binary(key) do
-    case :ets.lookup(@table_name, key) do
-      [{^key, _token, expires_at}] ->
-        System.system_time(:second) <= expires_at
+ @doc """
+Checks if a session token is valid without retrieving it.
+"""
+def valid_session?(key) when is_binary(key) do
+  case :ets.lookup(@table_name, key) do
+    [{^key, _token}] ->
+      # Calculate the expiration time
+      expiration_time = DateTime.add(DateTime.utc_now(), @default_max_age, :second)
 
-      [] ->
-        false
-    end
+      # Check if the session is still valid
+      DateTime.compare(expiration_time, DateTime.utc_now()) == :gt
+
+    [] ->
+      false
   end
+end
+
 
   @doc """
   Cleans up expired sessions from the ETS table.
