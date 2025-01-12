@@ -1,6 +1,11 @@
 defmodule PhoenixBankingAppWeb.SessionValidator do
+  alias PhoenixBankingApp.Utils.SessionManager
+
+  import Plug.Conn
+
   @doc """
   Plug to validate session using the `key` from query parameters.
+  Redirects to `/auth/sign-in` if the session is invalid or missing.
   """
   def init(default), do: default
 
@@ -14,11 +19,10 @@ defmodule PhoenixBankingAppWeb.SessionValidator do
         # Pass the connection forward if the session is valid
         conn
 
-      {:error, reason} ->
-        # Halt the connection and respond with an error
+      {:error, _reason} ->
+        # Redirect to the sign-in page if the session is invalid
         conn
-        |> put_status(:unauthorized)
-        |> json(%{error: to_string(reason)})
+        |> redirect(to: "/auth/sign-in")
         |> halt()
     end
   end
@@ -26,7 +30,7 @@ defmodule PhoenixBankingAppWeb.SessionValidator do
   defp validate_session(nil), do: {:error, :missing_key}
 
   defp validate_session(key) when is_binary(key) do
-    if MyApp.Session.valid_session?(key) do
+    if SessionManager.valid_session?(key) do
       :ok
     else
       {:error, :invalid_session}
