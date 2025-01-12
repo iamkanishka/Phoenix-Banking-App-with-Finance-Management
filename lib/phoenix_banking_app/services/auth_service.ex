@@ -31,8 +31,10 @@ defmodule PhoenixBankingApp.Services.AuthService do
       {:ok, user_auth_data} =
         AppwriteAccounts.create_email_password_session(email, password)
 
+      cust_or_autogen_secret_key = General.generate_uniqe_id()
+
       SessionManager.put_session(
-        user_auth_data["userId"],
+        cust_or_autogen_secret_key,
         user_auth_data["secret"]
       )
 
@@ -264,7 +266,7 @@ defmodule PhoenixBankingApp.Services.AuthService do
         )
 
       need_connectivity =
-        if length(docs["documents"]) == 0 ,
+        if length(docs["documents"]) == 0,
           do: true,
           else: false
 
@@ -280,14 +282,14 @@ defmodule PhoenixBankingApp.Services.AuthService do
     try do
       {:ok, docs} =
         get_list_documents(
-        EnvKeysFetcher.get_appwrite_database_id(),
-        EnvKeysFetcher.get_user_collection_id(),
-        [
-          Query.equal("user_id", [user_id])
-        ]
-      )
+          EnvKeysFetcher.get_appwrite_database_id(),
+          EnvKeysFetcher.get_user_collection_id(),
+          [
+            Query.equal("user_id", [user_id])
+          ]
+        )
 
-      {:ok, Enum.at(docs["documents"],0)}
+      {:ok, Enum.at(docs["documents"], 0)}
     catch
       {:error, error} ->
         {:error, error}
