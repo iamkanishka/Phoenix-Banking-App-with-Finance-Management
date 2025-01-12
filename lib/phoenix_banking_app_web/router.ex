@@ -19,7 +19,7 @@ defmodule PhoenixBankingAppWeb.Router do
   end
 
   scope "/", PhoenixBankingAppWeb do
-    pipe_through [:browser, :authenticated_browser]
+    pipe_through :browser
 
     # auth routes
     live "/auth/sign-in", Auth.SignIn, :sign_in
@@ -27,7 +27,7 @@ defmodule PhoenixBankingAppWeb.Router do
   end
 
   scope "/", PhoenixBankingAppWeb do
-    pipe_through :browser
+    pipe_through [:browser, :authenticated_browser]
 
     # module routes
     live "/:key", HomeLive.Show, :show
