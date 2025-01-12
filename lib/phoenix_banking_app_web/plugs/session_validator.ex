@@ -1,7 +1,7 @@
 defmodule PhoenixBankingAppWeb.SessionValidator do
   alias PhoenixBankingApp.Utils.SessionManager
-
   import Plug.Conn
+  import Phoenix.Controller
 
   @doc """
   Plug to validate session using the `key` from query parameters.
