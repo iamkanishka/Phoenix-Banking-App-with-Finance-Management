@@ -37,7 +37,7 @@ defmodule PhoenixBankingAppWeb.Auth.Components.AuthFormLive do
         <% end %>
 
         <:actions>
-          <.button phx-disable-with="Saving...">
+          <.button phx-disable-with={if @type == "sign-in", do: "Signing In...", else: "Signing Up"}>
             <%= if @is_loading do %>
               <div role="status">
                 <svg
