@@ -94,9 +94,13 @@ defmodule PhoenixBankingApp.Services.AuthService do
 
       updated_user_doc_with_secret =
         Map.merge(user_doc, %{
-          "session_key" => cust_or_autogen_session_key,
-          "session_secret" => user_session["secret"]
+          "session_key" => cust_or_autogen_session_key
         })
+
+      SessionManager.put_session(
+        cust_or_autogen_session_key,
+        user_session["secret"]
+      )
 
       IO.inspect(updated_user_doc_with_secret, label: "user_doc")
 
