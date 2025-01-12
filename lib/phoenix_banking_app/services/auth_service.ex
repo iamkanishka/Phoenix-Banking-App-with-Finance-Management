@@ -1,4 +1,5 @@
 defmodule PhoenixBankingApp.Services.AuthService do
+  alias Appwrite.Utils.General
   alias PhoenixBankingApp.Utils.SessionManager
   alias Appwrite.Utils
   alias Appwrite.Utils.Query
@@ -31,10 +32,11 @@ defmodule PhoenixBankingApp.Services.AuthService do
       {:ok, user_auth_data} =
         AppwriteAccounts.create_email_password_session(email, password)
 
-      cust_or_autogen_secret_key = General.generate_uniqe_id()
+      cust_or_autogen_document_id =
+        String.replace(to_string(General.generate_uniqe_id()), "-", "")
 
       SessionManager.put_session(
-        cust_or_autogen_secret_key,
+        cust_or_autogen_document_id,
         user_auth_data["secret"]
       )
 
