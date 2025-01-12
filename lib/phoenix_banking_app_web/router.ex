@@ -9,7 +9,6 @@ defmodule PhoenixBankingAppWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
 
-    plug PhoenixBankingAppWeb.Plugs.CurrentUrlLiveView
   end
 
   pipeline :api do
