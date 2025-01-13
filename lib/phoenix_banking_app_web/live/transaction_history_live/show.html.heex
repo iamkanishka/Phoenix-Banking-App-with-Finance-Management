@@ -47,6 +47,18 @@
           id={:bank_transaction_table} transactions={@transactions}
           appwrite_item_id={@appwrite_item_id} url={@url} />
         </div>
+        <%= if @total_pages >= 1 do %>
+        <div>
+          <.live_component
+            module={PhoenixBankingAppWeb.CustomComponents.Pagination}
+            id={:bank_transaction_pagination}
+            page={@page}
+            appwrite_item_id={@appwrite_item_id}
+            url={@url}
+            total_pages={@total_pages}
+          />
+        </div>
+      <% end %>
       </section>
     </div>
     <% end %> 
