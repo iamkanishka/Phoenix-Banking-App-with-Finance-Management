@@ -90,4 +90,18 @@ defmodule PhoenixBankingAppWeb.CustomComponents.Pagination do
         |> Map.get("id")
     end
   end
+
+  def paginate(transactions, page, rows_per_page \\ 10) do
+    pageNumber = if is_number(page), do: page, else: String.to_integer(page)
+
+    total_pages = div(Enum.count(transactions) + rows_per_page - 1, rows_per_page)
+
+    index_of_last_transaction = pageNumber * rows_per_page
+    index_of_first_transaction = index_of_last_transaction - rows_per_page
+
+    current_transactions = Enum.slice(transactions, index_of_first_transaction, rows_per_page)
+
+    %{total_pages: total_pages, current_transactions: current_transactions}
+  end
+
 end
