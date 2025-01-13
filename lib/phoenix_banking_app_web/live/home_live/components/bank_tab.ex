@@ -69,7 +69,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
 
   @impl true
   def update(assigns, socket) do
-    pagination = Pagination.paginate(assigns.transactions, assigns.page, 10)
+    pagination = Pagination.paginate(assigns.transactions, assigns.page, 5)
 
     {:ok,
      socket
