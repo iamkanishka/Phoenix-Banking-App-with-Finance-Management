@@ -18,9 +18,10 @@ defmodule PhoenixBankingAppWeb.TransactionHistoryLive.Show do
   end
 
   @impl true
-  def handle_params(_unsigned_params, uri, socket) do
+  def handle_params(unsigned_params, uri, socket) do
     {:noreply,
      socket
+     |> assign(:page, get_page(unsigned_params, 1))
      |> assign(:url, uri)}
   end
 
@@ -84,4 +85,18 @@ defmodule PhoenixBankingAppWeb.TransactionHistoryLive.Show do
      |> assign(:transactions, account_res[:transaction])
      |> assign(:is_loading, false)}
   end
+
+
+  def get_page(params, default_page \\ 1) do
+    case params do
+      %{"page" => page} ->
+        # Return the page value from params
+        page
+
+      %{} ->
+        # Return the default page if "page" key is not present
+        default_page
+    end
+  end
+
 end
