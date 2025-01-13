@@ -77,8 +77,6 @@ defmodule PhoenixBankingAppWeb.TransactionHistoryLive.Show do
     {:ok, accounts} = get_accounts_data(user_id)
 
     {:ok, account_res} = get_account_data(get_bank_id(params, accounts[:data]))
-    IO.inspect(account_res)
-
     pagination = Pagination.paginate(account_res[:transaction], socket.assigns.page, 10)
 
     {:noreply,
@@ -89,7 +87,6 @@ defmodule PhoenixBankingAppWeb.TransactionHistoryLive.Show do
      |> assign(:total_pages, pagination[:total_pages])
      |> assign(:is_loading, false)}
   end
-
 
   def get_page(params, default_page \\ 1) do
     case params do
@@ -102,5 +99,4 @@ defmodule PhoenixBankingAppWeb.TransactionHistoryLive.Show do
         default_page
     end
   end
-
 end
