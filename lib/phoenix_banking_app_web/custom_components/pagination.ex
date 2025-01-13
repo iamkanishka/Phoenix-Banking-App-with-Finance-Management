@@ -68,22 +68,29 @@ defmodule PhoenixBankingAppWeb.CustomComponents.Pagination do
     page = if dir == "next", do: socket.assigns.page + 1, else: socket.assigns.page - 1
     id = extract_id_from_url(socket.assigns.url)
 
+    mod_url =
+      if String.contains?(socket.assigns.url, "transaction-history"),
+        do: "transaction-history/#{socket.assigns.key}",
+        else: "#{socket.assigns.key}"
+
     to =
       if id do
-        ~p"/?id=#{id}&page=#{page}"
+        ~p"/#{mod_url}?id=#{id}&page=#{page}"
       else
-        ~p"/?page=#{page}"
+        ~p"/#{mod_url}?page=#{page}"
       end
 
     {:noreply,
      socket
-     |> push_patch(to: to)}
+     |> push_patch(to: String.replace(to, "%2F", "/"))}
   end
 
   # Helper function
   defp extract_id_from_url(url) do
     case URI.parse(url).query do
-      nil -> nil
+      nil ->
+        nil
+
       query ->
         query
         |> URI.decode_query()
@@ -103,5 +110,4 @@ defmodule PhoenixBankingAppWeb.CustomComponents.Pagination do
 
     %{total_pages: total_pages, current_transactions: current_transactions}
   end
-
 end
