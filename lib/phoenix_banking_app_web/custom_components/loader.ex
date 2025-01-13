@@ -14,7 +14,7 @@ defmodule PhoenixBankingAppWeb.CustomComponents.Loader do
     <!-- Image -->
       <div class="text-center z-10">
         <img src="/images/applogophxbank.png" alt="Phoenix Icon" class="w-16 h-16 mx-auto" />
-        <p class="text-gray-600 text-sm mt-2">Loading Account Details...</p>
+        <p class="text-gray-600 text-sm mt-2">{@loading_message}</p>
       </div>
     </div>
     """
