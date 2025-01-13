@@ -24,7 +24,6 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
     {:noreply,
      socket
      |> assign(:page, get_page(params, 1))
-     |> assign(:transactions, sample_transactions())
      |> assign(:url, uri)}
   end
 
@@ -92,8 +91,12 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
     {:ok, user_details} = get_user_data(params)
     user_id = Enum.at(user_details["documents"], 0)["user_id"]
     {:ok, accounts} = get_accounts_data(user_id)
+
+    {:ok, account_res} = get_account_data(get_bank_id(params, accounts[:data]))
+
      {:noreply,
      socket
+     |> assign(:transactions, account_res[:transaction])
      |> assign(:accounts_data, accounts[:data])
      |> assign(:total_current_balance, accounts[:total_current_balance])
      |> assign(:total_banks, accounts[:total_banks])
@@ -101,4 +104,25 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
      |> assign(:logged_in, Enum.at(user_details["documents"], 0))
      |> assign(:is_loading, false)}
   end
+
+  defp get_account_data(bank_id) do
+    case BankService.get_account(bank_id) do
+      {:ok, account} -> {:ok, account}
+      {:error, reason} -> {:error, reason}
+    end
+  end
+
+  def get_bank_id(params, accounts) do
+    case params do
+      %{"id" => id} ->
+        # Process the id as needed
+        id
+
+      %{} ->
+        # Handle the absence of the "id" parameter
+        # For example, assign a default value or redirect
+        Enum.at(accounts, 0)[:appwrite_item_id]
+    end
+  end
+
 end
