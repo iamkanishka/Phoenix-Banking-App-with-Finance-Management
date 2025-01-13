@@ -49,7 +49,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
         />
       </div>
 
-      <%= if @total_pages > 1 do %>
+      <%= if @total_pages >= 1 do %>
         <div>
           <.live_component
             module={PhoenixBankingAppWeb.CustomComponents.Pagination}
