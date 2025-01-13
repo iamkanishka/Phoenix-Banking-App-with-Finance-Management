@@ -1,4 +1,5 @@
 defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
+  alias PhoenixBankingAppWeb.CustomComponents.Pagination
   use PhoenixBankingAppWeb, :live_component
 
   @impl true
@@ -8,7 +9,6 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
       <div class="text-sm font-medium text-center text-gray-500 dark:text-gray-400 dark:border-gray-700">
         <ul class="flex flex-wrap -mb-px">
           <%= for account <- @accounts do %>
-
             <li class="me-2">
               <a
                 href="#"
@@ -67,7 +67,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
 
   @impl true
   def update(assigns, socket) do
-    pagination = paginate(assigns.transactions, assigns.page, 10)
+    pagination = Pagination.paginate(assigns.transactions, assigns.page, 10)
 
     {:ok,
      socket
@@ -81,19 +81,5 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
     {:noreply,
      socket
      |> push_patch(to: ~p"/#{socket.assigns.key}?id=#{id}")}
-
-  end
-
-  def paginate(transactions, page, rows_per_page \\ 10) do
-    pageNumber = if is_number(page), do: page, else: String.to_integer(page)
-
-    total_pages = div(Enum.count(transactions) + rows_per_page - 1, rows_per_page)
-
-    index_of_last_transaction = pageNumber * rows_per_page
-    index_of_first_transaction = index_of_last_transaction - rows_per_page
-
-    current_transactions = Enum.slice(transactions, index_of_first_transaction, rows_per_page)
-
-    %{total_pages: total_pages, current_transactions: current_transactions}
   end
 end
