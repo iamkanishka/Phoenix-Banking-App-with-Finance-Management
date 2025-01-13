@@ -68,7 +68,8 @@ defmodule PhoenixBankingApp.Services.BankService do
       {:ok, bank_data} = get_bank(appwrite_item_id)
 
       bank = Enum.at(bank_data["documents"], 0)
-       {:ok, accounts_res} =
+
+      {:ok, accounts_res} =
         Accounts.get(%{access_token: bank["access_token"]})
 
       account_data = Enum.at(accounts_res.accounts, 0)
@@ -93,12 +94,7 @@ defmodule PhoenixBankingApp.Services.BankService do
 
       {:ok, institution} = get_institution(accounts_res.item.institution_id)
 
-      # IO.inspect(bank["processor_token"])
-      # IO.inspect(bank["sanbox_processor_token"])
-
       {:ok, bank_transactions} = get_transactions(bank["sandbox_processor_token"])
-
-      # IO.inspect(bank_transactions)
 
       account = %{
         id: account_data.account_id,
@@ -168,8 +164,6 @@ defmodule PhoenixBankingApp.Services.BankService do
     IO.inspect(processor_token)
     transaction_data = fetch_transactions(processor_token, true, [], 0) |> Enum.reverse()
     {:ok, transaction_data}
-    # IO.inspect(fetch_transactions(processor_token, true, []))
-    # IO.inspect(fetch_transactions(processor_token, true, []) |> Enum.reverse())
   end
 
   defp fetch_transactions(_processor_token, false, transactions, _count), do: transactions
@@ -181,10 +175,7 @@ defmodule PhoenixBankingApp.Services.BankService do
     request = %{
       processor_token: processor_token,
       count: 20
-      # cursor: "last-request-cursor-value"
     }
-
-    IO.inspect(request)
 
     case Transactions.sync(request) do
       {:ok, %PhoenixBankingApp.Plaid.Transactions.Sync{added: transactions, has_more: has_more}} ->
@@ -203,8 +194,6 @@ defmodule PhoenixBankingApp.Services.BankService do
               # image: transaction.logo_url
             }
           end)
-
-        IO.inspect(count)
 
         has_more = if count == 5, do: false, else: has_more
         IO.inspect(length(new_transactions ++ transactions_data))
