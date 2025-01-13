@@ -46,6 +46,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
           transactions={@transactions}
           appwrite_item_id={@appwrite_item_id}
           url={@url}
+
         />
       </div>
 
@@ -58,6 +59,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
             appwrite_item_id={@appwrite_item_id}
             url={@url}
             total_pages={@total_pages}
+            key={@key}
           />
         </div>
       <% end %>
