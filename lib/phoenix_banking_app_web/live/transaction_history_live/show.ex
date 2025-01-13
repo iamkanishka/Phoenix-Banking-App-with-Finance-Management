@@ -1,4 +1,5 @@
 defmodule PhoenixBankingAppWeb.TransactionHistoryLive.Show do
+  alias PhoenixBankingAppWeb.CustomComponents.Pagination
   use PhoenixBankingAppWeb, :live_view
   alias PhoenixBankingApp.Services.BankService
   alias PhoenixBankingApp.Services.AuthService
@@ -78,11 +79,14 @@ defmodule PhoenixBankingAppWeb.TransactionHistoryLive.Show do
     {:ok, account_res} = get_account_data(get_bank_id(params, accounts[:data]))
     IO.inspect(account_res)
 
+    pagination = Pagination.paginate(account_res[:transaction], socket.assigns.page, 10)
+
     {:noreply,
      socket
      |> assign(:appwrite_item_id, get_bank_id(params, accounts[:data]))
      |> assign(:account, account_res[:account])
-     |> assign(:transactions, account_res[:transaction])
+     |> assign(:transactions, pagination[:current_transactions])
+     |> assign(:total_pages, pagination[:total_pages])
      |> assign(:is_loading, false)}
   end
 
