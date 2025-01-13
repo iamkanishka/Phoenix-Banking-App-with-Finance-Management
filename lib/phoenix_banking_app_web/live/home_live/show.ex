@@ -92,9 +92,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
     {:ok, user_details} = get_user_data(params)
     user_id = Enum.at(user_details["documents"], 0)["user_id"]
     {:ok, accounts} = get_accounts_data(user_id)
-    IO.inspect(accounts)
-
-    {:noreply,
+     {:noreply,
      socket
      |> assign(:accounts_data, accounts[:data])
      |> assign(:total_current_balance, accounts[:total_current_balance])
