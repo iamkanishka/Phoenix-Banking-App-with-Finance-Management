@@ -6,7 +6,7 @@
 
     <%= if @is_loading do %> <.live_component
     module={PhoenixBankingAppWeb.CustomComponents.Loader}
-    id={:home_transaction} /> <% else %> 
+    id={:home_transaction} loading_message={"Fetching transactions..."} /> <% else %> 
 
     <div class="transactions-header">
 
