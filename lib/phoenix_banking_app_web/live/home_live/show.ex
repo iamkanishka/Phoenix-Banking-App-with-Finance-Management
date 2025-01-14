@@ -52,20 +52,6 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
     end
   end
 
-  def sample_transactions do
-    [
-      %{
-        id: :erlang.unique_integer([:positive]),
-        name: "Grocery Store Purchase first ",
-        amount: 75.50,
-        type: "debit",
-        date: "2024-12-10T14:30:00Z",
-        payment_channel: "credit card",
-        category: "Food and Drink"
-      }
-    ]
-  end
-
   defp get_user_data(params) do
     case AuthService.get_logged_in_user(params["key"]) do
       {:ok, user} ->
@@ -94,7 +80,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
 
     {:ok, account_res} = get_account_data(get_bank_id(params, accounts[:data]))
 
-     {:noreply,
+    {:noreply,
      socket
      |> assign(:transactions, account_res[:transaction])
      |> assign(:accounts_data, accounts[:data])
@@ -124,5 +110,4 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
         Enum.at(accounts, 0)[:appwrite_item_id]
     end
   end
-
 end
