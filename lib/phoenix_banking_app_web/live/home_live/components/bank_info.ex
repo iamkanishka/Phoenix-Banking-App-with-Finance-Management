@@ -6,7 +6,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankInfo do
   def render(assigns) do
     ~H"""
     <div
-      phx-click="bank_change"
+      phx-click="bank_transaction_history"
       phx-target={@myself}
       class={"bank-info #{@colors["bg"]}" <> if  @type == "card" and   @appwrite_item_id ==  @account[:appwrite_item_id], do: "bg-bank-gradient", else: if @type == "card", do: "rounded-xl hover:shadow-sm cursor-pointer" ,else: "" }
     >
@@ -52,7 +52,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankInfo do
   end
 
   @impl true
-  def handle_event("bank_change", _unsigned_params, socket) do
+  def handle_event("bank_transaction_history", _unsigned_params, socket) do
     {:noreply,
      socket
      |> push_patch(to: ~p"/?id=#{to_string(socket.assigns.appwrite_item_id)}")}
