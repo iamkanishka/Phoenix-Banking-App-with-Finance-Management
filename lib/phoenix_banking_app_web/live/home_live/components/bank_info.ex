@@ -55,9 +55,12 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankInfo do
   def handle_event("bank_transaction_history", _unsigned_params, socket) do
     {:noreply,
      socket
-     |> push_navigate(to: ~p"/transaction-history/#{socket.assigns.key}?id=#{to_string(socket.assigns.appwrite_item_id)}", replce: true)}
-
-    end
+     |> push_navigate(
+       to:
+         ~p"/transaction-history/#{socket.assigns.key}?id=#{to_string(socket.assigns.appwrite_item_id)}",
+       replce: true
+     )}
+  end
 
   defp format_amount(amount) when is_number(amount) do
     Number.Currency.number_to_currency(amount, unit: "$", precision: 2)
