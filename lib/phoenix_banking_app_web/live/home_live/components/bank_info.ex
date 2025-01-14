@@ -15,7 +15,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankInfo do
           src="/images/connect-bank.svg"
           width={20}
           height={20}
-          alt={@account[:subtype]}
+          alt={@account[:sub_type]}
           class="m-2 min-w-5"
         />
       </figure>
@@ -28,7 +28,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankInfo do
 
           <%= if  @type == "full" do %>
             <p class={"text-12 rounded-full px-3 py-1 font-medium text-blue-700 #{@colors["subText"]} #{@colors["lightBg"]}"}>
-              {@account[:subtype]}
+              {@account[:sub_type]}
             </p>
           <% end %>
         </div>
