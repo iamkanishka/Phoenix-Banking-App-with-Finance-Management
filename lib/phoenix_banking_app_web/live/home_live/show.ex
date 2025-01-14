@@ -24,6 +24,8 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
     {:noreply,
      socket
      |> assign(:page, get_page(params, 1))
+     |> assign(:appwrite_item_id, get_id(params, []))
+
      |> assign(:url, uri)}
   end
 
