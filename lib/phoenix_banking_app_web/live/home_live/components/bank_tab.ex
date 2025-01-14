@@ -34,6 +34,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankTab do
               url={@url}
               type="full"
               account={account}
+                key={@key}
             />
           <% end %>
         <% end %>
