@@ -59,6 +59,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
                 account={Enum.at(@banks, 0)}
                 userName={"#{@user["first_name"]} #{@user["last_name"]}"}
                 showBalance={false}
+                key={@key}
               />
             </div>
 
@@ -77,6 +78,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
                   account={Enum.at(@banks, 1)}
                   userName={"#{@user["first_name"]} #{@user["last_name"]}"}
                   showBalance={false}
+                  key={@key}
                 />
               </div>
             <% end %>
