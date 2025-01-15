@@ -19,7 +19,7 @@
           module={PhoenixBankingAppWeb.CustomComponents.BankCard}
           id={"#{account[:id]}"} appwrite_item_id={account[:appwrite_item_id]}
           userName={"#{@logged_in["first_name"]} #{@logged_in["last_name"]}"}
-          showBalance={false} account={account} /> <% end %>
+          showBalance={false} account={account}  key={@key} /> <% end %>
         </div>
       </div>
       <% end %>
