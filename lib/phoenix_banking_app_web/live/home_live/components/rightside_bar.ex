@@ -89,11 +89,12 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
           <h2 class="header-2">Top categories</h2>
 
           <div class="space-y-5">
-            <%= for category  <- @categories do %>
+            <%= for {category, index} <- Enum.with_index(@categories)do %>
               <div>
                 <.live_component
                   module={PhoenixBankingAppWeb.HomeLive.Components.Category}
-                  id={:bank_category}
+                  id={"transaction-category#{index}"}
+                  index
                   category={category}
                 />
               </div>
@@ -110,7 +111,6 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
     {:ok,
      socket
      |> assign(:categories, [])
-
      |> assign(assigns)}
   end
 end
