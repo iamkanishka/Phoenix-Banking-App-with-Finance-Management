@@ -32,5 +32,5 @@
   <%= if !@is_loading do %> <.live_component
   module={PhoenixBankingAppWeb.HomeLive.Components.RightsideBar}
   id={:right_side_bar} user={@logged_in} transactions={@transactions}
-  banks={@accounts_data} appwrite_item_id={@appwrite_item_id} /> <% end %>
+  banks={@accounts_data} appwrite_item_id={@appwrite_item_id}  key={@key} /> <% end %>
 </div>
