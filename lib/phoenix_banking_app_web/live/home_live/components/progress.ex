@@ -14,7 +14,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.Progress do
   end
 
   @impl true
-  def update({assigns}, socket) do
+  def update(assigns, socket) do
     {:ok,
      socket
      |> assign(assigns)}
