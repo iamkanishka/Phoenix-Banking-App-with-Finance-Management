@@ -110,7 +110,26 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
   def update(assigns, socket) do
     {:ok,
      socket
-     |> assign(:categories, [])
+     |> assign(:categories, count_transaction_categories(assigns.transactions))
      |> assign(assigns)}
+  end
+
+  def count_transaction_categories(transactions) do
+    # Aggregate counts by category
+    category_counts =
+      Enum.reduce(transactions, %{}, fn transaction, acc ->
+        category = Map.get(transaction, :category, "unknown")
+        Map.update(acc, category, 1, &(&1 + 1))
+      end)
+
+    # Calculate the total count
+    total_count = Enum.reduce(category_counts, 0, fn {_key, count}, acc -> acc + count end)
+
+    # Convert to a list of maps and sort by count in descending order
+    category_counts
+    |> Enum.map(fn {category, count} ->
+      %{name: category, count: count, total_count: total_count}
+    end)
+    |> Enum.sort_by(& &1.count, :desc)
   end
 end
