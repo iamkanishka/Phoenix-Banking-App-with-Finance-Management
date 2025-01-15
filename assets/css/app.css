@@ -435,4 +435,41 @@ body {
   .sidebar-label {
     @apply text-16 font-semibold text-black-2 max-xl:hidden;
   }
+
+
+  .bg-green-100 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(209 250 229 / var(--tw-bg-opacity));
+  }
+  
+  .bg-green-25 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(240 255 244 / var(--tw-bg-opacity));
+  }
+  
+  .bg-green-25\/20 {
+    background-color: rgb(240 255 244 / 0.2);
+  }
+  
+  .bg-green-300 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(147 247 201 / var(--tw-bg-opacity));
+  }
+  
+  .bg-green-400 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(96 221 159 / var(--tw-bg-opacity));
+  }
+  
+  .bg-green-600 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(22 163 74 / var(--tw-bg-opacity));
+  }
+  
+  .bg-green-700 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(20 130 65 / var(--tw-bg-opacity));
+  }
+  
+
 }
