@@ -14,15 +14,15 @@ defmodule PhoenixBankingApp.Constants.TopCategoryStyles do
       icon: "/images/monitor.svg"
     },
     "Travel" => %{
-      bg: "bg-success-25",
-      circle_bg: "bg-success-100",
+      bg: "bg-green-25",
+      circle_bg: "bg-green-100",
       text: %{
-        main: "text-success-900",
-        count: "text-success-700"
+        main: "text-green-900",
+        count: "text-green-700"
       },
       progress: %{
-        bg: "bg-success-100",
-        indicator: "bg-success-700"
+        bg: "bg-green-100",
+        indicator: "bg-green-700"
       },
       icon: "/images/coins.svg"
     },
