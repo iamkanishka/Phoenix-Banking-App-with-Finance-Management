@@ -12,18 +12,18 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.Category do
 
       <div class="flex w-full flex-1 flex-col gap-2">
         <div class="text-14 flex justify-between">
-          <h2 class={"font-medium #{assigns.text_main}"}>{@category.name}</h2>
+          <h2 class={"font-medium #{assigns.text[:main]}"}>{@category.name}</h2>
 
-          <h3 class={"font-normal #{assigns.text_count}"}>{@category.count}</h3>
+          <h3 class={"font-normal #{assigns.text[:count]}"}>{@category.count}</h3>
         </div>
 
         <div>
           <.live_component
             module={PhoenixBankingAppWeb.HomeLive.Components.Progress}
-            id={:progress_bar}
+            id={"progress_bar #{@index}"}
             value={@category.count / @category.total_count * 100}
-            class={"h-2 w-full #{assigns.progress_bg}"}
-            indicator_class={"h-2 w-full #{assigns.progress_indicator}"}
+            class={"h-2 w-full #{assigns.progress[:bg]}"}
+            indicator_class={"h-2 w-full #{assigns.progress[:indicator]}"}
           />
         </div>
       </div>
@@ -33,7 +33,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.Category do
 
   @impl true
   def update(assigns, socket) do
-    style = TopCategoryStyles.get_top_category_styles(socket.category.name)
+    style = TopCategoryStyles.get_top_category_styles(assigns.category.name)
 
     {:ok,
      socket
