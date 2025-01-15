@@ -4,8 +4,8 @@ defmodule PhoenixBankingAppWeb.CustomComponents.BankCard do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="flex flex-col">
-      <.link navigate={"~p/transaction-history/?id=#{@appwrite_item_id}"} class="bank-card">
+    <div class="flex flex-col cursor-pointer">
+      <div phx-click="bank_transaction_history" phx-target={@myself} class="bank-card ">
         <div class="bank-card_content">
           <div>
             <h1 class="text-16 font-semibold text-white">
@@ -46,7 +46,7 @@ defmodule PhoenixBankingAppWeb.CustomComponents.BankCard do
           alt="lines"
           class="absolute top-0 left-0"
         />
-      </.link>
+      </div>
 
       <%= if @showBalance do %>
         <.button phx-hook="ClipboardCopy" data-clipboard={@account.shareableId}>
@@ -66,5 +66,16 @@ defmodule PhoenixBankingAppWeb.CustomComponents.BankCard do
 
   defp format_amount(amount) when is_number(amount) do
     Number.Currency.number_to_currency(amount, unit: "$", precision: 2)
+  end
+
+  @impl true
+  def handle_event("bank_transaction_history", _unsigned_params, socket) do
+    {:noreply,
+     socket
+     |> push_navigate(
+       to:
+         ~p"/transaction-history/#{socket.assigns.key}?id=#{to_string(socket.assigns.appwrite_item_id)}",
+       replce: true
+     )}
   end
 end
