@@ -94,7 +94,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
                 <.live_component
                   module={PhoenixBankingAppWeb.HomeLive.Components.Category}
                   id={"transaction-category#{index}"}
-                  index
+                  index={index}
                   category={category}
                 />
               </div>
