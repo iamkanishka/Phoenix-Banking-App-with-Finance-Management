@@ -24,8 +24,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
     {:noreply,
      socket
      |> assign(:page, get_page(params, 1))
-     |> assign(:appwrite_item_id, get_id(params, []))
-
+    #  |> assign(:appwrite_item_id, get_id(params, []))
      |> assign(:url, uri)}
   end
 
@@ -76,21 +75,28 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
 
   @impl true
   def handle_info({:load_critical_data, params}, socket) do
-    {:ok, user_details} = get_user_data(params)
-    user_id = Enum.at(user_details["documents"], 0)["user_id"]
-    {:ok, accounts} = get_accounts_data(user_id)
+    try do
+      {:ok, user_details} = get_user_data(params)
+      user_id = Enum.at(user_details["documents"], 0)["user_id"]
+      {:ok, accounts} = get_accounts_data(user_id)
 
-    {:ok, account_res} = get_account_data(get_bank_id(params, accounts[:data]))
+      {:ok, account_res} = get_account_data(get_bank_id(params, accounts[:data]))
 
-    {:noreply,
-     socket
-     |> assign(:transactions, account_res[:transaction])
-     |> assign(:accounts_data, accounts[:data])
-     |> assign(:total_current_balance, accounts[:total_current_balance])
-     |> assign(:total_banks, accounts[:total_banks])
-     |> assign(:appwrite_item_id, get_id(params, accounts[:data]))
-     |> assign(:logged_in, Enum.at(user_details["documents"], 0))
-     |> assign(:is_loading, false)}
+      {:noreply,
+       socket
+       |> assign(:transactions, account_res[:transaction])
+       |> assign(:accounts_data, accounts[:data])
+       |> assign(:total_current_balance, accounts[:total_current_balance])
+       |> assign(:total_banks, accounts[:total_banks])
+       |> assign(:appwrite_item_id, get_id(params, accounts[:data]))
+       |> assign(:logged_in, Enum.at(user_details["documents"], 0))
+       |> assign(:is_loading, false)}
+    catch
+      {:error, _error} ->
+        {:noreply,
+         socket
+         |> push_navigate(to: "/auth/sign-in", replace: true)}
+    end
   end
 
   defp get_account_data(bank_id) do
