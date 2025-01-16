@@ -36,15 +36,17 @@ defmodule PhoenixBankingAppWeb.CustomComponents.SidebarLive do
               {label}
             </p>
           </.link>
-
         <% end %>
       </nav>
 
-      <.live_component
-        module={PhoenixBankingAppWeb.CustomComponents.FooterLive}
-        id="{:footer}"
-        type="desktop"
-      />
+      <%= if !@is_loading do %>
+        <.live_component
+          module={PhoenixBankingAppWeb.CustomComponents.FooterLive}
+          id="{:footer}"
+          type="desktop"
+          user={@user}
+        />
+      <% end %>
     </section>
     """
   end
