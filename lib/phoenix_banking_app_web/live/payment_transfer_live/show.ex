@@ -6,7 +6,6 @@ defmodule PhoenixBankingAppWeb.PaymentTransferLive.Show do
 
   @impl true
   def mount(params, _session, socket) do
-
     send(self(), {:load_critical_data, params})
 
     {:ok,
@@ -14,9 +13,8 @@ defmodule PhoenixBankingAppWeb.PaymentTransferLive.Show do
      |> assign(:accounts_data, [])
      |> assign(:key, params["key"])
      |> assign(:current_url, "/payment-transfer/")
-     |> assign(:is_loading, true)
-
-    }
+     |> assign(:logged_in, %{})
+     |> assign(:is_loading, true)}
   end
 
   @impl true
@@ -46,7 +44,6 @@ defmodule PhoenixBankingAppWeb.PaymentTransferLive.Show do
     end
   end
 
-
   @impl true
   def handle_info({:load_critical_data, params}, socket) do
     {:ok, user_details} = get_user_data(params)
@@ -56,7 +53,7 @@ defmodule PhoenixBankingAppWeb.PaymentTransferLive.Show do
     {:noreply,
      socket
      |> assign(:accounts_data, accounts[:data])
-    |> assign(:is_loading, false)}
+     |> assign(:logged_in, Enum.at(user_details["documents"], 0))
+     |> assign(:is_loading, false)}
   end
-
 end
