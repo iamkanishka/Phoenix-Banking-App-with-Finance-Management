@@ -10,7 +10,9 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
         <div class="profile">
           <div class="profile-img">
             <%!-- <span class="text-5xl font-bold text-blue-500">{user.firstName[0]}</span> --%>
-            <span class="text-5xl font-bold text-blue-500">K</span>
+            <span class="text-5xl font-bold text-blue-500">
+              {capitalize_first_letter(@user["first_name"])}
+            </span>
           </div>
 
           <div class="profile-details">
@@ -21,11 +23,11 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
               {user.email}
             </p> --%>
             <h1 class="profile-name">
-              Kanishka naik
+              {"#{@user["first_name"]} #{@user["last_name"]}"}
             </h1>
 
             <p class="profile-email">
-              Kanishkabc@gmail.com
+              {"#{@user["email"]}"}
             </p>
           </div>
         </div>
@@ -131,5 +133,11 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.RightsideBar do
       %{name: category, count: count, total_count: total_count}
     end)
     |> Enum.sort_by(& &1.count, :desc)
+  end
+
+  def capitalize_first_letter(string) when is_binary(string) do
+    String.slice(string, 0, 1)
+    |> String.upcase()
+
   end
 end
