@@ -58,6 +58,32 @@ defmodule PhoenixBankingAppWeb.TransactionHistoryLive.Show do
     end
   end
 
+
+
+  @impl true
+  def handle_info({:load_critical_data, params}, socket) do
+    {:ok, user_details} = get_user_data(params)
+    user_id = Enum.at(user_details["documents"], 0)["user_id"]
+    {:ok, accounts} = get_accounts_data(user_id)
+
+    {:ok, account_res} = get_account_data(get_bank_id(params, accounts[:data]))
+    pagination = Pagination.paginate(account_res[:transaction], socket.assigns.page, 10)
+
+
+
+
+    {:noreply,
+     socket
+     |> assign(:appwrite_item_id, get_bank_id(params, accounts[:data]))
+     |> assign(:accounts,  accounts[:data])
+
+     |> assign(:account, account_res[:account])
+     |> assign(:logged_in, Enum.at(user_details["documents"], 0))
+     |> assign(:transactions, pagination[:current_transactions])
+     |> assign(:total_pages, pagination[:total_pages])
+     |> assign(:is_loading, false)}
+  end
+
   def get_bank_id(params, accounts) do
     case params do
       %{"id" => id} ->
@@ -71,24 +97,6 @@ defmodule PhoenixBankingAppWeb.TransactionHistoryLive.Show do
     end
   end
 
-  @impl true
-  def handle_info({:load_critical_data, params}, socket) do
-    {:ok, user_details} = get_user_data(params)
-    user_id = Enum.at(user_details["documents"], 0)["user_id"]
-    {:ok, accounts} = get_accounts_data(user_id)
-
-    {:ok, account_res} = get_account_data(get_bank_id(params, accounts[:data]))
-    pagination = Pagination.paginate(account_res[:transaction], socket.assigns.page, 10)
-
-    {:noreply,
-     socket
-     |> assign(:appwrite_item_id, get_bank_id(params, accounts[:data]))
-     |> assign(:account, account_res[:account])
-     |> assign(:logged_in, Enum.at(user_details["documents"], 0))
-     |> assign(:transactions, pagination[:current_transactions])
-     |> assign(:total_pages, pagination[:total_pages])
-     |> assign(:is_loading, false)}
-  end
 
   def get_page(params, default_page \\ 1) do
     case params do
