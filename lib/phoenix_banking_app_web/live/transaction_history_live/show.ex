@@ -14,6 +14,7 @@ defmodule PhoenixBankingAppWeb.TransactionHistoryLive.Show do
      |> assign(:current_url, "/transaction-history/")
      |> assign(:is_loading, true)
      |> assign(:appwrite_item_id, "")
+     |> assign(:logged_in, %{})
      |> assign(:account, %{})
      |> assign(:transactions, [])}
   end
@@ -83,6 +84,7 @@ defmodule PhoenixBankingAppWeb.TransactionHistoryLive.Show do
      socket
      |> assign(:appwrite_item_id, get_bank_id(params, accounts[:data]))
      |> assign(:account, account_res[:account])
+     |> assign(:logged_in, Enum.at(user_details["documents"], 0))
      |> assign(:transactions, pagination[:current_transactions])
      |> assign(:total_pages, pagination[:total_pages])
      |> assign(:is_loading, false)}
