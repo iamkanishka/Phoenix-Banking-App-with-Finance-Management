@@ -6,7 +6,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Components.BankInfo do
   def render(assigns) do
     ~H"""
     <div
-      phx-click="bank_transaction_history"
+      phx-click="bank_transaction_history cursor-pointer"
       phx-target={@myself}
       class={"bank-info #{@colors["bg"]}" <> if  @type == "card" and   @appwrite_item_id ==  @account[:appwrite_item_id], do: "bg-bank-gradient", else: if @type == "card", do: "rounded-xl hover:shadow-sm cursor-pointer" ,else: "" }
     >
