@@ -21,14 +21,22 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
 
   @impl true
   def handle_params(params, uri, socket) do
-    {:noreply,
-     socket
-     |> assign(:page, get_page(params, 1))
-    #  |> assign(:appwrite_item_id, get_id(params, []))
-     |> assign(:url, uri)}
+
+      if Map.has_key?(params, "id") do
+        {:noreply,
+         socket
+         |> assign(:page, get_page(params, 1))
+         |> assign(:appwrite_item_id, get_id(params))
+         |> assign(:url, uri)}
+      else
+        {:noreply,
+         socket
+         |> assign(:page, get_page(params, 1))
+          |> assign(:url, uri)}
+      end
   end
 
-  def get_id(params, accounts) do
+  def get_id(params) do
     case params do
       %{"id" => id} ->
         # Process the id as needed
@@ -37,7 +45,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
       %{} ->
         # Handle the absence of the "id" parameter
         # For example, assign a default value or redirect
-        Enum.at(accounts, 0)[:appwrite_item_id]
+        ""
     end
   end
 
@@ -88,7 +96,7 @@ defmodule PhoenixBankingAppWeb.HomeLive.Show do
        |> assign(:accounts_data, accounts[:data])
        |> assign(:total_current_balance, accounts[:total_current_balance])
        |> assign(:total_banks, accounts[:total_banks])
-       |> assign(:appwrite_item_id, get_id(params, accounts[:data]))
+       |> assign(:appwrite_item_id, get_bank_id(params, accounts[:data]))
        |> assign(:logged_in, Enum.at(user_details["documents"], 0))
        |> assign(:is_loading, false)}
     catch
