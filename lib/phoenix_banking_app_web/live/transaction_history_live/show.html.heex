@@ -1,17 +1,14 @@
 <div class="flex">
   <.live_component module={PhoenixBankingAppWeb.CustomComponents.SidebarLive}
-  current_url={@current_url} id={:header} key={@key} user={@logged_in} is_loading={@is_loading}  />
+  current_url={@current_url} id={:header} key={@key} user={@logged_in}
+  is_loading={@is_loading} />
 
   <div class="transactions w-full">
-
     <%= if @is_loading do %> <.live_component
-    module={PhoenixBankingAppWeb.CustomComponents.Loader}
-    id={:home_transaction} loading_message={"Fetching transactions..."} /> <% else %> 
+    module={PhoenixBankingAppWeb.CustomComponents.Loader} id={:home_transaction}
+    loading_message={"Fetching transactions..."} /> <% else %>
 
     <div class="transactions-header">
-
-
-
       <.live_component
       module={PhoenixBankingAppWeb.CustomComponents.HeaderBoxLive }
       id={:headerbox} title={"Transaction History"} user={""} type={"greeting"}
@@ -19,28 +16,29 @@
     </div>
 
     <div class="space-y-6">
+      <%= for account <- @accounts do %> <%= if @appwrite_item_id ==
+      account[:appwrite_item_id] do %>
+
       <div class="transactions-account">
         <div class="flex flex-col gap-2">
-          <h2 class="text-18 font-bold text-white">{@account[:name]}</h2>
-          <p class="text-14 text-blue-25">{@account[:official_name]}</p>
+          <h2 class="text-18 font-bold text-white">{account[:name]}</h2>
+          <p class="text-14 text-blue-25">{account[:official_name]}</p>
           <p class="text-14 font-semibold tracking-[1.1px] text-white">
-            ●●●● ●●●● ●●●● {@account[:mask]}
+            ●●●● ●●●● ●●●● {account[:mask]}
           </p>
         </div>
 
         <div class="transactions-account-balance">
           <p class="text-14">Current balance</p>
           <p class="text-24 text-center font-bold">
-            <!--
-              {format_amount(@account[:current_balance])}
-              -->
-            { @account[:current_balance]}
+            { account[:current_balance]}
           </p>
         </div>
       </div>
-      <section class="flex w-full flex-col gap-6">
-    
+      <% end %> <% end %>
 
+
+      <section class="flex w-full flex-col gap-6">
         <div class="flex w-full flex-col gap-6">
           <.live_component
           module={PhoenixBankingAppWeb.CustomComponents.TransactionTable}
@@ -50,18 +48,14 @@
         <%= if @total_pages >= 1 do %>
         <div>
           <.live_component
-            module={PhoenixBankingAppWeb.CustomComponents.Pagination}
-            id={:bank_transaction_pagination}
-            page={@page}
-            appwrite_item_id={@appwrite_item_id}
-            url={@url}
-            total_pages={@total_pages}
-            key={@key}
-          />
+          module={PhoenixBankingAppWeb.CustomComponents.Pagination}
+          id={:bank_transaction_pagination} page={@page}
+          appwrite_item_id={@appwrite_item_id} url={@url}
+          total_pages={@total_pages} key={@key} />
         </div>
-      <% end %>
+        <% end %>
       </section>
     </div>
-    <% end %> 
+    <% end %>
   </div>
 </div>
