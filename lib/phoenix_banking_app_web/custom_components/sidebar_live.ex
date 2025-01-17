@@ -45,6 +45,7 @@ defmodule PhoenixBankingAppWeb.CustomComponents.SidebarLive do
           id="{:footer}"
           type="desktop"
           user={@user}
+          key={@key}
         />
       <% end %>
     </section>
