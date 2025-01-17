@@ -353,4 +353,17 @@ defmodule PhoenixBankingApp.Services.AuthService do
   def get_form_fields do
     @form_fields
   end
+
+  def sign_out(session_key) do
+    # {:ok, session} = SessionManager.get_session(session_key)
+    # IO.inspect(session, label: "session")
+
+    case AppwriteAccounts.delete_session(session_key) do
+      {:ok, deleted_session} ->
+        {:ok, deleted_session}
+
+      {:error, error} ->
+        {:error, error}
+    end
+  end
 end
