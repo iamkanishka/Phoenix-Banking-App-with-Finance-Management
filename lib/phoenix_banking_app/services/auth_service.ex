@@ -92,8 +92,6 @@ defmodule PhoenixBankingApp.Services.AuthService do
 
       {:ok, user_doc} = add_user(updated_user_data)
 
-      cust_or_autogen_session_key =
-        String.replace(to_string(General.generate_uniqe_id()), "-", "")
 
       updated_user_doc_with_secret =
         Map.merge(user_doc, %{
