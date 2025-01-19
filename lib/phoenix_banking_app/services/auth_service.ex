@@ -36,7 +36,7 @@ defmodule PhoenixBankingApp.Services.AuthService do
         String.replace(to_string(General.generate_uniqe_id()), "-", "")
 
       SessionManager.put_session(
-        cust_or_autogen_session_key,
+        user_auth_data["$id"],
         user_auth_data["secret"]
       )
 
@@ -47,14 +47,14 @@ defmodule PhoenixBankingApp.Services.AuthService do
 
         updated_user_doc_with_secret =
           Map.merge(user_doc, %{
-            "session_key" => cust_or_autogen_session_key
+            "session_key" => user_auth_data["$id"]
           })
 
         notify_parent({:user, updated_user_doc_with_secret})
 
-        {:ok, need_bank_connectivity, cust_or_autogen_session_key}
+        {:ok, need_bank_connectivity, user_auth_data["$id"]}
       else
-        {:ok, need_bank_connectivity, cust_or_autogen_session_key}
+        {:ok, need_bank_connectivity, user_auth_data["$id"]}
       end
     catch
       {:error, error} ->
@@ -99,11 +99,11 @@ defmodule PhoenixBankingApp.Services.AuthService do
 
       updated_user_doc_with_secret =
         Map.merge(user_doc, %{
-          "session_key" => cust_or_autogen_session_key
+          "session_key" => user_session["$id"]
         })
 
       SessionManager.put_session(
-        cust_or_autogen_session_key,
+        user_session["$id"],
         user_session["secret"]
       )
 
@@ -355,10 +355,9 @@ defmodule PhoenixBankingApp.Services.AuthService do
   end
 
   def sign_out(session_key) do
-    # {:ok, session} = SessionManager.get_session(session_key)
-    # IO.inspect(session, label: "session")
+    {:ok, session} = SessionManager.get_session(session_key)
 
-    case AppwriteAccounts.delete_session(session_key) do
+    case AppwriteAccounts.delete_session(%{"X-Appwrite-Session" => session}, session_key) do
       {:ok, deleted_session} ->
         {:ok, deleted_session}
 
