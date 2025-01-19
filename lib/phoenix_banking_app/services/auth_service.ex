@@ -32,8 +32,6 @@ defmodule PhoenixBankingApp.Services.AuthService do
       {:ok, user_auth_data} =
         AppwriteAccounts.create_email_password_session(email, password)
 
-      cust_or_autogen_session_key =
-        String.replace(to_string(General.generate_uniqe_id()), "-", "")
 
       SessionManager.put_session(
         user_auth_data["$id"],
