@@ -32,7 +32,6 @@ defmodule PhoenixBankingApp.Services.AuthService do
       {:ok, user_auth_data} =
         AppwriteAccounts.create_email_password_session(email, password)
 
-
       SessionManager.put_session(
         user_auth_data["$id"],
         user_auth_data["secret"]
@@ -91,7 +90,6 @@ defmodule PhoenixBankingApp.Services.AuthService do
       IO.inspect(updated_user_data, label: "updated_user_data")
 
       {:ok, user_doc} = add_user(updated_user_data)
-
 
       updated_user_doc_with_secret =
         Map.merge(user_doc, %{
