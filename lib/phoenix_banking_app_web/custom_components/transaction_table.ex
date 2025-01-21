@@ -5,6 +5,9 @@ defmodule PhoenixBankingAppWeb.CustomComponents.TransactionTable do
   def render(assigns) do
     ~H"""
     <div>
+    <div class="text-right text-sm text-gray-500 space-y-5">Note: This is a sample data provided by the Plaid</div>
+
+
       <.table id="transactions" rows={@transactions}>
         <:col :let={t} label="Transaction" class="max-w-[250px] pl-2 pr-10">
           <div class="flex items-center gap-3">
