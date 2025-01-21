@@ -239,7 +239,7 @@ body {
   }
 
   .profile-email {
-    @apply text-16 font-normal text-gray-600;
+    @apply text-sm font-normal text-gray-600;
   }
 
   .banks {
