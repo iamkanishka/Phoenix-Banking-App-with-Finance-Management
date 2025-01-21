@@ -22,7 +22,7 @@ defmodule PhoenixBankingAppWeb.CustomComponents.FooterLive do
         </p>
       </div>
 
-      <div class="footer_image" phx-click="handle_log_out">
+      <div class="footer_image" phx-click="handle_log_out" phx-target={@myself}>
         <img src="/images/logout.svg" alt="logout" />
       </div>
     </footer>
@@ -42,7 +42,7 @@ defmodule PhoenixBankingAppWeb.CustomComponents.FooterLive do
   defp sign_out(socket) do
     case AuthService.sign_out(socket.assigns.key) do
       {:ok, _deleted_session} ->
-        {:noreply, socket |> push_navigate(to: "/auth/sign_in", replace: true)}
+        {:noreply, socket |> push_navigate(to: "/auth/sign-in", replace: true)}
 
       {:error, error} ->
         {:noreply, socket |> push_event("error", %{message: "Error signing out"})}
